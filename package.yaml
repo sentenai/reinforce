@@ -1,0 +1,52 @@
+name:        reinforce
+version:     0.0.0.1
+synopsis:    a refinforcement learning framework in Haskell
+description: Please see README.md
+category:    Reinforcement learning, machine learning, artificial intelligence
+author:      Sentenai, Inc.
+maintainer:  sam@sentenai.com
+github:      Sentenai/reinforce
+license:     BSD3
+copyright:   2017 Sentenai, Inc.
+
+default-extensions:
+  - NoImplicitPrelude
+  - MultiParamTypeClasses
+  - OverloadedStrings
+  - LambdaCase
+
+dependencies:
+  - ad
+  - aeson
+  - base
+  - binary
+  - bytestring
+  - containers
+  - dlist
+  - gym-http-api
+  - hashable
+  - http-client
+  - iso8601-time
+  - lens-aeson
+  - microlens-platform
+  - mtl
+  - mwc-random
+  - safe-exceptions
+  - servant-client
+  - statistics
+  - text
+  - unordered-containers
+  - vector
+
+library:
+  source-dirs: src
+
+# tests:
+#   spec:
+#     source-dirs: test
+#     main: Spec.hs
+#     dependencies:
+#       - hspec
+#       - QuickCheck
+
+

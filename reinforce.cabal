@@ -1,0 +1,56 @@
+-- This file has been generated from package.yaml by hpack version 0.17.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           reinforce
+version:        0.0.0.1
+synopsis:       a refinforcement learning framework in Haskell
+description:    Please see README.md
+category:       Reinforcement learning, machine learning, artificial intelligence
+homepage:       https://github.com/Sentenai/reinforce#readme
+bug-reports:    https://github.com/Sentenai/reinforce/issues
+author:         Sentenai, Inc.
+maintainer:     sam@sentenai.com
+copyright:      2017 Sentenai, Inc.
+license:        BSD3
+build-type:     Simple
+cabal-version:  >= 1.10
+
+source-repository head
+  type: git
+  location: https://github.com/Sentenai/reinforce
+
+library
+  hs-source-dirs:
+      src
+  default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase
+  build-depends:
+      ad
+    , aeson
+    , base
+    , binary
+    , bytestring
+    , containers
+    , dlist
+    , gym-http-api
+    , hashable
+    , http-client
+    , iso8601-time
+    , lens-aeson
+    , microlens-platform
+    , mtl
+    , mwc-random
+    , safe-exceptions
+    , servant-client
+    , statistics
+    , text
+    , unordered-containers
+    , vector
+  exposed-modules:
+      Control.MonadEnv
+      Control.MonadEnv.Internal
+      Control.MonadMWCRandom
+      Environments.CartPoleV0
+      Reinforce.Prelude
+      Spaces.State
+  default-language: Haskell2010

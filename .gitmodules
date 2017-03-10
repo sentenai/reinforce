@@ -1,0 +1,4 @@
+[submodule "gym-http-api"]
+	path = gym-http-api
+	url = git@github.com:stites/gym-http-api.git
+	branch = usability
