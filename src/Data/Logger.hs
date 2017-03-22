@@ -64,3 +64,18 @@ instance MonadEnv m s a r => MonadEnv (NoopLogger m) s a r where
   runAction = NoopLogger . runAction
   reward = NoopLogger . reward
 
+newtype DebugLogger m x = DebugLogger { runDebugLogger :: m x }
+  deriving (Functor, Applicative, Monad, MonadIO, MonadThrow)
+
+instance Monad m => Logger (DebugLogger m) where
+  info   a   = traceM $ T.unpack a
+  info_  a b = traceM $ T.unpack (a <> b)
+  debug  a   = traceM $ T.unpack a
+  debug_ a b = traceM $ T.unpack (a <> b)
+
+instance MonadEnv m s a r => MonadEnv (DebugLogger m) s a r where
+  reset = DebugLogger reset
+  step a = DebugLogger . step a
+  runAction = DebugLogger . runAction
+  reward = DebugLogger . reward
+
