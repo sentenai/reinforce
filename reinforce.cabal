@@ -51,6 +51,7 @@ library
       Control.MonadEnv
       Control.MonadEnv.Internal
       Control.MonadMWCRandom
+      Data.Logger
       Environments.CartPoleV0
       Reinforce.Prelude
       Spaces.State

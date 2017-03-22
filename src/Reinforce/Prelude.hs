@@ -22,6 +22,7 @@ import Control.Monad.Identity as X
 import Control.Applicative as X
 import Data.Vector as X (Vector)
 import GHC.Float as X
+import Data.Text as X (Text)
 
 
 -- | A monadic while loop

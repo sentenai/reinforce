@@ -31,6 +31,7 @@ import qualified Data.Text as T (pack)
 import qualified OpenAI.Gym as OpenAI
 import Control.Exception (AssertionFailed(..))
 import Servant.Client
+import Data.Logger
 import Network.HTTP.Client
 import OpenAI.Gym
   ( GymEnv(..)
@@ -50,6 +51,7 @@ newtype Environment a = Environment { getEnvironment :: RWST GymConfigs (DList E
     , MonadWriter (DList Event)
     , MonadState LastState
     , MonadRWS GymConfigs (DList Event) LastState
+    , Logger
     )
 
 data GymConfigs = GymConfigs InstID Bool
@@ -206,4 +208,8 @@ withMonitor env = do
   where
     m :: InstID -> OpenAI.Monitor
     m (InstID t) = OpenAI.Monitor ("/tmp/"<> T.pack (show CartPoleV0) <>"-" <> t) True False False
+
+-------------------------------------------------------------------------------
+-- Instances
+-------------------------------------------------------------------------------
 
