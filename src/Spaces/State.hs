@@ -28,8 +28,19 @@ instance StateSpace [Float] where
 -- ========================================================================= --
 
 -- | one-hot encode a bounded enumerable
-oneHot :: forall n e . (Num n, Bounded e, Enum e) => e -> Vector n
+-- oneHot :: forall n e . (Num n, Bounded e, Enum e) => e -> Vector n
+-- oneHot e = V.unsafeUpd zeros [(fromEnum e, 1)]
+--   where
+--     zeros :: Vector n
+--     zeros = V.fromList $ replicate (fromEnum (maxBound :: e)) 0
+
+class (Bounded a, Enum a) => DiscreteSpace a
+
+-- | one-hot encode a bounded enumerable
+oneHot :: forall a . (Bounded a, Enum a) => a -> Vector Double
 oneHot e = V.unsafeUpd zeros [(fromEnum e, 1)]
   where
-    zeros :: Vector n
-    zeros = V.fromList $ replicate (fromEnum (maxBound :: e)) 0
+    zeros :: Vector Double
+    zeros = V.fromList $ replicate (fromEnum (maxBound :: a)) 0
+
+
