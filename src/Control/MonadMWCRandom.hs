@@ -84,45 +84,30 @@ genContVar d = getGen >>= liftIO . Stats.genContVar d
 -- ========================================================================= --
 -- * Utility functions functions
 
--- | Sample a single index from a list of probabilities, treating the list as a
--- distribution
-sampleFrom :: (MonadIO m, MonadThrow m, MonadMWCRandom m) => [Double] -> m Int
-sampleFrom xs = uniform
-  >>= return . sampleUsing xs
-  >>= \case
-    Just p -> return p
-    Nothing -> do
-      if diff > eps
-      then throwM $ InvalidDistribution "probabilities sum to less than 1"
-      else do
-        liftIO . print $ "WARNING: probabilities sum to less than 1"
-        return $ length xs - 1
+-- | Sample a single index from a list of weights, converting the list into
+-- a distribution
+sampleFrom :: (MonadIO m, MonadMWCRandom m) => [Double] -> m Int
+sampleFrom xs = uniform >>= return . choose
   where
-    eps, diff :: Double
-    diff = abs (sum xs - 1)
-    eps = 0.0001
+    dist :: [Double]
+    dist = map (/ total) xs
 
-data SampleException
-  = InvalidDistribution Text
-  deriving (Generic, Show)
+    total :: Double
+    total = sum xs
 
-instance Exception SampleException
+    choose :: Double -> Int
+    choose n =
+      -- Return the head index (unsafeHead is safe since the last elem's snd must be 1.0)
+      fst . unsafeHead .
 
--- | Sample an index from a list of probabilities, treating the list as a
--- distribution and taking some randomly generated seed value
-sampleUsing :: [Double] -> Double -> Maybe Int
-sampleUsing xs n =
-  -- Return the head index (unsafeHead is safe since the last elem's snd must be 1.0)
-  fmap fst . head .
+      -- Drop while the cumulative sum is < the given value
+      dropWhile ((< n) . snd) .
 
-  -- Drop while the cumulative sum is < the given value
-  dropWhile ((< n) . snd) .
+      -- Pair each elem with its index
+      zip [0..] .
 
-  -- Pair each elem with its index
-  zip [0..] .
-
-  -- Transform list of probabilities to cumulative sum
-  scanl1 (+) $ xs
+      -- Transform list of probabilities to cumulative sum
+      scanl1 (+) $ dist
 
 
 -- ========================================================================= --
