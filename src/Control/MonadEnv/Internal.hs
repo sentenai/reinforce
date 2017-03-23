@@ -25,36 +25,8 @@ type Reward = Double
 -- | An observation of the environment will either show that the environment is
 -- done with the episode (yielding 'Done') or will return the reward of
 -- the last action performed and the next state
-data Obs r o = Done | Next !r !o
+data Obs r o = Done !r | Next !r !o   -- FIXME: also have @Initial !o@
   deriving (Show, Eq)
-
-
-instance (Num r, Monoid o) => Monoid (Obs r o) where
-  mempty = Done
-
-  Done `mappend` _ = Done
-  _ `mappend` Done = Done
-  Next r0 a `mappend` Next r1 b = Next (r0+r1) (a `mappend` b)
-
-
-instance Functor (Obs r) where
-  fmap _ Done = Done
-  fmap fn (Next r o) = Next r (fn o)
-
-
-instance Num r => Applicative (Obs r) where
-  pure a = Next 0 a
-
-  Done <*> _ = Done
-  _ <*> Done = Done
-  (Next _ fn) <*> (Next r a) = Next r (fn a)
-
-
-instance Num r => Alternative (Obs r) where
-  empty = Done
-
-  Done <|> r@(Next _ _) = r
-  l <|> _ = l
 
 
 -- * The Environment Monad

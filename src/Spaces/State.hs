@@ -41,6 +41,6 @@ oneHot :: forall a . (Bounded a, Enum a) => a -> Vector Double
 oneHot e = V.unsafeUpd zeros [(fromEnum e, 1)]
   where
     zeros :: Vector Double
-    zeros = V.fromList $ replicate (fromEnum (maxBound :: a)) 0
+    zeros = V.fromList $ replicate (fromEnum (maxBound :: a) + 1) 0
 
 

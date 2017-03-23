@@ -58,7 +58,8 @@ data GymConfigs = GymConfigs InstID Bool
 
 type EpNum = Integer
 
-type LastState = (EpNum, StateCP)
+data LastState = LastState EpNum StateCP | Uninitialized EpNum
+  deriving (Eq, Show)
 
 data Event = Event EpNum StateCP Action Double
   deriving Show
@@ -67,6 +68,7 @@ data Event = Event EpNum StateCP Action Double
 data GymException
   = UnexpectedServerResponse [Char]
   | TypeError [Char]
+  | EnvironmentRequiresReset
   deriving (Show)
 
 
@@ -138,20 +140,25 @@ instance MonadEnv Environment StateCP Action Reward where
     i <- getInstID
     Observation o <- inEnvironment . OpenAI.envReset $ i
     n@(Next _ s) <- toState 0 o
-    (ep, _) <- get
-    put (ep+1, s)
+    get >>= \case
+      Uninitialized ep -> put $ LastState (ep+1) s
+      LastState   ep _ -> put $ LastState (ep+1) s
     return n
 
   step :: Action -> Reward -> Environment ObsCP
   step a _ = do
+    get >>= \case
+      Uninitialized _ -> throwM EnvironmentRequiresReset
+      LastState _ _   -> return ()
+
     GymConfigs i mon <- Environment ask
     out <- inEnvironment . OpenAI.envStep i $ renderStep mon
     if OpenAI.done out
-    then return Done
+    then return $ Done (OpenAI.reward out)
     else do
       n@(Next r s) <- toState (OpenAI.reward out) (OpenAI.observation out)
-      (ep, prior) <- get
-      put (ep, s)
+      LastState ep prior <- get
+      put $ LastState ep s
       tell . pure  $ Event ep prior a r
       return n
     where
@@ -184,7 +191,7 @@ runEnvironment m u mon env = runClientM action (ClientEnv m u)
   action :: ClientM (DList Event)
   action = do
     i <- OpenAI.envCreate CartPoleV0
-    (_, w) <- execRWST (getEnvironment renderableEnv) (GymConfigs i mon) (0, mempty)
+    (_, w) <- execRWST (getEnvironment renderableEnv) (GymConfigs i mon) (Uninitialized 0)
     OpenAI.envClose i
     return w
 
