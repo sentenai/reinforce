@@ -92,9 +92,15 @@ sampleFrom xs = uniform
   >>= \case
     Just p -> return p
     Nothing -> do
-      -- throwM $ InvalidDistribution "probabilities sum to less than 1"
-      liftIO . print $ "WARNING: probabilities sum to less than 1"
-      return $ length xs - 1
+      if diff > eps
+      then throwM $ InvalidDistribution "probabilities sum to less than 1"
+      else do
+        liftIO . print $ "WARNING: probabilities sum to less than 1"
+        return $ length xs - 1
+  where
+    eps, diff :: Double
+    diff = abs (sum xs - 1)
+    eps = 0.0001
 
 data SampleException
   = InvalidDistribution Text
