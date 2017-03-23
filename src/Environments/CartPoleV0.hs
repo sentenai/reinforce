@@ -24,7 +24,6 @@ import qualified Spaces.State as Spaces
 import Data.DList
 
 import Data.Aeson
-import System.Process
 import Data.Aeson.Types
 import qualified Data.Vector as V
 import qualified Data.Text as T (pack)

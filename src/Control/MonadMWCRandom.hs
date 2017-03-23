@@ -16,7 +16,7 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# OPTIONS_GHC -Wno-deprecations #-} -- for unsafeHead - reasoning below
+{-# LANGUAGE DeriveGeneric #-}
 module Control.MonadMWCRandom
   ( MonadMWCRandom(..)
   , MonadMWCRandomIO
@@ -84,28 +84,39 @@ genContVar d = getGen >>= liftIO . Stats.genContVar d
 -- ========================================================================= --
 -- * Utility functions functions
 
-
 -- | Sample a single index from a list of probabilities, treating the list as a
 -- distribution
-sampleFrom :: (MonadIO m, MonadMWCRandom m) => [Double] -> m Int
-sampleFrom xs = do
-  n <- uniform
-  return $ (pick n xs) - 1
+sampleFrom :: (MonadIO m, MonadThrow m, MonadMWCRandom m) => [Double] -> m Int
+sampleFrom xs = uniform
+  >>= return . sampleUsing xs
+  >>= \case
+    Just p -> return p
+    Nothing -> do
+      -- throwM $ InvalidDistribution "probabilities sum to less than 1"
+      liftIO . print $ "WARNING: probabilities sum to less than 1"
+      return $ length xs - 1
 
-  where
-    pick :: Double -> [Double] -> Int
-    pick n =
-      -- Return the head index (unsafeHead is safe since the last elem's snd must be 1.0)
-      fst . head .
+data SampleException
+  = InvalidDistribution Text
+  deriving (Generic, Show)
 
-      -- Drop while the cumulative sum is < the given value
-      dropWhile ((< n) . snd) .
+instance Exception SampleException
 
-      -- Pair each elem with its index
-      zip [0..] .
+-- | Sample an index from a list of probabilities, treating the list as a
+-- distribution and taking some randomly generated seed value
+sampleUsing :: [Double] -> Double -> Maybe Int
+sampleUsing xs n =
+  -- Return the head index (unsafeHead is safe since the last elem's snd must be 1.0)
+  fmap fst . head .
 
-      -- Transform list of probabilities to cumulative sum
-      scanl (+) 0
+  -- Drop while the cumulative sum is < the given value
+  dropWhile ((< n) . snd) .
+
+  -- Pair each elem with its index
+  zip [0..] .
+
+  -- Transform list of probabilities to cumulative sum
+  scanl1 (+) $ xs
 
 
 -- ========================================================================= --

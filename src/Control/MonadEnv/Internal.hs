@@ -22,6 +22,7 @@ import Reinforce.Prelude
 -- | The reward signal.
 type Reward = Double
 
+
 -- | An observation of the environment will either show that the environment is
 -- done with the episode (yielding 'Done') or will return the reward of
 -- the last action performed and the next state
