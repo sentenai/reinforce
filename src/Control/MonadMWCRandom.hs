@@ -12,6 +12,7 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -86,8 +87,8 @@ genContVar d = getGen >>= liftIO . Stats.genContVar d
 
 -- | Sample a single index from a list of weights, converting the list into
 -- a distribution
-sampleFrom :: (MonadIO m, MonadMWCRandom m) => [Double] -> m Int
-sampleFrom xs = uniform >>= return . choose
+sampleFrom :: (MonadIO m, MonadMWCRandom m) => [Double] -> m (Int, [Double])
+sampleFrom xs = uniform >>= return . choose >>= return . (,dist)
   where
     dist :: [Double]
     dist = map (/ total) xs
