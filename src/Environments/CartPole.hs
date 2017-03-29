@@ -8,10 +8,6 @@
 -- cart_pole:  Takes an action (0 or 1) and the current values of the
 -- four state variables and updates their values by estimating the state
 -- TAU seconds later.
---
---        get_box:           The cart-pole's state space is divided into 162
---                           boxes.  get_box returns the index of the box into
---                           which the current state appears.
 -- ----------------------------------------------------------------------
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -22,13 +18,14 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Environments.CartPole where
 
-import Reinforce.Prelude
 import Control.MonadEnv.Internal
 import Control.MonadMWCRandom
 import Data.DList
 import Data.Maybe
 import qualified System.Random.MWC as MWC
-import Environments.CartPoleV0 (StateCP(..), Action(..), Event)
+
+import Reinforce.Prelude
+import Data.CartPole
 
 
 newtype Environment a = Environment { getEnvironment :: RWST CartPoleConf (DList Event) CartPoleState IO a }

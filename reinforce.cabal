@@ -51,9 +51,10 @@ library
       Control.MonadEnv
       Control.MonadEnv.Internal
       Control.MonadMWCRandom
+      Data.CartPole
       Data.Logger
       Environments.CartPole
-      Environments.CartPoleV0
+      Environments.Gym.CartPoleV0
       Reinforce.Prelude
       Spaces.State
   default-language: Haskell2010
