@@ -1,4 +1,5 @@
 {-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE DataKinds #-}
 module Data.CartPole where
 
 import Reinforce.Prelude
@@ -8,7 +9,10 @@ import Data.Aeson
 import Data.Aeson.Types
 import qualified Data.Vector as V
 import Control.Exception (AssertionFailed(..))
-
+import Spaces.Action
+import Spaces.State
+import Numeric.LinearAlgebra.Static
+import qualified Numeric.LinearAlgebra as LA
 
 data Event = Event Integer StateCP Action Double
   deriving Show
@@ -16,6 +20,8 @@ data Event = Event Integer StateCP Action Double
 data Action = GoLeft | GoRight
   deriving (Show, Eq, Enum, Bounded)
 
+instance DiscreteActionSpace Action where
+  type Size Action = 2
 
 -- | CartPole has an action space of "discrete 2" containing {0..n-1}
 instance ToJSON Action where
@@ -59,5 +65,10 @@ instance FromJSON StateCP where
     (p, a, v, r) <- parseJSON arr :: Parser (Float, Float, Float, Float)
     return $ StateCP p a v r
   parseJSON invalid    = typeMismatch "StateCP" invalid
+
+instance StateSpaceStatic StateCP where
+  type Size StateCP = 4
+  toR = vector . V.toList . Spaces.toVector
+  fromR = Spaces.fromVector . V.fromList . LA.toList . unwrap
 
 

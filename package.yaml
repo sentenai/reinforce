@@ -14,6 +14,7 @@ default-extensions:
   - MultiParamTypeClasses
   - OverloadedStrings
   - LambdaCase
+  - TypeFamilies
 
 dependencies:
   - ad
@@ -25,6 +26,7 @@ dependencies:
   - dlist
   - gym-http-api
   - hashable
+  - hmatrix
   - http-client
   - iso8601-time
   - lens-aeson

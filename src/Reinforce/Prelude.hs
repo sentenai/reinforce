@@ -10,22 +10,29 @@ module Reinforce.Prelude
   , unsafeHead
   ) where
 
-import Control.Exception as X (assert)
-import Data.List as X (intercalate)
-import Data.Monoid as X
-import Lens.Micro.Platform as X
-import Control.Exception.Safe as X
 import Prelude as X hiding (head)
-import System.Random.MWC as X (GenIO, Variate)
+
+import Control.Applicative      as X
+import Control.Exception.Safe   as X
+import Control.Monad.Identity   as X
+import Control.Monad.Reader     as X
 import Control.Monad.RWS.Strict as X hiding ((<>))
-import Control.Monad.Reader as X
-import Control.Monad.State as X
-import Control.Monad.Identity as X
-import Control.Applicative as X
+import Control.Monad.State      as X
+
+import Data.List   as X (intercalate)
+import Data.Monoid as X
+import Data.Proxy  as X (Proxy)
+import Data.Text   as X (Text)
 import Data.Vector as X (Vector)
-import GHC.Float as X
-import GHC.Generics as X hiding (to)
-import Data.Text as X (Text)
+
+import GHC.Float    as X
+import GHC.Generics as X (Generic)
+import GHC.TypeLits as X
+
+import Lens.Micro.Platform as X
+import System.Random.MWC   as X (GenIO, Variate)
+
+-- ========================================================================= --
 
 import qualified Prelude as P (head)
 
