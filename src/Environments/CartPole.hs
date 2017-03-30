@@ -166,7 +166,9 @@ instance MonadEnv Environment StateCP Action Reward where
           }
 
     let fallen = hasFallen next
-        putNextState = put . CartPoleState epN fallen next
+        putNextState ss = do
+          put $ CartPoleState epN fallen next ss
+          tell . pure $ Event epN s a (if (maybe 0 id ss) > 0 then 1 else 0)
 
     if not fallen
     then putNextState st >> return (Next 1 next)

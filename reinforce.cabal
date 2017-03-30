@@ -58,6 +58,5 @@ library
       Environments.Gym.CartPoleV0
       Reinforce.Prelude
       Spaces.Action
-      Spaces.Observation
       Spaces.State
   default-language: Haskell2010
