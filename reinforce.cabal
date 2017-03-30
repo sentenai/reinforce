@@ -54,6 +54,7 @@ library
       Control.MonadMWCRandom
       Data.CartPole
       Data.Logger
+      Environments.Bandits
       Environments.CartPole
       Environments.Gym.CartPoleV0
       Reinforce.Prelude

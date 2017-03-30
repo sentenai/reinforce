@@ -26,6 +26,7 @@ import qualified System.Random.MWC as MWC
 
 import Reinforce.Prelude
 import Data.CartPole
+import qualified Data.Logger as Logger
 
 
 newtype Environment a = Environment { getEnvironment :: RWST CartPoleConf (DList Event) CartPoleState IO a }
@@ -168,7 +169,7 @@ instance MonadEnv Environment StateCP Action Reward where
     let fallen = hasFallen next
         putNextState ss = do
           put $ CartPoleState epN fallen next ss
-          tell . pure $ Event epN s a (if (maybe 0 id ss) > 0 then 1 else 0)
+          tell . pure $ Logger.Event epN (if (maybe 0 id ss) > 0 then 1 else 0) s a
 
     if not fallen
     then putNextState st >> return (Next 1 next)

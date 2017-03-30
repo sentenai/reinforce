@@ -13,9 +13,9 @@ import Spaces.Action
 import Spaces.State
 import Numeric.LinearAlgebra.Static
 import qualified Numeric.LinearAlgebra as LA
+import qualified Data.Logger as Logger
 
-data Event = Event Integer StateCP Action Double
-  deriving Show
+type Event = Logger.Event Double StateCP Action
 
 data Action = GoLeft | GoRight
   deriving (Show, Eq, Enum, Bounded)

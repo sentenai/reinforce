@@ -10,6 +10,14 @@ import Debug.Trace
 import Control.MonadEnv.Internal
 import qualified Data.Text as T
 
+-- ========================================================================= --
+
+data Event r o a = Event Integer r o a
+  deriving Show
+
+-- ========================================================================= --
+
+
 class Monad m => Logger m where
   info   :: Text -> m ()
   info_  :: Text -> Text -> m ()

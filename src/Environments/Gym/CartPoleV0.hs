@@ -27,14 +27,14 @@ import Data.Aeson
 import qualified Data.Text as T (pack)
 import qualified OpenAI.Gym as OpenAI
 import Servant.Client
-import Data.Logger
+import Data.Logger (Logger)
+import qualified Data.Logger as Logger
 import Network.HTTP.Client
 import OpenAI.Gym
   ( GymEnv(..)
   , InstID(..)
   , Observation(..)
   )
-
 
 newtype Environment a = Environment { getEnvironment :: RWST GymConfigs (DList Event) LastState ClientM a }
   deriving
@@ -141,7 +141,7 @@ instance MonadEnv Environment StateCP Action Reward where
       n@(Next r s) <- toState (OpenAI.reward out) (OpenAI.observation out)
       LastState ep prior <- get
       put $ LastState ep s
-      tell . pure  $ Event ep prior a r
+      tell . pure  $ Logger.Event ep r prior a
       return n
     where
       renderStep :: Bool -> OpenAI.Step
