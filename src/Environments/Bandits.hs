@@ -1,10 +1,15 @@
+{-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Environments.Bandits where
 
-import Control.MonadEnv.Internal
+import Control.MonadEnv.Internal hiding (Reward)
 import Control.MonadMWCRandom
 import qualified Data.Vector as V
+import Data.Vector ((!))
 import Data.DList
 import Data.Maybe
+import qualified Data.Logger as Logger
 import qualified System.Random.MWC as MWC
 
 import Reinforce.Prelude
@@ -17,7 +22,9 @@ data Config = Config
   , gen      :: GenIO
   }
 
+type Reward = Double
 type Action = Int
+type Event = Logger.Event Reward () Action
 
 newtype Environment a = Environment { getEnvironment :: RWST Config (DList Event) () IO a }
   deriving
@@ -42,7 +49,10 @@ defaultBandits n = mkBandits n 2 0.5
 
 mkBandits :: Int -> Int -> Float -> GenIO -> Config
 mkBandits n offset std = Config n offset std $
-  V.fromList $ fmap (`normalDistr` std) [offset .. offset + n - 1]
+  V.fromList $ fmap (`rewardDist` std) [offset .. offset + n - 1]
+  where
+    rewardDist :: Int -> Float -> NormalDistribution
+    rewardDist m s = normalDistr (fromIntegral m) (realToFrac s)
 
 instance MonadMWCRandom Environment where
   getGen = Environment $ ask >>= return . gen
@@ -54,8 +64,8 @@ instance MonadEnv Environment () Action Reward where
 
   step :: Action -> Reward -> Environment (Obs Reward ())
   step a _ = do
-    rwd <- genContVar . (! a) . bandits <$> ask
-    tell . pure $ Event 0 () a rwd
+    rwd <- genContVar =<< (! a) . bandits <$> ask
+    tell . pure $ Logger.Event 0 rwd () a
     return $ Next rwd ()
 
   reward :: Action -> Environment Reward
