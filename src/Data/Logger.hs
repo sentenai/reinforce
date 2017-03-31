@@ -68,9 +68,9 @@ instance Monad m => Logger (NoopLogger m) where
 
 instance MonadEnv m s a r => MonadEnv (NoopLogger m) s a r where
   reset = NoopLogger reset
-  step a = NoopLogger . step a
-  runAction = NoopLogger . runAction
-  reward = NoopLogger . reward
+  step a = NoopLogger $ step a
+  -- runAction = NoopLogger . runAction
+  -- reward = NoopLogger . reward
 
 newtype DebugLogger m x = DebugLogger { runDebugLogger :: m x }
   deriving (Functor, Applicative, Monad, MonadIO, MonadThrow)
@@ -83,7 +83,7 @@ instance Monad m => Logger (DebugLogger m) where
 
 instance MonadEnv m s a r => MonadEnv (DebugLogger m) s a r where
   reset = DebugLogger reset
-  step a = DebugLogger . step a
-  runAction = DebugLogger . runAction
-  reward = DebugLogger . reward
+  step a = DebugLogger $ step a
+  -- runAction = DebugLogger . runAction
+  -- reward = DebugLogger . reward
 

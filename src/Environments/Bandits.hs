@@ -62,15 +62,15 @@ instance MonadEnv Environment () Action Reward where
   reset :: Environment (Obs Reward ())
   reset = return $ Next 0 ()
 
-  step :: Action -> Reward -> Environment (Obs Reward ())
-  step a _ = do
+  step :: Action -> Environment (Obs Reward ())
+  step a = do
     rwd <- genContVar =<< (! a) . bandits <$> ask
     tell . pure $ Logger.Event 0 rwd () a
     return $ Next rwd ()
 
-  reward :: Action -> Environment Reward
-  reward _ = return 0
+reward :: Action -> Environment Reward
+reward a = genContVar =<< (! a) . bandits <$> ask
 
-  runAction :: Action -> Environment ()
-  runAction _ = return ()
+  -- runAction :: Action -> Environment ()
+  -- runAction _ = return ()
 

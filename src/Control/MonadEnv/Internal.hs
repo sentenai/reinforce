@@ -38,16 +38,16 @@ class (Num r, Monad e, Enum a) => MonadEnv e s a r | e -> s a r where
   -- by calling reset, which returns an initial observation.
   reset :: e (Obs r s)
 
-  -- | Step though an environment using an action.
-  step :: a -> r -> e (Obs r s)
+  -- | Step though an environment using an action and it's reward
+  step :: a -> e (Obs r s)
 
-  -- | Perform an action given to the environment by an agent and run
-  -- all effects in the environment
-  runAction :: a -> e ()
+  -- -- | Perform an action given to the environment by an agent and run
+  -- -- all effects in the environment
+  -- runAction :: a -> e ()
 
   -- | Calculate how much reward is given when running an action in the
   -- context of the environment
-  reward :: a -> e r
+  -- reward :: a -> e r
 
 
 -- * Basic Instances
@@ -56,26 +56,26 @@ instance MonadEnv e s a r => MonadEnv (ReaderT t e) s a r where
   reset :: ReaderT t e (Obs r s)
   reset = lift reset
 
-  step :: a -> r -> ReaderT t e (Obs r s)
-  step a = lift . step a
+  step :: a -> ReaderT t e (Obs r s)
+  step a = lift $ step a
 
-  runAction :: a -> ReaderT t e ()
-  runAction = lift . runAction
+  -- runAction :: a -> ReaderT t e ()
+  -- runAction = lift . runAction
 
-  reward :: a -> ReaderT t e r
-  reward = lift . reward
+  -- reward :: a -> ReaderT t e r
+  -- reward = lift . reward
 
 
 instance MonadEnv e s a r => MonadEnv (StateT t e) s a r where
   reset :: StateT t e (Obs r s)
   reset = lift reset
 
-  step :: a -> r -> StateT t e (Obs r s)
-  step a = lift . step a
+  step :: a -> StateT t e (Obs r s)
+  step a = lift $ step a
 
-  runAction :: a -> StateT t e ()
-  runAction = lift . runAction
+  -- runAction :: a -> StateT t e ()
+  -- runAction = lift . runAction
 
-  reward :: a -> StateT t e r
-  reward = lift . reward
+  -- reward :: a -> StateT t e r
+  -- reward = lift . reward
 

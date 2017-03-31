@@ -127,8 +127,8 @@ instance MonadEnv Environment StateCP Action Reward where
       LastState   ep _ -> put $ LastState (ep+1) s
     return n
 
-  step :: Action -> Reward -> Environment (Obs Reward StateCP)
-  step a _ = do
+  step :: Action -> Environment (Obs Reward StateCP)
+  step a = do
     get >>= \case
       Uninitialized _ -> throwM EnvironmentRequiresReset
       LastState _ _   -> return ()
@@ -148,11 +148,11 @@ instance MonadEnv Environment StateCP Action Reward where
       renderStep = OpenAI.Step (toJSON a)
 
   -- | no reward function is needed when interacting with the OpenAI gym
-  reward :: Action -> Environment Reward
-  reward _ = return 0
+  -- reward :: Action -> Environment Reward
+  -- reward _ = return 0
 
   -- | no action needs to be run when interacting with the OpenAI gym
-  runAction :: Action -> Environment ()
-  runAction _ = return ()
+  -- runAction :: Action -> Environment ()
+  -- runAction _ = return ()
 
 

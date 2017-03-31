@@ -140,8 +140,8 @@ instance MonadEnv Environment StateCP Action Reward where
     put $ CartPoleState (epN+1) False s st
     return $ Next 0 s
 
-  step :: Action -> Reward -> Environment (Obs Reward StateCP)
-  step a _ = do
+  step :: Action -> Environment (Obs Reward StateCP)
+  step a = do
     conf <- ask
     CartPoleState epN _ s st <- get
 
@@ -185,12 +185,12 @@ instance MonadEnv Environment StateCP Action Reward where
         ++ "You should always call 'reset()' once you receive 'done = True' -- any further steps are undefined behavior."
 
   -- | no reward function is needed when interacting with the OpenAI gym
-  reward :: Action -> Environment Reward
-  reward _ = return 0
+  -- reward :: Action -> Environment Reward
+  -- reward _ = return 0
 
   -- | no action needs to be run when interacting with the OpenAI gym
-  runAction :: Action -> Environment ()
-  runAction _ = return ()
+  -- runAction :: Action -> Environment ()
+  -- runAction _ = return ()
 
 
 
