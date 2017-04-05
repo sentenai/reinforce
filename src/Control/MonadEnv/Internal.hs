@@ -24,9 +24,10 @@ type Reward = Double
 
 
 -- | An observation of the environment will either show that the environment is
--- done with the episode (yielding 'Done') or will return the reward of
--- the last action performed and the next state
-data Obs r o = Done !r | Next !r !o   -- FIXME: also have @Initial !o@
+-- done with the episode (yielding 'Done'), that the environment is starting
+-- 'Initial', or will return the reward of the last action performed and the
+-- next state
+data Obs r o = Initial !o | Next !r !o | Done !r
   deriving (Show, Eq)
 
 
@@ -59,23 +60,10 @@ instance MonadEnv e s a r => MonadEnv (ReaderT t e) s a r where
   step :: a -> ReaderT t e (Obs r s)
   step a = lift $ step a
 
-  -- runAction :: a -> ReaderT t e ()
-  -- runAction = lift . runAction
-
-  -- reward :: a -> ReaderT t e r
-  -- reward = lift . reward
-
-
 instance MonadEnv e s a r => MonadEnv (StateT t e) s a r where
   reset :: StateT t e (Obs r s)
   reset = lift reset
 
   step :: a -> StateT t e (Obs r s)
   step a = lift $ step a
-
-  -- runAction :: a -> StateT t e ()
-  -- runAction = lift . runAction
-
-  -- reward :: a -> StateT t e r
-  -- reward = lift . reward
 
