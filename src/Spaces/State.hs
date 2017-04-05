@@ -1,15 +1,32 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 module Spaces.State where
 
 import Reinforce.Prelude
 import qualified Data.Vector as V
+import GHC.TypeLits
+import Numeric.LinearAlgebra.Static
+
+
+class StateSpaceStatic s where
+  type Size s :: Nat
+  toR   :: s -> R (Size s)
+  fromR :: MonadThrow m => R (Size s) -> m s
+
+instance StateSpaceStatic () where
+  type Size () = 0
+  toR = const $ vector []
+  fromR _ = return ()
+
+-- ========================================================================= --
 
 class StateSpace s where
   toVector   :: s -> Vector Double
   fromVector :: MonadThrow m => Vector Double -> m s
+
 
 instance StateSpace (Vector Double) where
   toVector   = id
@@ -23,24 +40,13 @@ instance StateSpace [Float] where
   toVector   = V.fromList . fmap realToFrac
   fromVector = return . fmap double2Float . V.toList
 
-
-
 -- ========================================================================= --
-
--- | one-hot encode a bounded enumerable
--- oneHot :: forall n e . (Num n, Bounded e, Enum e) => e -> Vector n
--- oneHot e = V.unsafeUpd zeros [(fromEnum e, 1)]
---   where
---     zeros :: Vector n
---     zeros = V.fromList $ replicate (fromEnum (maxBound :: e)) 0
-
-class (Bounded a, Enum a) => DiscreteSpace a
 
 -- | one-hot encode a bounded enumerable
 oneHot :: forall a . (Bounded a, Enum a) => a -> Vector Double
 oneHot e = V.unsafeUpd zeros [(fromEnum e, 1)]
   where
     zeros :: Vector Double
-    zeros = V.fromList $ replicate (fromEnum (maxBound :: a)) 0
+    zeros = V.fromList $ replicate (fromEnum (maxBound :: a) + 1) 0
 
 

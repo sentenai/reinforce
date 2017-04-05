@@ -12,11 +12,12 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# OPTIONS_GHC -Wno-deprecations #-} -- for unsafeHead - reasoning below
+{-# LANGUAGE DeriveGeneric #-}
 module Control.MonadMWCRandom
   ( MonadMWCRandom(..)
   , MonadMWCRandomIO
@@ -84,19 +85,21 @@ genContVar d = getGen >>= liftIO . Stats.genContVar d
 -- ========================================================================= --
 -- * Utility functions functions
 
-
--- | Sample a single index from a list of probabilities, treating the list as a
--- distribution
-sampleFrom :: (MonadIO m, MonadMWCRandom m) => [Double] -> m Int
-sampleFrom xs = do
-  n <- uniform
-  return $ (pick n xs) - 1
-
+-- | Sample a single index from a list of weights, converting the list into
+-- a distribution
+sampleFrom :: (MonadIO m, MonadMWCRandom m) => [Double] -> m (Int, [Double])
+sampleFrom xs = uniform >>= return . choose >>= return . (,dist)
   where
-    pick :: Double -> [Double] -> Int
-    pick n =
+    dist :: [Double]
+    dist = map (/ total) xs
+
+    total :: Double
+    total = sum xs
+
+    choose :: Double -> Int
+    choose n =
       -- Return the head index (unsafeHead is safe since the last elem's snd must be 1.0)
-      fst . head .
+      fst . unsafeHead .
 
       -- Drop while the cumulative sum is < the given value
       dropWhile ((< n) . snd) .
@@ -105,7 +108,7 @@ sampleFrom xs = do
       zip [0..] .
 
       -- Transform list of probabilities to cumulative sum
-      scanl (+) 0
+      scanl1 (+) $ dist
 
 
 -- ========================================================================= --
@@ -139,15 +142,15 @@ instance Monad m => MonadMWCRandom (MWCRandT m) where
 -- | An instance which allows for an environment to hold a reference to a shared
 -- MWC-random generator
 instance MonadEnv m s a r => MonadEnv (MWCRandT m) s a r where
-  --reset :: MWCRandT m (Obs r s)
+  reset :: MWCRandT m (Obs r s)
   reset = lift reset
 
-  step :: a -> r -> MWCRandT m (Obs r s)
-  step a = lift . step a
+  step :: a -> MWCRandT m (Obs r s)
+  step a = lift $ step a
 
-  runAction :: a -> MWCRandT m ()
-  runAction = lift . runAction
+  -- runAction :: a -> MWCRandT m ()
+  -- runAction = lift . runAction
 
-  reward :: a -> MWCRandT m r
-  reward = lift . reward
+  -- reward :: a -> MWCRandT m r
+  -- reward = lift . reward
 

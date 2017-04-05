@@ -28,8 +28,7 @@ reset = I.reset
 
 -- | API to step though an environment using an action.
 step :: MonadEnv e s a r => a -> e (Obs r s)
-step a = do
-  I.runAction a
-  I.reward a >>= I.step a
+step a = I.step a
+--step a = I.reward a >>= I.step a
 
 
