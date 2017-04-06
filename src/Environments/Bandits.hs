@@ -11,6 +11,7 @@ import Data.DList
 import Data.Maybe
 import qualified Data.Logger as Logger
 import qualified System.Random.MWC as MWC
+import Control.Exception.Safe (assert)
 
 import Reinforce.Prelude
 
@@ -22,9 +23,15 @@ data Config = Config
   , gen      :: GenIO
   }
 
-type Reward = Double
-type Action = Int
 type Event = Logger.Event Reward () Action
+type Reward = Double
+newtype Action = Action { unAction :: Int }
+  deriving (Eq, Ord, Show, Enum, Bounded)
+
+mkAction :: Int -> Environment Action
+mkAction i = Environment $ do
+  n <- nBandits <$> ask
+  assert (i > n || i < 0) (pure $ Action i)
 
 newtype Environment a = Environment { getEnvironment :: RWST Config (DList Event) () IO a }
   deriving
@@ -55,7 +62,7 @@ mkBandits n offset std = Config n offset std $
     rewardDist m s = normalDistr (fromIntegral m) (realToFrac s)
 
 instance MonadMWCRandom Environment where
-  getGen = Environment $ ask >>= return . gen
+  getGen = Environment $ fmap gen ask
 
 instance MonadEnv Environment () Action Reward where
   -- this isn't an episodic environment... we'll have to split this out later
@@ -63,14 +70,7 @@ instance MonadEnv Environment () Action Reward where
   reset = return $ Next 0 ()
 
   step :: Action -> Environment (Obs Reward ())
-  step a = do
+  step (Action a) = do
     rwd <- genContVar =<< (! a) . bandits <$> ask
-    tell . pure $ Logger.Event 0 rwd () a
+    tell . pure $ Logger.Event 0 rwd () (Action a)
     return $ Next rwd ()
-
-reward :: Action -> Environment Reward
-reward a = genContVar =<< (! a) . bandits <$> ask
-
-  -- runAction :: Action -> Environment ()
-  -- runAction _ = return ()
-

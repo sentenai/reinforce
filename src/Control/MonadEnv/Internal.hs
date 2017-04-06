@@ -34,6 +34,7 @@ data Obs r o = Initial !o | Next !r !o | Done !r
 -- * The Environment Monad
 
 -- | Our environment monad
+-- TODO: Think about two typeclasses: ContinuousMonadEnv and EpisodicMonadEnv
 class (Num r, Monad e, Enum a) => MonadEnv e s a r | e -> s a r where
   -- | A process (in this case an episode of json indexing) gets started
   -- by calling reset, which returns an initial observation.

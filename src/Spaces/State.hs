@@ -16,6 +16,13 @@ class StateSpaceStatic s where
   toR   :: s -> R (Size s)
   fromR :: MonadThrow m => R (Size s) -> m s
 
+instance StateSpaceStatic () where
+  type Size () = 0
+  toR = const $ vector []
+  fromR _ = return ()
+
+-- ========================================================================= --
+
 class StateSpace s where
   toVector   :: s -> Vector Double
   fromVector :: MonadThrow m => Vector Double -> m s

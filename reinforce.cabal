@@ -25,8 +25,7 @@ library
       src
   default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
   build-depends:
-      ad
-    , aeson
+      aeson
     , base
     , binary
     , bytestring
@@ -36,12 +35,9 @@ library
     , hashable
     , hmatrix
     , http-client
-    , iso8601-time
-    , lens-aeson
     , microlens-platform
     , mtl
     , mwc-random
-    , process
     , safe-exceptions
     , servant-client
     , statistics

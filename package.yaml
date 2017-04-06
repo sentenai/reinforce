@@ -17,7 +17,6 @@ default-extensions:
   - TypeFamilies
 
 dependencies:
-  - ad
   - aeson
   - base
   - binary
@@ -28,12 +27,9 @@ dependencies:
   - hashable
   - hmatrix
   - http-client
-  - iso8601-time
-  - lens-aeson
   - microlens-platform
   - mtl
   - mwc-random
-  - process
   - safe-exceptions
   - servant-client
   - statistics
