@@ -27,7 +27,7 @@ type Reward = Double
 -- done with the episode (yielding 'Done'), that the environment is starting
 -- 'Initial', or will return the reward of the last action performed and the
 -- next state
-data Obs r o = Initial !o | Next !r !o | Done !r
+data Obs r o = Initial !o | Next !r !o | Done !r | Terminal
   deriving (Show, Eq)
 
 
