@@ -69,6 +69,6 @@ instance FromJSON StateCP where
 instance StateSpaceStatic StateCP where
   type Size StateCP = 4
   toR = vector . V.toList . Spaces.toVector
-  fromR = Spaces.fromVector . V.fromList . LA.toList . unwrap
+  -- fromR = Spaces.fromVector . V.fromList . LA.toList . unwrap
 
 

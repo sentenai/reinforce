@@ -147,10 +147,3 @@ instance MonadEnv m s a r => MonadEnv (MWCRandT m) s a r where
 
   step :: a -> MWCRandT m (Obs r s)
   step a = lift $ step a
-
-  -- runAction :: a -> MWCRandT m ()
-  -- runAction = lift . runAction
-
-  -- reward :: a -> MWCRandT m r
-  -- reward = lift . reward
-

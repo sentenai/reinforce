@@ -14,12 +14,12 @@ import Numeric.LinearAlgebra.Static
 class StateSpaceStatic s where
   type Size s :: Nat
   toR   :: s -> R (Size s)
-  fromR :: MonadThrow m => R (Size s) -> m s
+  -- fromR :: MonadThrow m => R (Size s) -> m s
 
 instance StateSpaceStatic () where
   type Size () = 0
   toR = const $ vector []
-  fromR _ = return ()
+  -- fromR _ = return ()
 
 -- ========================================================================= --
 
