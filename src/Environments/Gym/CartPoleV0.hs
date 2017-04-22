@@ -117,15 +117,15 @@ inEnvironment = Environment . lift
 -------------------------------------------------------------------------------
 
 instance MonadEnv Environment StateCP Action Reward where
-  reset :: Environment (Obs Reward StateCP)
+  reset :: Environment (Initial StateCP)
   reset = do
     i <- getInstID
     Observation o <- inEnvironment . OpenAI.envReset $ i
-    n@(Next _ s) <- toState 0 o
+    Next _ s <- toState 0 o
     get >>= \case
       Uninitialized ep -> put $ LastState (ep+1) s
       LastState   ep _ -> put $ LastState (ep+1) s
-    return n
+    return $ Initial s
 
   step :: Action -> Environment (Obs Reward StateCP)
   step a = do

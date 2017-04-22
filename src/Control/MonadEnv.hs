@@ -19,11 +19,11 @@ module Control.MonadEnv
   ) where
 
 import Reinforce.Prelude
-import Control.MonadEnv.Internal (Obs(..), Reward, MonadEnv)
+import Control.MonadEnv.Internal (Obs(..), Reward, MonadEnv, Initial)
 import qualified Control.MonadEnv.Internal as I
 
 -- | API for resetting an environment
-reset :: MonadEnv e s a r => e (Obs r s)
+reset :: MonadEnv e s a r => e (Initial s)
 reset = I.reset
 
 -- | API to step though an environment using an action.

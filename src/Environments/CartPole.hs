@@ -133,12 +133,12 @@ uniformRandStateCP
 
 
 instance MonadEnv Environment StateCP Action Reward where
-  reset :: Environment (Obs Reward StateCP)
+  reset :: Environment (Initial StateCP)
   reset = do
     s <- uniformRandStateCP
     CartPoleState epN _ _ st <- get
     put $ CartPoleState (epN+1) False s st
-    return $ Next 0 s
+    return $ Initial s
 
   step :: Action -> Environment (Obs Reward StateCP)
   step a = do

@@ -66,8 +66,8 @@ instance MonadMWCRandom Environment where
 
 instance MonadEnv Environment () Action Reward where
   -- this isn't an episodic environment... we'll have to split this out later
-  reset :: Environment (Obs Reward ())
-  reset = return $ Next 0 ()
+  reset :: Environment (Initial ())
+  reset = return $ Initial ()
 
   step :: Action -> Environment (Obs Reward ())
   step (Action a) = do

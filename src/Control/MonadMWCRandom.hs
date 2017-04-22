@@ -39,7 +39,7 @@ module Control.MonadMWCRandom
 import Reinforce.Prelude
 import qualified System.Random.MWC as MWC
 import qualified Statistics.Distribution as Stats
-import Control.MonadEnv.Internal (MonadEnv(..), Obs)
+import Control.MonadEnv.Internal (MonadEnv(..), Obs, Initial)
 
 
 -- | MonadMWCRandom for public use. FIXME: use with PrimState so that we can use ST
@@ -142,7 +142,7 @@ instance Monad m => MonadMWCRandom (MWCRandT m) where
 -- | An instance which allows for an environment to hold a reference to a shared
 -- MWC-random generator
 instance MonadEnv m s a r => MonadEnv (MWCRandT m) s a r where
-  reset :: MWCRandT m (Obs r s)
+  reset :: MWCRandT m (Initial s)
   reset = lift reset
 
   step :: a -> MWCRandT m (Obs r s)

@@ -23,11 +23,15 @@ import Reinforce.Prelude
 type Reward = Double
 
 
+-- | When starting an episode, we want to send an indication that the environment
+-- is starting without conflating this type with future steps (in @Obs r o@)
+data Initial o = Initial !o
+
 -- | An observation of the environment will either show that the environment is
--- done with the episode (yielding 'Done'), that the environment is starting
--- 'Initial', or will return the reward of the last action performed and the
+-- done with the episode (yielding 'Done'), that the environment has already
+-- 'Terminated', or will return the reward of the last action performed and the
 -- next state
-data Obs r o = Initial !o | Next !r !o | Done !r | Terminated
+data Obs r o = Next !r !o | Done !r | Terminated
   deriving (Show, Eq)
 
 
@@ -38,7 +42,7 @@ data Obs r o = Initial !o | Next !r !o | Done !r | Terminated
 class (Num r, Monad e, Enum a) => MonadEnv e s a r | e -> s a r where
   -- | A process (in this case an episode of json indexing) gets started
   -- by calling reset, which returns an initial observation.
-  reset :: e (Obs r s)
+  reset :: e (Initial s)
 
   -- | Step though an environment using an action and it's reward
   step :: a -> e (Obs r s)
@@ -55,14 +59,14 @@ class (Num r, Monad e, Enum a) => MonadEnv e s a r | e -> s a r where
 -- * Basic Instances
 
 instance MonadEnv e s a r => MonadEnv (ReaderT t e) s a r where
-  reset :: ReaderT t e (Obs r s)
+  reset :: ReaderT t e (Initial s)
   reset = lift reset
 
   step :: a -> ReaderT t e (Obs r s)
   step a = lift $ step a
 
 instance MonadEnv e s a r => MonadEnv (StateT t e) s a r where
-  reset :: StateT t e (Obs r s)
+  reset :: StateT t e (Initial s)
   reset = lift reset
 
   step :: a -> StateT t e (Obs r s)
