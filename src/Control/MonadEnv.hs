@@ -15,6 +15,7 @@ module Control.MonadEnv
   , reset
   , step
   , Obs(..)
+  , Initial(..)
   , Reward
   ) where
 
