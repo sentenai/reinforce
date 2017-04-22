@@ -7,7 +7,6 @@ module Spaces.State where
 
 import Reinforce.Prelude
 import qualified Data.Vector as V
-import GHC.TypeLits
 import Numeric.LinearAlgebra.Static
 
 

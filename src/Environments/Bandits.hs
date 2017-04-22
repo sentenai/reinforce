@@ -1,6 +1,7 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DeriveGeneric #-}
 module Environments.Bandits where
 
 import Control.MonadEnv.Internal hiding (Reward)
@@ -12,11 +13,12 @@ import Data.Maybe
 import qualified Data.Logger as Logger
 import qualified System.Random.MWC as MWC
 import Control.Exception.Safe (assert)
+import Spaces.Shared
 
 import Reinforce.Prelude
 
 data Config = Config
-  { nBandits :: Int
+  { nBandits :: Int -- | only 10 arms for the time being
   , offset   :: Int
   , stdDev   :: Float
   , bandits  :: Vector NormalDistribution
@@ -24,9 +26,17 @@ data Config = Config
   }
 
 type Event = Logger.Event Reward () Action
+
 type Reward = Double
+
 newtype Action = Action { unAction :: Int }
-  deriving (Eq, Ord, Show, Enum, Bounded)
+  deriving (Eq, Ord, Show, Enum, Generic)
+
+instance Bounded Action where
+  minBound = Action 0
+  maxBound = Action 9
+
+instance Hashable Action where
 
 mkAction :: Int -> Environment Action
 mkAction i = Environment $ do
@@ -46,13 +56,13 @@ newtype Environment a = Environment { getEnvironment :: RWST Config (DList Event
     , MonadRWS Config (DList Event) ()
     )
 
-runEnvironment :: Environment () -> Config -> IO (DList Event)
-runEnvironment (Environment m) c = do
+runEnvironment :: Config -> Environment () -> IO (DList Event)
+runEnvironment c (Environment m) = do
   g <- MWC.createSystemRandom
   snd <$> evalRWST m c ()
 
-defaultBandits :: Int -> GenIO -> Config
-defaultBandits n = mkBandits n 2 0.5
+defaultBandits :: GenIO -> Config
+defaultBandits = mkBandits 10 2 0.1
 
 mkBandits :: Int -> Int -> Float -> GenIO -> Config
 mkBandits n offset std = Config n offset std $

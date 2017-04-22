@@ -9,10 +9,9 @@ import Data.Aeson
 import Data.Aeson.Types
 import qualified Data.Vector as V
 import Control.Exception (AssertionFailed(..))
-import Spaces.Action
-import Spaces.State
+import Spaces
+import Spaces.Action (Size)
 import Numeric.LinearAlgebra.Static
-import qualified Numeric.LinearAlgebra as LA
 import qualified Data.Logger as Logger
 
 type Event = Logger.Event Double StateCP Action
@@ -37,8 +36,11 @@ data StateCP = StateCP
   , angleRate :: Float  -- ^ rate of change of the angle
   } deriving (Show, Eq)
 
+instance Defaulted StateCP where
+  defaulted = StateCP 0 0 0 0
+
 instance Monoid StateCP where
-  mempty = StateCP 0 0 0 0
+  mempty = defaulted
   -- FIXME : remove this
 
 instance Spaces.StateSpace StateCP where
