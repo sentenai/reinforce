@@ -21,6 +21,8 @@ module Environments.Gym.CartPoleV0 where
 import Reinforce.Prelude
 import Control.MonadEnv.Internal
 import Data.CartPole
+import Environments.Gym.Internal hiding (inEnvironment, getEnvironment)
+import qualified Environments.Gym.Internal as I
 
 import Data.DList
 import Data.Aeson
@@ -36,7 +38,9 @@ import OpenAI.Gym
   , Observation(..)
   )
 
-newtype Environment a = Environment { getEnvironment :: RWST GymConfigs (DList Event) LastState ClientM a }
+
+newtype Environment a = Environment
+  { getEnvironment :: RWST GymConfigs (DList Event) (LastState StateCP) ClientM a }
   deriving
     ( Functor
     , Applicative
@@ -45,71 +49,26 @@ newtype Environment a = Environment { getEnvironment :: RWST GymConfigs (DList E
     , MonadThrow
     , MonadReader GymConfigs
     , MonadWriter (DList Event)
-    , MonadState LastState
-    , MonadRWS GymConfigs (DList Event) LastState
+    , MonadState (LastState StateCP)
+    , MonadRWS GymConfigs (DList Event) (LastState StateCP)
     , Logger
     )
-
-data GymConfigs
-  = GymConfigs InstID Bool    -- ^ the instance id, as well as a flag of if we want to render the state
-
-data LastState
-  = LastState Integer StateCP -- ^ the episode number and last state
-  | Uninitialized Integer     -- ^ a flag that the state is no longer initialized, and the current episode
-  deriving (Eq, Show)
-
-data GymException
-  = UnexpectedServerResponse [Char]
-  | TypeError [Char]
-  | EnvironmentRequiresReset
-  deriving (Show)
-
-instance Exception GymException where
 
 -------------------------------------------------------------------------------
 -- Helper functions
 
 runEnvironment :: Manager -> BaseUrl -> Bool -> Environment a -> IO (Either ServantError (DList Event))
-runEnvironment m u mon env = runClientM action (ClientEnv m u)
-  where
-  action :: ClientM (DList Event)
-  action = do
-    i <- OpenAI.envCreate CartPoleV0
-    (_, w) <- execRWST (getEnvironment renderableEnv) (GymConfigs i mon) (Uninitialized 0)
-    OpenAI.envClose i
-    return w
+runEnvironment = I.runEnvironment CartPoleV0
 
-  renderableEnv :: Environment ()
-  renderableEnv =
-    if mon
-    then withMonitor env
-    else env >> return ()
-
-
-getInstID :: Environment InstID
-getInstID = Environment $ ask >>= \(GymConfigs i _) -> return i
-
-
-withMonitor :: Environment a -> Environment ()
-withMonitor env = do
-  i <- getInstID
-  inEnvironment $ OpenAI.envMonitorStart i (m i)
-  _ <- env
-  inEnvironment $ OpenAI.envMonitorClose i
-  where
-    m :: InstID -> OpenAI.Monitor
-    m (InstID t) = OpenAI.Monitor ("/tmp/"<> T.pack (show CartPoleV0) <>"-" <> t) True False False
-
+instance GymEnvironment Environment StateCP Action Reward where
+  inEnvironment = Environment . lift
+  getEnvironment = getEnvironment
 
 toState :: MonadThrow m => Reward -> Value -> m (Obs Reward StateCP)
 toState r o =
   case (fromJSON o :: Result StateCP) of
     Error str -> throw $ UnexpectedServerResponse str
     Success o -> return $ Next r o
-
-
-inEnvironment :: ClientM a -> Environment a
-inEnvironment = Environment . lift
 
 
 -------------------------------------------------------------------------------
@@ -120,7 +79,7 @@ instance MonadEnv Environment StateCP Action Reward where
   reset :: Environment (Initial StateCP)
   reset = do
     i <- getInstID
-    Observation o <- inEnvironment . OpenAI.envReset $ i
+    Observation o <- I.inEnvironment . OpenAI.envReset $ i
     Next _ s <- toState 0 o
     get >>= \case
       Uninitialized ep -> put $ LastState (ep+1) s
@@ -134,7 +93,7 @@ instance MonadEnv Environment StateCP Action Reward where
       LastState _ _   -> return ()
 
     GymConfigs i mon <- Environment ask
-    out <- inEnvironment . OpenAI.envStep i $ renderStep mon
+    out <- I.inEnvironment . OpenAI.envStep i $ renderStep mon
     if OpenAI.done out
     then return $ Done (OpenAI.reward out)
     else do
@@ -146,13 +105,4 @@ instance MonadEnv Environment StateCP Action Reward where
     where
       renderStep :: Bool -> OpenAI.Step
       renderStep = OpenAI.Step (toJSON a)
-
-  -- | no reward function is needed when interacting with the OpenAI gym
-  -- reward :: Action -> Environment Reward
-  -- reward _ = return 0
-
-  -- | no action needs to be run when interacting with the OpenAI gym
-  -- runAction :: Action -> Environment ()
-  -- runAction _ = return ()
-
 
