@@ -11,21 +11,30 @@ default-extensions:
 
 dependencies:
   - base
+  - reinforce
+  - hmatrix
+  - containers
+  - unordered-containers
+  - bytestring
+  - vector
+  - dlist
+  - hashable
+  - monad-loops
+  - microlens-platform
+  - mtl
+  - mwc-random
+  - safe-exceptions
+  - text
+  - statistics
 
 library:
   source-dirs: src
 
 tests:
-  doctest:
-    main: DocTest.hs
-    source-dirs: test
-    dependencies:
-      - reinforce-agents
-      - doctest
-
   spec:
     main: Spec.hs
     source-dirs: test
     dependencies:
       - reinforce-agents
       - hspec
+      - QuickCheck
