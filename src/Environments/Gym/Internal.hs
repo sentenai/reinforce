@@ -98,25 +98,25 @@ stepCheck =
     LastState _ _   -> return ()
 
 
-_reset :: (GymContext m o a r, FromJSON o) => (Value -> m o) -> m (Obs r o)
-_reset convert = do
+_reset :: (GymContext m o a r, FromJSON o) => m (Obs r o)
+_reset = do
   i <- getInstID
   Observation o <- inEnvironment . OpenAI.envReset $ i
-  s <- convert o
+  s <- aesonToState o
   get >>= \case
     Uninitialized ep -> put $ LastState (ep+1) s
     LastState   ep _ -> put $ LastState (ep+1) s
   return $ Next 0 s
 
-_step :: (GymContext m o a r, ToJSON a, r ~ Reward) => (Value -> m o) -> a -> m (Obs r o)
-_step convert a = do
+_step :: (GymContext m o a r, ToJSON a, r ~ Reward, FromJSON o) => a -> m (Obs r o)
+_step a = do
   stepCheck
   GymConfigs i mon <- ask
   out <- inEnvironment . OpenAI.envStep i $ renderStep mon
   if OpenAI.done out
   then return $ Done (OpenAI.reward out)
   else do
-    s <- convert (OpenAI.observation out)
+    s <- aesonToState (OpenAI.observation out)
     let r = OpenAI.reward out
         n = Next r s
 
@@ -127,5 +127,12 @@ _step convert a = do
   where
     renderStep :: Bool -> OpenAI.Step
     renderStep = OpenAI.Step (toJSON a)
+
+
+aesonToState :: forall o m . (FromJSON o, MonadThrow m) => Value -> m o
+aesonToState o =
+  case (fromJSON o :: Result o) of
+    Error str -> throw $ UnexpectedServerResponse str
+    Success o -> return o
 
 
