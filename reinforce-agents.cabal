@@ -1,0 +1,48 @@
+-- This file has been generated from package.yaml by hpack version 0.17.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           reinforce-agents
+version:        0.1.0.0
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+library
+  hs-source-dirs:
+      src
+  default-extensions: BangPatterns LambdaCase OverloadedStrings ViewPatterns
+  ghc-options: -Wall
+  build-depends:
+      base
+  default-language: Haskell2010
+
+test-suite doctest
+  type: exitcode-stdio-1.0
+  main-is: DocTest.hs
+  hs-source-dirs:
+      test
+  default-extensions: BangPatterns LambdaCase OverloadedStrings ViewPatterns
+  ghc-options: -Wall
+  build-depends:
+      base
+    , reinforce-agents
+    , doctest
+  other-modules:
+      Spec
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  default-extensions: BangPatterns LambdaCase OverloadedStrings ViewPatterns
+  ghc-options: -Wall
+  build-depends:
+      base
+    , reinforce-agents
+    , hspec
+  other-modules:
+      DocTest
+  default-language: Haskell2010
