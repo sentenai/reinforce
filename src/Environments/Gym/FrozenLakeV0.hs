@@ -36,16 +36,15 @@ import OpenAI.Gym
   , Observation(..)
   )
 
-data StateFL = StateFL
+data StateFL = StateFL [[Double]] -- a 4x4 matrix for frozenlake v0
 
 instance FromJSON StateFL where
   parseJSON :: Value -> Parser StateFL
-  parseJSON arr@(Array _)= do
-    (p, a, v, r) <- parseJSON arr :: Parser (Float, Float, Float, Float)
-    return $ StateFL
+  parseJSON arr@(Array v) = (parseJSON arr :: Parser [[Double]])
+    >>= return . StateFL
   parseJSON invalid    = typeMismatch "StateFL" invalid
 
-data Action = Up | Down | Left | Right
+data Action = Left | Down | Right | Up
   deriving (Enum, Bounded, Ord, Show, Eq)
 
 instance ToJSON Action where
