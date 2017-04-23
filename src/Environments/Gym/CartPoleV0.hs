@@ -21,7 +21,7 @@ module Environments.Gym.CartPoleV0 where
 import Reinforce.Prelude
 import Control.MonadEnv.Internal
 import Data.CartPole
-import Environments.Gym.Internal hiding (inEnvironment, getEnvironment)
+import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 
 import Data.DList

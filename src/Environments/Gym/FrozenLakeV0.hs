@@ -18,6 +18,7 @@ module Environments.Gym.FrozenLakeV0 where
 
 import Reinforce.Prelude
 import Control.MonadEnv.Internal
+import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 
 import Data.DList
@@ -52,19 +53,18 @@ instance ToJSON Action where
   toJSON = toJSON . fromEnum
 
 type Event = Logger.Event Reward StateFL Action
-type LastState = I.LastState StateFL
 
-newtype Environment a = Environment { getEnvironment :: RWST I.GymConfigs (DList Event) LastState ClientM a }
+newtype Environment a = Environment { getEnvironment :: RWST GymConfigs (DList Event) (LastState StateFL) ClientM a }
   deriving
     ( Functor
     , Applicative
     , Monad
     , MonadIO
     , MonadThrow
-    , MonadReader I.GymConfigs
+    , MonadReader GymConfigs
     , MonadWriter (DList Event)
-    , MonadState LastState
-    , MonadRWS I.GymConfigs (DList Event) LastState
+    , MonadState (LastState StateFL)
+    , MonadRWS GymConfigs (DList Event) (LastState StateFL)
     , Logger
     )
 
@@ -81,7 +81,7 @@ instance I.GymEnvironment Environment StateFL Action Reward where
 toState :: MonadThrow m => Reward -> Value -> m (Obs Reward StateFL)
 toState r o =
   case (fromJSON o :: Result StateFL) of
-    Error str -> throw $ I.UnexpectedServerResponse str
+    Error str -> throw $ UnexpectedServerResponse str
     Success o -> return $ Next r o
 
 
@@ -92,28 +92,28 @@ toState r o =
 instance MonadEnv Environment StateFL Action Reward where
   reset :: Environment (Obs Reward StateFL)
   reset = do
-    i <- I.getInstID
-    Observation o <- I.inEnvironment . OpenAI.envReset $ i
+    i <- getInstID
+    Observation o <- inEnvironment . OpenAI.envReset $ i
     n@(Next _ s) <- toState 0 o
     get >>= \case
-      I.Uninitialized ep -> put $ I.LastState (ep+1) s
-      I.LastState   ep _ -> put $ I.LastState (ep+1) s
+      Uninitialized ep -> put $ LastState (ep+1) s
+      LastState   ep _ -> put $ LastState (ep+1) s
     return n
 
   step :: Action -> Environment (Obs Reward StateFL)
   step a = do
     get >>= \case
-      I.Uninitialized _ -> throwM I.EnvironmentRequiresReset
-      I.LastState _ _   -> return ()
+      Uninitialized _ -> throwM EnvironmentRequiresReset
+      LastState _ _   -> return ()
 
-    I.GymConfigs i mon <- Environment ask
-    out <- I.inEnvironment . OpenAI.envStep i $ renderStep mon
+    GymConfigs i mon <- Environment ask
+    out <- inEnvironment . OpenAI.envStep i $ renderStep mon
     if OpenAI.done out
     then return $ Done (OpenAI.reward out)
     else do
       n@(Next r s) <- toState (OpenAI.reward out) (OpenAI.observation out)
-      I.LastState ep prior <- get
-      put $ I.LastState ep s
+      LastState ep prior <- get
+      put $ LastState ep s
       tell . pure  $ Logger.Event ep r prior a
       return n
     where
