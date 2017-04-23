@@ -4,6 +4,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 module Environments.Gym.Internal where
 
+import Control.MonadEnv
 import Reinforce.Prelude
 import Data.DList
 import Data.Logger
@@ -88,4 +89,39 @@ withMonitor env = do
   where
     m :: InstID -> OpenAI.Monitor
     m (InstID t) = OpenAI.Monitor ("/tmp/"<> T.pack (show CartPoleV0) <>"-" <> t) True False False
+
+stepCheck :: (MonadThrow m, MonadState (LastState o) m) => m ()
+stepCheck =
+  get >>= \case
+    Uninitialized _ -> throwM EnvironmentRequiresReset
+    LastState _ _   -> return ()
+
+
+_reset :: (GymContext m o a r, FromJSON o) => (Value -> m (Obs r o)) -> m (Obs r o)
+_reset convert = do
+  i <- getInstID
+  Observation o <- inEnvironment . OpenAI.envReset $ i
+  n@(Next _ s) <- convert o
+  get >>= \case
+    Uninitialized ep -> put $ LastState (ep+1) s
+    LastState   ep _ -> put $ LastState (ep+1) s
+  return n
+
+_step :: (GymContext m o a r, ToJSON a, r ~ Reward) => (Reward -> Value -> m (Obs r o)) -> a -> m (Obs r o)
+_step convert a = do
+  stepCheck
+  GymConfigs i mon <- ask
+  out <- inEnvironment . OpenAI.envStep i $ renderStep mon
+  if OpenAI.done out
+  then return $ Done (OpenAI.reward out)
+  else do
+    n@(Next r s) <- convert (OpenAI.reward out) (OpenAI.observation out)
+    LastState ep prior <- get
+    put $ LastState ep s
+    tell . pure  $ Logger.Event ep r prior a
+    return n
+  where
+    renderStep :: Bool -> OpenAI.Step
+    renderStep = OpenAI.Step (toJSON a)
+
 

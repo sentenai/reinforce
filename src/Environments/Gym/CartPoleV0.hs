@@ -76,33 +76,9 @@ toState r o =
 -------------------------------------------------------------------------------
 
 instance MonadEnv Environment StateCP Action Reward where
-  reset :: Environment (Initial StateCP)
-  reset = do
-    i <- getInstID
-    Observation o <- I.inEnvironment . OpenAI.envReset $ i
-    Next _ s <- toState 0 o
-    get >>= \case
-      Uninitialized ep -> put $ LastState (ep+1) s
-      LastState   ep _ -> put $ LastState (ep+1) s
-    return $ Initial s
+  reset :: Environment (Obs Reward StateCP)
+  reset = I._reset (toState 0)
 
   step :: Action -> Environment (Obs Reward StateCP)
-  step a = do
-    get >>= \case
-      Uninitialized _ -> throwM EnvironmentRequiresReset
-      LastState _ _   -> return ()
-
-    GymConfigs i mon <- Environment ask
-    out <- I.inEnvironment . OpenAI.envStep i $ renderStep mon
-    if OpenAI.done out
-    then return $ Done (OpenAI.reward out)
-    else do
-      n@(Next r s) <- toState (OpenAI.reward out) (OpenAI.observation out)
-      LastState ep prior <- get
-      put $ LastState ep s
-      tell . pure  $ Logger.Event ep r prior a
-      return n
-    where
-      renderStep :: Bool -> OpenAI.Step
-      renderStep = OpenAI.Step (toJSON a)
+  step = I._step toState
 
