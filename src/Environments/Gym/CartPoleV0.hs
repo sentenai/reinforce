@@ -64,11 +64,11 @@ instance GymEnvironment Environment StateCP Action Reward where
   inEnvironment = Environment . lift
   getEnvironment = getEnvironment
 
-toState :: MonadThrow m => Reward -> Value -> m (Obs Reward StateCP)
-toState r o =
+toState :: MonadThrow m => Value -> m StateCP
+toState o =
   case (fromJSON o :: Result StateCP) of
     Error str -> throw $ UnexpectedServerResponse str
-    Success o -> return $ Next r o
+    Success o -> return o
 
 
 -------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ toState r o =
 
 instance MonadEnv Environment StateCP Action Reward where
   reset :: Environment (Obs Reward StateCP)
-  reset = I._reset (toState 0)
+  reset = I._reset toState
 
   step :: Action -> Environment (Obs Reward StateCP)
   step = I._step toState

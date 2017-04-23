@@ -50,6 +50,7 @@ class GymEnvironment m o a r | m -> o a r where
 type GymContext m o a r =
   ( MonadIO m
   , MonadThrow m
+  , Num r
   , MonadWriter (DList (Event r o a)) m
   , MonadReader GymConfigs m
   , MonadState (LastState o) m
@@ -97,17 +98,17 @@ stepCheck =
     LastState _ _   -> return ()
 
 
-_reset :: (GymContext m o a r, FromJSON o) => (Value -> m (Obs r o)) -> m (Obs r o)
+_reset :: (GymContext m o a r, FromJSON o) => (Value -> m o) -> m (Obs r o)
 _reset convert = do
   i <- getInstID
   Observation o <- inEnvironment . OpenAI.envReset $ i
-  n@(Next _ s) <- convert o
+  s <- convert o
   get >>= \case
     Uninitialized ep -> put $ LastState (ep+1) s
     LastState   ep _ -> put $ LastState (ep+1) s
-  return n
+  return $ Next 0 s
 
-_step :: (GymContext m o a r, ToJSON a, r ~ Reward) => (Reward -> Value -> m (Obs r o)) -> a -> m (Obs r o)
+_step :: (GymContext m o a r, ToJSON a, r ~ Reward) => (Value -> m o) -> a -> m (Obs r o)
 _step convert a = do
   stepCheck
   GymConfigs i mon <- ask
@@ -115,7 +116,10 @@ _step convert a = do
   if OpenAI.done out
   then return $ Done (OpenAI.reward out)
   else do
-    n@(Next r s) <- convert (OpenAI.reward out) (OpenAI.observation out)
+    s <- convert (OpenAI.observation out)
+    let r = OpenAI.reward out
+        n = Next r s
+
     LastState ep prior <- get
     put $ LastState ep s
     tell . pure  $ Logger.Event ep r prior a
