@@ -53,6 +53,7 @@ library
       Environments.Bandits
       Environments.CartPole
       Environments.Gym.CartPoleV0
+      Environments.MountainCar
       Reinforce.Prelude
       Spaces
       Spaces.Action
