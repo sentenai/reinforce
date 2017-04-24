@@ -82,7 +82,7 @@ instance I.GymEnvironment Environment StateFL Action Reward where
 -------------------------------------------------------------------------------
 
 instance MonadEnv Environment StateFL Action Reward where
-  reset :: Environment (Obs Reward StateFL)
+  reset :: Environment (Initial StateFL)
   reset = I._reset
 
   step :: Action -> Environment (Obs Reward StateFL)

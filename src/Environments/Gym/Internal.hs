@@ -98,7 +98,7 @@ stepCheck =
     LastState _ _   -> return ()
 
 
-_reset :: (GymContext m o a r, FromJSON o) => m (Obs r o)
+_reset :: (GymContext m o a r, FromJSON o) => m (Initial o)
 _reset = do
   i <- getInstID
   Observation o <- inEnvironment . OpenAI.envReset $ i
@@ -106,7 +106,7 @@ _reset = do
   get >>= \case
     Uninitialized ep -> put $ LastState (ep+1) s
     LastState   ep _ -> put $ LastState (ep+1) s
-  return $ Next 0 s
+  return $ Initial s
 
 _step :: (GymContext m o a r, ToJSON a, r ~ Reward, FromJSON o) => a -> m (Obs r o)
 _step a = do

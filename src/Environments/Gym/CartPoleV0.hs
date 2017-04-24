@@ -69,7 +69,7 @@ instance GymEnvironment Environment StateCP Action Reward where
 -------------------------------------------------------------------------------
 
 instance MonadEnv Environment StateCP Action Reward where
-  reset :: Environment (Obs Reward StateCP)
+  reset :: Environment (Initial StateCP)
   reset = I._reset
 
   step :: Action -> Environment (Obs Reward StateCP)
