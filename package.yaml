@@ -36,6 +36,7 @@ dependencies:
   - text
   - unordered-containers
   - vector
+  - sdl2
 
 library:
   source-dirs: src
