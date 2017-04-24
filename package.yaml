@@ -8,6 +8,7 @@ default-extensions:
   - LambdaCase
   - OverloadedStrings
   - ViewPatterns
+  - NoImplicitPrelude
 
 dependencies:
   - base
