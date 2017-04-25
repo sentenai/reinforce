@@ -1,6 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -22,10 +19,10 @@ class (Monoid a, Monad m) => History m a where
 
 
 data Configs = Configs
-  { learningRate :: Double
-  , gamma        :: Double
-  , eps          :: Double
-  , maxSteps     :: Maybe Int
+  { lambda   :: Double
+  , gamma    :: Double
+  , epsilon  :: Double
+  , maxSteps :: Maybe Int
   }
 
 defaultConfigs :: Configs
@@ -40,25 +37,21 @@ defaultQTableState :: QTableState
 defaultQTableState = QTableState $ matrix $ replicate (4*4) 0
 
 
-data LearningFunctions = LearningFunctions
-  { choose  :: StateFL -> QTable Action
-  , actions :: StateFL -> QTable [Action]
-  , value   :: StateFL -> Action -> QTable Reward
-  , update  :: StateFL -> Action -> Reward -> StateFL -> QTable ()
-  }
-
-learningFunctions :: Double -> LearningFunctions
-learningFunctions eps = LearningFunctions (_choose eps) _actions _value _update
+class Monad m => QLearning m s a | m -> s a where
+  choose  :: s -> m a
+  actions :: s -> m [a]
+  calcQ   :: s -> a -> m Reward
+  update  :: s -> a -> Reward -> s -> m ()
 
 
 newtype QTable x = QTable
-  { getQTable :: RWST LearningFunctions [Event] QTableState Environment x }
+  { getQTable :: RWST Configs [Event] QTableState Environment x }
   deriving
     ( Functor
     , Applicative
     , Monad
     , MonadIO
-    , MonadReader LearningFunctions
+    , MonadReader Configs
 
     )
 instance MonadMWCRandom QTable where
@@ -69,55 +62,51 @@ instance MonadEnv QTable StateFL Action Reward where
   reset = QTable $ lift reset
 
 rolloutQLearning
-  :: (param ~ Reward)
-  => Maybe Integer
-  -> param
-  -> param
+  :: Maybe Integer
   -> QTable ()
-rolloutQLearning maxSteps lambda gamma = do
+rolloutQLearning maxSteps = do
   Initial s <- Env.reset
   clock maxSteps 0 (goM s)
   where
     goM :: StateFL -> Integer -> QTable ()
     goM s st = do
-      LearningFunctions{choose, update} <- ask
       a <- choose s
       Env.step a >>= \case
-  --      Terminated -> return ()
+        Terminated -> return ()
         Done _     -> return ()
         Next r s'  -> do
           update s a r s'
           clock maxSteps (st+1) (goM s')
 
-_choose :: Double -> StateFL -> QTable Action
-_choose eps s = do
-  p <- uniform
-  as <- _actions s
+instance QLearning QTable StateFL Action where
+  choose :: StateFL -> QTable Action
+  choose s = do
+    Configs{epsilon} <- ask
+    p <- uniform
+    as <- actions s
 
-  if p > eps
-  then return . maximum $ as
-  else do
-    i <- uniformR (0, length as)
-    return . unsafeHead $ drop (i-1) as
+    if p > epsilon
+    then return . maximum $ as
+    else do
+      i <- uniformR (0, length as)
+      return . unsafeHead $ drop (i-1) as
 
-_actions :: StateFL -> QTable [Action]
-_actions s = undefined
 
-_value :: StateFL -> Action -> QTable Reward
-_value s a = undefined
+  actions :: StateFL -> QTable [Action]
+  actions s = undefined
 
-_update :: StateFL -> Action -> Reward -> StateFL -> QTable ()
-_update s a r s' = do
-  q <- updatedQ s a r s'
-  return ()
 
-updatedQ :: StateFL -> Action -> Reward -> StateFL -> QTable Reward
-updatedQ s a r s' = do
-  LearningFunctions{actions, value} <- ask
-  oldQ <- value s  a
-  newQs <- sequence . map (value s') =<< actions s'
-  let newQ = maximum newQs :: Reward
-  return $ oldQ + lambda * (r + gamma * newQ - oldQ)
+  calcQ :: StateFL -> Action -> QTable Reward
+  calcQ s a = undefined
+
+
+  update :: StateFL -> Action -> Reward -> StateFL -> QTable ()
+  update s a r s' = do
+    Configs{lambda, gamma} <- ask
+    oldQ <- calcQ s a
+    newQs <- sequence . map (calcQ s') =<< actions s'
+    let updQ = oldQ + lambda * (r + gamma * (maximum newQs) - oldQ)
+    return ()
 
 
 -- for i in range(num_episodes):
@@ -146,16 +135,14 @@ runLearner
   :: forall m o a r . MonadEnv m o a r
   => Maybe Integer
   -> Maybe Integer
-  -> r
-  -> r
-  -> (Maybe Integer -> r -> r -> m ())
+  -> (Maybe Integer -> m ())
   -> m ()
-runLearner maxEpisodes maxSteps lambda gamma rollout = clock maxEpisodes 0 goM
+runLearner maxEpisodes maxSteps rollout = clock maxEpisodes 0 goM
   where
    goM :: Integer -> m ()
-   goM epn = do
-     rollout maxSteps lambda gamma
-     clock maxEpisodes (epn + 1) goM
+   goM epn =
+     rollout maxSteps
+     >> clock maxEpisodes (epn + 1) goM
 
 clock :: Monad m => Maybe Integer -> Integer -> (Integer -> m ()) -> m ()
 clock   Nothing n goM = goM n

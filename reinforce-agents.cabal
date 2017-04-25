@@ -11,25 +11,25 @@ cabal-version:  >= 1.10
 library
   hs-source-dirs:
       src
-  default-extensions: BangPatterns LambdaCase OverloadedStrings ViewPatterns NoImplicitPrelude
+  default-extensions: BangPatterns FunctionalDependencies GeneralizedNewtypeDeriving InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns NoImplicitPrelude OverloadedStrings ViewPatterns
   ghc-options: -Wall
   build-depends:
       base
-    , reinforce
-    , hmatrix
-    , containers
-    , unordered-containers
     , bytestring
-    , vector
+    , containers
     , dlist
     , hashable
-    , monad-loops
+    , hmatrix
     , microlens-platform
+    , monad-loops
     , mtl
     , mwc-random
+    , reinforce
     , safe-exceptions
-    , text
     , statistics
+    , text
+    , unordered-containers
+    , vector
   exposed-modules:
       Agents.Prelude
       Agents.QTable
@@ -40,25 +40,25 @@ test-suite spec
   main-is: Spec.hs
   hs-source-dirs:
       test
-  default-extensions: BangPatterns LambdaCase OverloadedStrings ViewPatterns NoImplicitPrelude
+  default-extensions: BangPatterns FunctionalDependencies GeneralizedNewtypeDeriving InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns NoImplicitPrelude OverloadedStrings ViewPatterns
   ghc-options: -Wall
   build-depends:
       base
-    , reinforce
-    , hmatrix
-    , containers
-    , unordered-containers
     , bytestring
-    , vector
+    , containers
     , dlist
     , hashable
-    , monad-loops
+    , hmatrix
     , microlens-platform
+    , monad-loops
     , mtl
     , mwc-random
+    , reinforce
     , safe-exceptions
-    , text
     , statistics
+    , text
+    , unordered-containers
+    , vector
     , reinforce-agents
     , hspec
     , QuickCheck

@@ -5,28 +5,33 @@ ghc-options: -Wall
 
 default-extensions:
   - BangPatterns
+  - FunctionalDependencies
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
   - LambdaCase
+  - MultiParamTypeClasses
+  - NamedFieldPuns
+  - NoImplicitPrelude
   - OverloadedStrings
   - ViewPatterns
-  - NoImplicitPrelude
 
 dependencies:
   - base
-  - reinforce
-  - hmatrix
-  - containers
-  - unordered-containers
   - bytestring
-  - vector
+  - containers
   - dlist
   - hashable
-  - monad-loops
+  - hmatrix
   - microlens-platform
+  - monad-loops
   - mtl
   - mwc-random
+  - reinforce
   - safe-exceptions
-  - text
   - statistics
+  - text
+  - unordered-containers
+  - vector
 
 library:
   source-dirs: src
