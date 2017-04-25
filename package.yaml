@@ -13,6 +13,7 @@ default-extensions:
   - NamedFieldPuns
   - NoImplicitPrelude
   - OverloadedStrings
+  - ScopedTypeVariables
   - ViewPatterns
 
 dependencies:
