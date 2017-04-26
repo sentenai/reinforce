@@ -1,4 +1,5 @@
 {-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DataKinds #-}
 module Data.CartPole where
 
@@ -17,7 +18,9 @@ import qualified Data.Logger as Logger
 type Event = Logger.Event Double StateCP Action
 
 data Action = GoLeft | GoRight
-  deriving (Show, Eq, Enum, Bounded)
+  deriving (Show, Eq, Enum, Bounded, Ord, Generic)
+
+instance Hashable Action
 
 instance DiscreteActionSpace Action where
   type Size Action = 2
@@ -34,8 +37,9 @@ data StateCP = StateCP
   , angle     :: Float  -- ^ angle of the pole with the vertical
   , velocity  :: Float  -- ^ cart velocity
   , angleRate :: Float  -- ^ rate of change of the angle
-  } deriving (Show, Eq)
+  } deriving (Show, Eq, Generic)
 
+instance Hashable StateCP
 instance Defaulted StateCP where
   defaulted = StateCP 0 0 0 0
 
