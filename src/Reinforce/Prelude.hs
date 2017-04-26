@@ -17,6 +17,7 @@ import Control.Exception.Safe   as X
 import Control.Monad.Identity   as X
 import Control.Monad.Reader     as X
 import Control.Monad.RWS.Strict as X hiding ((<>))
+import Control.Monad.Writer.Strict as X (Writer(..))
 import Control.Monad.State      as X
 
 import Data.List   as X (intercalate)

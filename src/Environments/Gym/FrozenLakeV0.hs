@@ -11,6 +11,7 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE TypeSynonymInstances #-}
@@ -37,6 +38,9 @@ import OpenAI.Gym
   )
 
 data StateFL = StateFL [[Double]] -- a 4x4 matrix for frozenlake v0
+  deriving (Show, Eq, Generic)
+
+instance Hashable StateFL
 
 instance FromJSON StateFL where
   parseJSON :: Value -> Parser StateFL
@@ -45,7 +49,9 @@ instance FromJSON StateFL where
   parseJSON invalid    = typeMismatch "StateFL" invalid
 
 data Action = Left | Down | Right | Up
-  deriving (Enum, Bounded, Ord, Show, Eq)
+  deriving (Enum, Bounded, Ord, Show, Eq, Generic)
+
+instance Hashable Action
 
 instance ToJSON Action where
   toJSON :: Action -> Value

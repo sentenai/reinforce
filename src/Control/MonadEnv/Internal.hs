@@ -25,12 +25,14 @@ type Reward = Double
 
 -- | When starting an episode, we want to send an indication that the environment
 -- is starting without conflating this type with future steps (in @Obs r o@)
+-- TODO: add @Terminal@, and return this (or return ()) on failure
 data Initial o = Initial !o
 
 -- | An observation of the environment will either show that the environment is
 -- done with the episode (yielding 'Done'), that the environment has already
 -- 'Terminated', or will return the reward of the last action performed and the
 -- next state
+-- TODO: return @Terminal@ (or return ()) on failure
 data Obs r o = Next !r !o | Done !r | Terminated
   deriving (Show, Eq)
 
