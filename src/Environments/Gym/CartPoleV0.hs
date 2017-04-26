@@ -60,6 +60,10 @@ newtype Environment a = Environment
 runEnvironment :: Manager -> BaseUrl -> Bool -> Environment a -> IO (Either ServantError (DList Event))
 runEnvironment = I.runEnvironment CartPoleV0
 
+runDefaultEnvironment :: Bool -> Environment a -> IO (Either ServantError (DList Event))
+runDefaultEnvironment = I.runDefaultEnvironment CartPoleV0
+
+
 instance GymEnvironment Environment StateCP Action Reward where
   inEnvironment = Environment . lift
   getEnvironment = getEnvironment

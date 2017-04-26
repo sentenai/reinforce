@@ -75,6 +75,13 @@ runEnvironment t m u mon env = runClientM action (ClientEnv m u)
     then withMonitor env
     else env >> return ()
 
+runDefaultEnvironment
+  :: forall m o a r x . GymContext m o a r
+  => GymEnv -> Bool -> m x -> IO (Either ServantError (DList (Event r o a)))
+runDefaultEnvironment t m e = do
+  mngr <- newManager defaultManagerSettings
+  runEnvironment t mngr (BaseUrl Http "localhost" 5000 "") m e
+
 
 getInstID :: MonadReader GymConfigs m => m InstID
 getInstID = ask >>= \(GymConfigs i _) -> return i

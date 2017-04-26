@@ -77,6 +77,8 @@ newtype Environment a = Environment { getEnvironment :: RWST GymConfigs (DList E
 runEnvironment :: Manager -> BaseUrl -> Bool -> Environment a -> IO (Either ServantError (DList Event))
 runEnvironment a b c d = I.runEnvironment FrozenLakeV0 a b c d
 
+runDefaultEnvironment :: Bool -> Environment a -> IO (Either ServantError (DList Event))
+runDefaultEnvironment = I.runDefaultEnvironment FrozenLakeV0
 
 instance I.GymEnvironment Environment StateFL Action Reward where
   inEnvironment  = Environment . lift
