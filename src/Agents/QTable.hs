@@ -58,6 +58,7 @@ data QTableState = QTableState
 qsL :: Lens' QTableState (HashMap StateFL (HashMap Action Reward))
 qsL = lens qs $ \(QTableState _) a -> QTableState a
 
+
 defaultQTableState :: QTableState
 defaultQTableState = QTableState $ mempty
 
@@ -74,6 +75,9 @@ newtype QTable x = QTable
     , MonadState QTableState
     , MonadRWS Configs [Event] QTableState
     )
+
+runQTable :: Configs -> QTable x -> Environment (x, QTableState, [Event])
+runQTable conf (QTable rws) = runRWST rws conf defaultQTableState
 
 instance MonadMWCRandom QTable where
   getGen = liftIO getGen
