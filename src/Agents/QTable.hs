@@ -1,31 +1,34 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE ConstraintKinds #-}
+
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 module Agents.QTable where
 
 import Agents.Prelude
 import Agents
-import Data.CartPole
-import Environments.Gym.CartPoleV0
+-- import Environments.Gym.FrozenLakeV0
 import Control.MonadEnv.Internal as Env
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM
 import Control.MonadMWCRandom
+import Data.Logger
 
 
-class Monad m => QLearning m s a | m -> s a where
+class Monad m => QLearning m s a r | m -> s a r where
+--   type Action m
+--   type EnvState m
   choose  :: s -> m a
   actions :: s -> m [a]
-  update  :: s -> a -> Reward -> s -> m ()
+  update  :: s -> a -> r -> s -> m ()
 
 
-rolloutQLearning
-  :: Maybe Integer
-  -> QTable ()
+rolloutQLearning :: forall m o a r . (MonadEnv m o a r, QLearning m o a r)=> Maybe Integer -> m ()
 rolloutQLearning maxSteps = do
   Initial s <- Env.reset
   clock maxSteps 0 (goM s)
   where
-    goM :: StateCP -> Integer -> QTable ()
+    goM :: o -> Integer -> m ()
     goM s st = do
       a <- choose s
       Env.step a >>= \case
@@ -36,55 +39,61 @@ rolloutQLearning maxSteps = do
           clock maxSteps (st+1) (goM s')
 
 
-data Configs = Configs
-  { lambda   :: Double
-  , gamma    :: Double
-  , epsilon  :: Double
+data Configs r = Configs
+  { lambda   :: r
+  , gamma    :: r
+  , epsilon  :: r
   , maxSteps :: Maybe Int
-  , initialQ :: Reward
+  , initialQ :: r
   }
 
-defaultConfigs :: Configs
+defaultConfigs :: Configs Reward
 defaultConfigs = Configs 0.85 0.99 0.1 (Just 2000) 0
 
 
-data QTableState = QTableState
-  { qs :: HashMap StateCP (HashMap Action Reward)
+data QTableState o a r = QTableState
+  { qs :: HashMap o (HashMap a r)
   }
 
-qsL :: Lens' QTableState (HashMap StateCP (HashMap Action Reward))
+qsL :: Lens' (QTableState o a r) (HashMap o (HashMap a r))
 qsL = lens qs $ \(QTableState _) a -> QTableState a
 
 
-defaultQTableState :: QTableState
+defaultQTableState :: (Hashable o, Eq o) => QTableState o a r
 defaultQTableState = QTableState $ mempty
 
 
-newtype QTable x = QTable
-  { getQTable :: RWST Configs [Event] QTableState Environment x }
+newtype QTable m o a r x = QTable
+  { getQTable :: RWST (Configs r) [Event r o a] (QTableState o a r) m x }
   deriving
     ( Functor
     , Applicative
     , Monad
     , MonadIO
-    , MonadReader Configs
-    , MonadWriter [Event]
-    , MonadState QTableState
-    , MonadRWS Configs [Event] QTableState
+    , MonadReader (Configs r)
+    , MonadWriter [Event r o a]
+    , MonadState (QTableState o a r)
+    , MonadRWS (Configs r) [Event r o a] (QTableState o a r)
     )
 
-runQTable :: Configs -> QTable x -> Environment (x, QTableState, [Event])
+runQTable :: (MonadEnv m o a r, Hashable o, Eq o) => Configs r -> QTable m o a r x -> m (x, QTableState o a r, [Event r o a])
 runQTable conf (QTable e) = runRWST e conf defaultQTableState
 
-instance MonadMWCRandom QTable where
+instance (MonadIO m, MonadMWCRandom m) => MonadMWCRandom (QTable m o a r) where
   getGen = liftIO getGen
 
-instance MonadEnv QTable StateCP Action Reward where
+instance MonadEnv m o a r => MonadEnv (QTable m o a r) o a r where
   step a = QTable $ lift (step a)
-  reset = QTable $ lift reset
+  reset  = QTable $ lift reset
 
-instance QLearning QTable StateCP Action where
-  choose :: StateCP -> QTable Action
+type EnvC m = (MonadIO m, MonadMWCRandom m)
+type ActionC a = (Ord a, Hashable a, Enum a, Bounded a)
+type RewardC r = (Variate r, Ord r, Enum r, Num r)
+type StateC o  = (Ord o, Hashable o)
+
+instance (EnvC m, RewardC r, ActionC a, StateC o)
+  => QLearning (QTable m o a r) o a r where
+  choose :: o -> QTable m o a r a
   choose s = do
     Configs{epsilon} <- ask
     p <- uniform
@@ -98,7 +107,7 @@ instance QLearning QTable StateCP Action where
     where
 
 
-  actions :: StateCP -> QTable [Action]
+  actions :: o -> QTable m o a r [a]
   actions s = do
     Configs{initialQ} <- ask
     QTableState{qs} <- get
@@ -106,28 +115,26 @@ instance QLearning QTable StateCP Action where
     qsL %= HM.insert s ars
     return $ HM.keys ars
     where
-      initalTable :: Reward -> HashMap Action Reward
-      initalTable x = HM.fromList $ zip [minBound..maxBound::Action] [x..]
+      initalTable :: r -> HashMap a r
+      initalTable x = HM.fromList $ zip [minBound..maxBound::a] [x..]
 
 
-  update :: StateCP -> Action -> Reward -> StateCP -> QTable ()
+  update :: o -> a -> r -> o -> QTable m o a r ()
   update s a r s' = do
     Configs{lambda, gamma, initialQ} <- ask
     QTableState{qs} <- get
-
     as <- actions s'
-    let oldQ  = getQ qs initialQ a
-    let newQs = getQ qs initialQ <$> as
+    let oldQ  = getQ s qs initialQ a
+    let newQs = getQ s qs initialQ <$> as
     let updQ  = oldQ + lambda * (r + gamma * (maximum newQs) - oldQ)
 
-    qsL %= setQ updQ
-    where
-      getQ :: HashMap StateCP (HashMap Action Reward) -> Reward -> Action -> Reward
-      getQ qs r_ a_ =
-        maybe r_ id (qs ^. at s . _Just ^. at a_)
+    qsL %= setQ s a updQ
 
-      setQ :: Reward -> HashMap StateCP (HashMap Action Reward) -> HashMap StateCP (HashMap Action Reward)
-      setQ q ars = HM.update (Just . HM.insert a q) s ars
+getQ :: (ActionC a, StateC o) => o -> HashMap o (HashMap a r) -> r -> a -> r
+getQ o qs r_ a_ = maybe r_ id (qs ^. at o . _Just ^. at a_)
+
+setQ :: (ActionC a, StateC o) => o -> a -> r -> HashMap o (HashMap a r) -> HashMap o (HashMap a r)
+setQ s a q ars = HM.update (Just . HM.insert a q) s ars
 
 
 
