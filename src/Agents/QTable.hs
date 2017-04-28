@@ -11,7 +11,7 @@ import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM
 import Control.MonadMWCRandom
 import Data.Logger
-import Algorithms.Internal (TDLearning(..))
+import Algorithms.Internal (TDLearning(..), RLParams(..))
 
 
 type EnvC m    = (MonadIO m, MonadMWCRandom m)
@@ -115,6 +115,7 @@ instance (EnvC m, RewardC r, ActionC a, StateC o) => TDLearning (QTable m o a r)
     return $ maybe initialQ id (qs ^. at obs . _Just ^. at act)
 
 
+instance Monad m => RLParams (QTable m o a r) r where
   getLambda :: QTable m o a r r
   getLambda = use lambdaL >>= \case
     Left l -> pure l
@@ -123,7 +124,6 @@ instance (EnvC m, RewardC r, ActionC a, StateC o) => TDLearning (QTable m o a r)
       >> pure l'
       where
         l' = fn (t+1) l
-
 
   getGamma :: QTable m o a r r
   getGamma = gamma <$> ask
