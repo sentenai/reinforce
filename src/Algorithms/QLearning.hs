@@ -8,16 +8,7 @@ import Agents
 import Agents.Prelude
 import Control.MonadEnv (MonadEnv, Initial(..), Obs(..))
 import qualified Control.MonadEnv as Env
-
-
-class Monad m => QLearning m s a r | m -> s a r where
-  choose  :: s -> m a
-  actions :: s -> m [a]
-  update  :: s -> a -> r -> m ()
-  value   :: s -> a -> m r
-
-  getLambda :: m r
-  getGamma :: m r
+import Algorithms.Internal
 
 
 -- ============================================================================= --
@@ -40,7 +31,7 @@ class Monad m => QLearning m s a r | m -> s a r where
 --       s <- s'
 --     until s terminal
 -- ========================================================================= --
-rolloutQLearning :: forall m o a r . (MonadEnv m o a r, QLearning m o a r, Ord r)=> Maybe Integer -> m ()
+rolloutQLearning :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> m ()
 rolloutQLearning maxSteps = do
   Initial s <- Env.reset
   clock maxSteps 0 (goM s)

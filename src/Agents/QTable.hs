@@ -11,7 +11,7 @@ import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM
 import Control.MonadMWCRandom
 import Data.Logger
-import Algorithms.QLearning (QLearning(..))
+import Algorithms.Internal (TDLearning(..))
 
 
 type EnvC m    = (MonadIO m, MonadMWCRandom m)
@@ -79,7 +79,7 @@ instance MonadEnv m o a r => MonadEnv (QTable m o a r) o a r where
   reset  = QTable $ lift reset
 
 
-instance (EnvC m, RewardC r, ActionC a, StateC o) => QLearning (QTable m o a r) o a r where
+instance (EnvC m, RewardC r, ActionC a, StateC o) => TDLearning (QTable m o a r) o a r where
   choose :: o -> QTable m o a r a
   choose obs = do
     Configs{epsilon} <- ask
