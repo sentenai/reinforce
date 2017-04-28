@@ -37,27 +37,31 @@ rolloutQLearning maxSteps = do
 
 
 data Configs r = Configs
-  { lambda   :: r
-  , gamma    :: r
+  { gamma    :: r
   , epsilon  :: r
   , maxSteps :: Maybe Int
   , initialQ :: r
   }
 
+
 defaultConfigs :: Configs Reward
-defaultConfigs = Configs 0.85 0.99 0.1 (Just 2000) 0
+defaultConfigs = Configs 0.99 0.1 (Just 2000) 0
 
 
 data QTableState o a r = QTableState
-  { qs :: HashMap o (HashMap a r)
+  { qs     :: HashMap o (HashMap a r)
+  , lambda :: Either r (Integer, r, Integer -> r -> r)
   }
 
+
 qsL :: Lens' (QTableState o a r) (HashMap o (HashMap a r))
-qsL = lens qs $ \(QTableState _) a -> QTableState a
+qsL = lens qs $ \(QTableState _ b) a -> QTableState a b
 
+lambdaL :: Lens' (QTableState o a r) (Either r (Integer, r, Integer -> r -> r))
+lambdaL = lens lambda $ \(QTableState a _) b -> QTableState a b
 
-defaultQTableState :: (Hashable o, Eq o) => QTableState o a r
-defaultQTableState = QTableState $ mempty
+defaultQTableState :: (Hashable o, Eq o, Fractional r) => QTableState o a r
+defaultQTableState = QTableState mempty (Left 0.85)
 
 
 newtype QTable m o a r x = QTable
@@ -73,8 +77,9 @@ newtype QTable m o a r x = QTable
     , MonadRWS (Configs r) [Event r o a] (QTableState o a r)
     )
 
+
 runQTable
-  :: (MonadEnv m o a r, Hashable o, Eq o)
+  :: (MonadEnv m o a r, StateC o, Fractional r)
   => Configs r -> QTable m o a r x -> m (x, QTableState o a r, [Event r o a])
 runQTable conf (QTable e) = runRWST e conf defaultQTableState
 
@@ -122,8 +127,9 @@ instance (EnvC m, RewardC r, ActionC a, StateC o) => QLearning (QTable m o a r) 
 
   update :: o -> a -> r -> o -> QTable m o a r ()
   update obs0 act rwd obs1 = do
-    Configs{lambda, gamma, initialQ} <- ask
+    Configs{gamma, initialQ} <- ask
     QTableState{qs} <- get
+    lambda <- getLambda
     as <- actions obs1
     let oldQ  = getQ qs initialQ act
         newQs = getQ qs initialQ <$> as
@@ -138,4 +144,11 @@ instance (EnvC m, RewardC r, ActionC a, StateC o) => QLearning (QTable m o a r) 
       setQ q ars = HM.update (Just . HM.insert act q) obs0 ars
 
 
-
+getLambda :: Monad m => QTable m o a r r
+getLambda = use lambdaL >>= \case
+  Left l -> pure l
+  Right (t, l, fn) ->
+    lambdaL .= Right (t+1, l', fn)
+    >> pure l'
+    where
+      l' = fn (t+1) l
