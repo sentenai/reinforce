@@ -32,9 +32,17 @@ library
     , vector
   exposed-modules:
       Agents
+      Agents.DoubleQTable
       Agents.Prelude
       Agents.QTable
+      Algorithms.Double.Internal
+      Algorithms.DoubleQLearning
+      Algorithms.ExpectedSarsa
+      Algorithms.Internal
+      Algorithms.QLearning
+      Algorithms.Sarsa
       Internal.MonadHistory
+      Policy.EpsilonGreedy
   default-language: Haskell2010
 
 test-suite spec

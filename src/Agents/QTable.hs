@@ -12,6 +12,7 @@ import qualified Data.HashMap.Strict as HM
 import Control.MonadMWCRandom
 import Data.Logger
 import Algorithms.Internal (TDLearning(..), RLParams(..))
+import Policy.EpsilonGreedy
 
 
 type EnvC m    = (MonadIO m, MonadMWCRandom m)
@@ -82,14 +83,10 @@ instance MonadEnv m o a r => MonadEnv (QTable m o a r) o a r where
 instance (EnvC m, RewardC r, ActionC a, StateC o) => TDLearning (QTable m o a r) o a r where
   choose :: o -> QTable m o a r a
   choose obs = do
-    Configs{epsilon} <- ask
-    prob <- uniform
-    acts <- actions obs
-    if prob > epsilon
-    then return . maximum $ acts -- greedy choice
-    else do
-      i <- uniformR (0, length acts)
-      return . unsafeHead $ drop (i-1) acts
+    Configs{epsilon, initialQ} <- ask
+    QTableState{qs} <- get
+    let acts = HM.toList $ HM.lookupDefault (initalTable initialQ) obs qs
+    epsilonGreedy acts epsilon
 
 
   actions :: o -> QTable m o a r [a]
@@ -99,10 +96,6 @@ instance (EnvC m, RewardC r, ActionC a, StateC o) => TDLearning (QTable m o a r)
     let ars = HM.lookupDefault (initalTable initialQ) obs qs
     qsL %= HM.insert obs ars
     return $ HM.keys ars
-    where
-      initalTable :: r -> HashMap a r
-      initalTable x = HM.fromList $ zip [minBound..maxBound::a] [x..]
-
 
   update :: o -> a -> r -> QTable m o a r ()
   update obs act updQ = qsL %= (HM.update (Just . HM.insert act updQ) obs)
@@ -113,6 +106,10 @@ instance (EnvC m, RewardC r, ActionC a, StateC o) => TDLearning (QTable m o a r)
     Configs{initialQ} <- ask
     QTableState{qs}   <- get
     return $ maybe initialQ id (qs ^. at obs . _Just ^. at act)
+
+
+initalTable :: (Enum a, Bounded a, Eq a, Hashable a, Enum r) => r -> HashMap a r
+initalTable x = HM.fromList $ zip [minBound..maxBound] [x..]
 
 
 instance Monad m => RLParams (QTable m o a r) r where

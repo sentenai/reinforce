@@ -5,7 +5,8 @@ import Agents.Prelude
 import Control.MonadEnv (MonadEnv, Initial(..), Obs(..))
 import Control.MonadMWCRandom
 import qualified Control.MonadEnv as Env
-import Algorithms.Internal (RLParams(..), DoubleTDLearning(..))
+import Algorithms.Internal (RLParams(..))
+import Algorithms.Double.Internal (DoubleTDLearning(..))
 
 
 -- ============================================================================= --
@@ -44,9 +45,7 @@ rolloutDoubleQLearning maxSteps = do
   where
     goM :: o -> Integer -> m ()
     goM s st = do
-      ar1 <- choose1 s
-      ar2 <- choose2 s
-      a   <- chooseWith ar1 ar2
+      a <- choose s
       Env.step a >>= \case
         Terminated -> return ()
         Done _     -> return ()
