@@ -13,7 +13,11 @@ import qualified Control.MonadEnv as Env
 class Monad m => QLearning m s a r | m -> s a r where
   choose  :: s -> m a
   actions :: s -> m [a]
-  update  :: s -> a -> r -> s -> m ()
+  update  :: s -> a -> r -> m ()
+  value   :: s -> a -> m r
+
+  getLambda :: m r
+  getGamma :: m r
 
 
 -- ============================================================================= --
@@ -36,7 +40,7 @@ class Monad m => QLearning m s a r | m -> s a r where
 --       s <- s'
 --     until s terminal
 -- ========================================================================= --
-rolloutQLearning :: forall m o a r . (MonadEnv m o a r, QLearning m o a r)=> Maybe Integer -> m ()
+rolloutQLearning :: forall m o a r . (MonadEnv m o a r, QLearning m o a r, Ord r)=> Maybe Integer -> m ()
 rolloutQLearning maxSteps = do
   Initial s <- Env.reset
   clock maxSteps 0 (goM s)
@@ -47,9 +51,12 @@ rolloutQLearning maxSteps = do
       Env.step a >>= \case
         Terminated -> return ()
         Done _     -> return ()
-        Next r s'  -> do
-          update s a r s'
+        Next rwd s'  -> do
+          lambda <- getLambda
+          gamma  <- getGamma
+
+          oldQ <- value s a
+          nextQs <- sequence . fmap (value s) =<< actions s
+          update s a $ oldQ + lambda * (rwd + gamma * (maximum nextQs) - oldQ)
           clock maxSteps (st+1) (goM s')
-
-
 

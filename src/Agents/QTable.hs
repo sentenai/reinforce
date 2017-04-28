@@ -104,30 +104,26 @@ instance (EnvC m, RewardC r, ActionC a, StateC o) => QLearning (QTable m o a r) 
       initalTable x = HM.fromList $ zip [minBound..maxBound::a] [x..]
 
 
-  update :: o -> a -> r -> o -> QTable m o a r ()
-  update obs0 act rwd obs1 = do
-    Configs{gamma, initialQ} <- ask
-    QTableState{qs} <- get
-    lambda <- getLambda
-    as <- actions obs1
-    let oldQ  = getQ qs initialQ act
-        newQs = getQ qs initialQ <$> as
-        updQ  = oldQ + lambda * (rwd + gamma * (maximum newQs) - oldQ)
-    qsL %= setQ updQ
-
-    where
-      getQ :: SARMap o a r -> r -> a -> r
-      getQ qs r a = maybe r id (qs ^. at obs0 . _Just ^. at a)
-
-      setQ :: r -> SARMap o a r -> SARMap o a r
-      setQ q ars = HM.update (Just . HM.insert act q) obs0 ars
+  update :: o -> a -> r -> QTable m o a r ()
+  update obs act updQ = qsL %= (HM.update (Just . HM.insert act updQ) obs)
 
 
-getLambda :: Monad m => QTable m o a r r
-getLambda = use lambdaL >>= \case
-  Left l -> pure l
-  Right (t, l, fn) ->
-    lambdaL .= Right (t+1, l', fn)
-    >> pure l'
-    where
-      l' = fn (t+1) l
+  value :: o -> a -> QTable m o a r r
+  value obs act = do
+    Configs{initialQ} <- ask
+    QTableState{qs}   <- get
+    return $ maybe initialQ id (qs ^. at obs . _Just ^. at act)
+
+
+  getLambda :: QTable m o a r r
+  getLambda = use lambdaL >>= \case
+    Left l -> pure l
+    Right (t, l, fn) ->
+      lambdaL .= Right (t+1, l', fn)
+      >> pure l'
+      where
+        l' = fn (t+1) l
+
+
+  getGamma :: QTable m o a r r
+  getGamma = gamma <$> ask
