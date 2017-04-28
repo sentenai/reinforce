@@ -6,34 +6,19 @@
 module Agents.QTable where
 
 import Agents.Prelude
-import Agents
 import Control.MonadEnv.Internal as Env
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM
 import Control.MonadMWCRandom
 import Data.Logger
+import Algorithms.QLearning (QLearning(..))
 
 
-class Monad m => QLearning m s a r | m -> s a r where
-  choose  :: s -> m a
-  actions :: s -> m [a]
-  update  :: s -> a -> r -> s -> m ()
-
-
-rolloutQLearning :: forall m o a r . (MonadEnv m o a r, QLearning m o a r)=> Maybe Integer -> m ()
-rolloutQLearning maxSteps = do
-  Initial s <- Env.reset
-  clock maxSteps 0 (goM s)
-  where
-    goM :: o -> Integer -> m ()
-    goM s st = do
-      a <- choose s
-      Env.step a >>= \case
-        Terminated -> return ()
-        Done _     -> return ()
-        Next r s'  -> do
-          update s a r s'
-          clock maxSteps (st+1) (goM s')
+type EnvC m    = (MonadIO m, MonadMWCRandom m)
+type ActionC a = (Ord a, Hashable a, Enum a, Bounded a)
+type RewardC r = (Variate r, Ord r, Enum r, Num r)
+type StateC o  = (Ord o, Hashable o)
+type SARMap o a r = HashMap o (HashMap a r)
 
 
 data Configs r = Configs
@@ -92,13 +77,6 @@ instance (MonadIO m, MonadMWCRandom m) => MonadMWCRandom (QTable m o a r) where
 instance MonadEnv m o a r => MonadEnv (QTable m o a r) o a r where
   step a = QTable $ lift (step a)
   reset  = QTable $ lift reset
-
-
-type EnvC m    = (MonadIO m, MonadMWCRandom m)
-type ActionC a = (Ord a, Hashable a, Enum a, Bounded a)
-type RewardC r = (Variate r, Ord r, Enum r, Num r)
-type StateC o  = (Ord o, Hashable o)
-type SARMap o a r = HashMap o (HashMap a r)
 
 
 instance (EnvC m, RewardC r, ActionC a, StateC o) => QLearning (QTable m o a r) o a r where
