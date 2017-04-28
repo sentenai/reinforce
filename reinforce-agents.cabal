@@ -64,4 +64,7 @@ test-suite spec
     , reinforce-agents
     , hspec
     , QuickCheck
+  other-modules:
+      Agents.QTable.CartPoleSpec
+      Agents.QTable.FrozenLakeSpec
   default-language: Haskell2010

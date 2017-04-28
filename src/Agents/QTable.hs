@@ -7,7 +7,6 @@ module Agents.QTable where
 
 import Agents.Prelude
 import Agents
--- import Environments.Gym.FrozenLakeV0
 import Control.MonadEnv.Internal as Env
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM
@@ -16,8 +15,6 @@ import Data.Logger
 
 
 class Monad m => QLearning m s a r | m -> s a r where
---   type Action m
---   type EnvState m
   choose  :: s -> m a
   actions :: s -> m [a]
   update  :: s -> a -> r -> s -> m ()
@@ -76,43 +73,47 @@ newtype QTable m o a r x = QTable
     , MonadRWS (Configs r) [Event r o a] (QTableState o a r)
     )
 
-runQTable :: (MonadEnv m o a r, Hashable o, Eq o) => Configs r -> QTable m o a r x -> m (x, QTableState o a r, [Event r o a])
+runQTable
+  :: (MonadEnv m o a r, Hashable o, Eq o)
+  => Configs r -> QTable m o a r x -> m (x, QTableState o a r, [Event r o a])
 runQTable conf (QTable e) = runRWST e conf defaultQTableState
+
 
 instance (MonadIO m, MonadMWCRandom m) => MonadMWCRandom (QTable m o a r) where
   getGen = liftIO getGen
+
 
 instance MonadEnv m o a r => MonadEnv (QTable m o a r) o a r where
   step a = QTable $ lift (step a)
   reset  = QTable $ lift reset
 
-type EnvC m = (MonadIO m, MonadMWCRandom m)
+
+type EnvC m    = (MonadIO m, MonadMWCRandom m)
 type ActionC a = (Ord a, Hashable a, Enum a, Bounded a)
 type RewardC r = (Variate r, Ord r, Enum r, Num r)
 type StateC o  = (Ord o, Hashable o)
+type SARMap o a r = HashMap o (HashMap a r)
 
-instance (EnvC m, RewardC r, ActionC a, StateC o)
-  => QLearning (QTable m o a r) o a r where
+
+instance (EnvC m, RewardC r, ActionC a, StateC o) => QLearning (QTable m o a r) o a r where
   choose :: o -> QTable m o a r a
-  choose s = do
+  choose obs = do
     Configs{epsilon} <- ask
-    p <- uniform
-    as <- actions s
-
-    if p > epsilon
-    then return . maximum $ as
+    prob <- uniform
+    acts <- actions obs
+    if prob > epsilon
+    then return . maximum $ acts -- greedy choice
     else do
-      i <- uniformR (0, length as)
-      return . unsafeHead $ drop (i-1) as
-    where
+      i <- uniformR (0, length acts)
+      return . unsafeHead $ drop (i-1) acts
 
 
   actions :: o -> QTable m o a r [a]
-  actions s = do
+  actions obs = do
     Configs{initialQ} <- ask
     QTableState{qs} <- get
-    let ars = HM.lookupDefault (initalTable initialQ) s qs
-    qsL %= HM.insert s ars
+    let ars = HM.lookupDefault (initalTable initialQ) obs qs
+    qsL %= HM.insert obs ars
     return $ HM.keys ars
     where
       initalTable :: r -> HashMap a r
@@ -120,21 +121,21 @@ instance (EnvC m, RewardC r, ActionC a, StateC o)
 
 
   update :: o -> a -> r -> o -> QTable m o a r ()
-  update s a r s' = do
+  update obs0 act rwd obs1 = do
     Configs{lambda, gamma, initialQ} <- ask
     QTableState{qs} <- get
-    as <- actions s'
-    let oldQ  = getQ s qs initialQ a
-    let newQs = getQ s qs initialQ <$> as
-    let updQ  = oldQ + lambda * (r + gamma * (maximum newQs) - oldQ)
+    as <- actions obs1
+    let oldQ  = getQ qs initialQ act
+        newQs = getQ qs initialQ <$> as
+        updQ  = oldQ + lambda * (rwd + gamma * (maximum newQs) - oldQ)
+    qsL %= setQ updQ
 
-    qsL %= setQ s a updQ
+    where
+      getQ :: SARMap o a r -> r -> a -> r
+      getQ qs r a = maybe r id (qs ^. at obs0 . _Just ^. at a)
 
-getQ :: (ActionC a, StateC o) => o -> HashMap o (HashMap a r) -> r -> a -> r
-getQ o qs r_ a_ = maybe r_ id (qs ^. at o . _Just ^. at a_)
-
-setQ :: (ActionC a, StateC o) => o -> a -> r -> HashMap o (HashMap a r) -> HashMap o (HashMap a r)
-setQ s a q ars = HM.update (Just . HM.insert a q) s ars
+      setQ :: r -> SARMap o a r -> SARMap o a r
+      setQ q ars = HM.update (Just . HM.insert act q) obs0 ars
 
 
 

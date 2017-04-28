@@ -141,3 +141,8 @@ flycheck_*.el
 
 # projectiles files
 .projectile
+
+
+#####################################################################################
+# Python files
+.ipynb_checkpoints
