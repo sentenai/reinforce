@@ -60,8 +60,9 @@ qsL = lens qs $ \(QTableState _ b) a -> QTableState a b
 lambdaL :: Lens' (QTableState o a r) (Either r (Integer, r, Integer -> r -> r))
 lambdaL = lens lambda $ \(QTableState a _) b -> QTableState a b
 
-defaultQTableState :: (Hashable o, Eq o, Fractional r) => QTableState o a r
-defaultQTableState = QTableState mempty (Left 0.85)
+defaultQTableState :: (StateC o, Fractional r) => Either r (r, Integer -> r -> r) -> QTableState o a r
+defaultQTableState (Left i)        = QTableState mempty (Left i)
+defaultQTableState (Right (i, fn)) = QTableState mempty (Right (0, i, fn))
 
 
 newtype QTable m o a r x = QTable
@@ -80,8 +81,8 @@ newtype QTable m o a r x = QTable
 
 runQTable
   :: (MonadEnv m o a r, StateC o, Fractional r)
-  => Configs r -> QTable m o a r x -> m (x, QTableState o a r, [Event r o a])
-runQTable conf (QTable e) = runRWST e conf defaultQTableState
+  => Configs r -> Either r (r, Integer -> r -> r) -> QTable m o a r x -> m (x, QTableState o a r, [Event r o a])
+runQTable conf l (QTable e) = runRWST e conf (defaultQTableState l)
 
 
 instance (MonadIO m, MonadMWCRandom m) => MonadMWCRandom (QTable m o a r) where

@@ -4,13 +4,14 @@ import Agents.Prelude
 
 import Agents
 import Agents.QTable
+import Algorithms.QLearning
 import Environments.Gym.CartPoleV0
 import Test.Hspec
 
 main :: IO ()
 main = do
   x <- runDefaultEnvironment False $
-         runQTable defaultConfigs $
+         runQTable defaultConfigs (Left 0.85) $
            runLearner (Just 10) (Just 10) $
              rolloutQLearning
   print x

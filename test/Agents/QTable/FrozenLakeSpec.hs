@@ -4,13 +4,14 @@ import Agents.Prelude
 
 import Agents
 import Agents.QTable
-import Environments.Gym.FrozenLakeV0
+import Algorithms.QLearning
+import Environments.Gym.FrozenLakeV0 (runDefaultEnvironment)
 import Test.Hspec
 
 main :: IO ()
 main = do
   x <- runDefaultEnvironment False $
-         runQTable defaultConfigs $
+         runQTable defaultConfigs (Left 0.85) $
            runLearner (Just 10) (Just 10) $
              rolloutQLearning
   print x
