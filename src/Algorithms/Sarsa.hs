@@ -9,7 +9,11 @@ import qualified Control.MonadEnv as Env
 class Monad m => Sarsa m s a r | m -> s a r where
   choose  :: s -> m a
   actions :: s -> m [a]
-  update  :: s -> a -> r -> s -> a -> m ()
+  update  :: s -> a -> r -> m ()
+  value   :: s -> a -> m r
+
+  getLambda :: m r
+  getGamma :: m r
 
 
 -- ========================================================================= --
@@ -30,7 +34,7 @@ class Monad m => Sarsa m s a r | m -> s a r where
 --       a <- a'
 --     until s terminal
 -- ========================================================================= --
-rolloutSarsa :: forall m o a r . (MonadEnv m o a r, Sarsa m o a r)=> Maybe Integer -> m ()
+rolloutSarsa :: forall m o a r . (MonadEnv m o a r, Sarsa m o a r, Ord r)=> Maybe Integer -> m ()
 rolloutSarsa maxSteps = do
   Initial s <- Env.reset
   a <- choose s
@@ -41,9 +45,13 @@ rolloutSarsa maxSteps = do
       Env.step a >>= \case
         Terminated -> return ()
         Done _     -> return ()
-        Next r s'  -> do
-          a' <- choose s'
-          update s a r s' a'
-          clock maxSteps (st + 1) (goM s' a')
+        Next rwd s'-> do
+          lambda <- getLambda
+          gamma  <- getGamma
+          a'     <- choose s'
 
+          oldQ   <- value s  a
+          nextQ  <- value s' a'
+          update s a $ oldQ + lambda * (rwd + gamma * nextQ - oldQ)
+          clock maxSteps (st+1) (goM s' a')
 
