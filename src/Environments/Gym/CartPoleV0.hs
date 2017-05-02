@@ -20,6 +20,7 @@ module Environments.Gym.CartPoleV0 where
 
 import Reinforce.Prelude
 import Control.MonadEnv.Internal
+import Control.MonadMWCRandom
 import Data.CartPole
 import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
@@ -67,6 +68,10 @@ runDefaultEnvironment = I.runDefaultEnvironment CartPoleV0
 instance GymEnvironment Environment StateCP Action Reward where
   inEnvironment = Environment . lift
   getEnvironment = getEnvironment
+
+instance MonadMWCRandom Environment where
+  getGen = liftIO getGen
+
 
 -------------------------------------------------------------------------------
 -- Instances

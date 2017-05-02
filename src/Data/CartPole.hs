@@ -37,7 +37,7 @@ data StateCP = StateCP
   , angle     :: Float  -- ^ angle of the pole with the vertical
   , velocity  :: Float  -- ^ cart velocity
   , angleRate :: Float  -- ^ rate of change of the angle
-  } deriving (Show, Eq, Generic)
+  } deriving (Show, Eq, Generic, Ord)
 
 instance Hashable StateCP
 instance Defaulted StateCP where

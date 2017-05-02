@@ -19,6 +19,7 @@ module Environments.Gym.FrozenLakeV0 where
 
 import Reinforce.Prelude
 import Control.MonadEnv.Internal
+import Control.MonadMWCRandom
 import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 
@@ -37,16 +38,20 @@ import OpenAI.Gym
   , Observation(..)
   )
 
-data StateFL = StateFL [[Double]] -- a 4x4 matrix for frozenlake v0
-  deriving (Show, Eq, Generic)
+newtype StateFL = Position { unPosition :: Int }
+  deriving (Show, Eq, Generic, Ord)
+
+mkStateFL :: MonadThrow m => Int -> m StateFL
+mkStateFL i
+  | i < 16 && i >= 0 = pure $ Position i
+  |        otherwise = throwString $ "no state exists for " ++ show i
 
 instance Hashable StateFL
 
 instance FromJSON StateFL where
   parseJSON :: Value -> Parser StateFL
-  parseJSON arr@(Array v) = (parseJSON arr :: Parser [[Double]])
-    >>= return . StateFL
-  parseJSON invalid    = typeMismatch "StateFL" invalid
+  parseJSON n@(Number _) = parseJSON n >>= pure . Position
+  parseJSON invalid      = typeMismatch "StateFL" invalid
 
 data Action = Left | Down | Right | Up
   deriving (Enum, Bounded, Ord, Show, Eq, Generic)
@@ -59,7 +64,8 @@ instance ToJSON Action where
 
 type Event = Logger.Event Reward StateFL Action
 
-newtype Environment a = Environment { getEnvironment :: RWST GymConfigs (DList Event) (LastState StateFL) ClientM a }
+newtype Environment a = Environment
+  { getEnvironment :: RWST GymConfigs (DList Event) (LastState StateFL) ClientM a }
   deriving
     ( Functor
     , Applicative
@@ -83,6 +89,10 @@ runDefaultEnvironment = I.runDefaultEnvironment FrozenLakeV0
 instance I.GymEnvironment Environment StateFL Action Reward where
   inEnvironment  = Environment . lift
   getEnvironment = getEnvironment
+
+instance MonadMWCRandom Environment where
+  getGen = Environment $ liftIO getGen
+
 
 
 -------------------------------------------------------------------------------
