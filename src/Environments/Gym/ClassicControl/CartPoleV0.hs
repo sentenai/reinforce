@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Module : Environment.CartPoleV1
+-- Module : Environment.CartPoleV0
 --
 -- Environment description:
 -- > A pole is attached by an un-actuated joint to a cart, which moves along a
@@ -8,25 +8,26 @@
 -- > falling over. A reward of +1 is provided for every timestep that the pole
 -- > remains upright. The episode ends when the pole is more than 15 degrees from
 -- > vertical, or the cart moves more than 2.4 units from the center.
--- >
--- > CartPole-v1 defines "solving" as getting average reward of 475.0 over 100
--- > consecutive trials.
--- >
--- > This environment corresponds to the version of the cart-pole problem
--- > described by Barto, Sutton, and Anderson [Barto83].
 --
--- https://gym.openai.com/envs/CartPole-v1
+-- https://gym.openai.com/envs/CartPole-v0
 --------------------------------------------------------------------------------
-module Environments.Gym.CartPoleV1
-  ( module Env
-  , runEnvironment
-  , runDefaultEnvironment
-  ) where
+{-# LANGUAGE FlexibleInstances #-}
+module Environments.Gym.ClassicControl.CartPoleV0 where
 
-import OpenAI.Gym (GymEnv(CartPoleV1))
-import Environments.Gym.CartPoleV0 as Env hiding (runEnvironment, runDefaultEnvironment)
+import Reinforce.Prelude
+import Control.MonadEnv.Internal
+import Data.CartPole
+import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
+import OpenAI.Gym (GymEnv(CartPoleV0))
 
-runEnvironment = I.runEnvironment CartPoleV1
-runDefaultEnvironment = I.runDefaultEnvironment CartPoleV1
+
+type Environment = GymEnvironment StateCP Action
+
+runEnvironment = I.runEnvironment CartPoleV0
+runDefaultEnvironment = I.runDefaultEnvironment CartPoleV0
+
+instance MonadEnv Environment StateCP Action Reward where
+  reset = I._reset
+  step = I._step
 

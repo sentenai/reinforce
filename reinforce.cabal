@@ -52,14 +52,14 @@ library
       Data.Logger
       Environments.Bandits
       Environments.CartPole
-      Environments.Gym.AcrobotV1
-      Environments.Gym.CartPoleV0
-      Environments.Gym.CartPoleV1
-      Environments.Gym.FrozenLakeV0
+      Environments.Gym.ClassicControl.AcrobotV1
+      Environments.Gym.ClassicControl.CartPoleV0
+      Environments.Gym.ClassicControl.CartPoleV1
+      Environments.Gym.ClassicControl.MountainCarContinuousV0
+      Environments.Gym.ClassicControl.MountainCarV0
+      Environments.Gym.ClassicControl.PendulumV0
       Environments.Gym.Internal
-      Environments.Gym.MountainCarContinuousV0
-      Environments.Gym.MountainCarV0
-      Environments.Gym.PendulumV0
+      Environments.Gym.ToyText.FrozenLakeV0
       Reinforce.Prelude
       Spaces
       Spaces.Action

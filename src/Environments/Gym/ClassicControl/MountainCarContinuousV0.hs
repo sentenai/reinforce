@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Module : Environments.Gym.MountainCarContinuousV0
+-- Module : Environments.Gym.ClassicControl.MountainCarContinuousV0
 --
 -- Environment description:
 -- > A car is on a one-dimensional track, positioned between two "mountains".
@@ -18,14 +18,14 @@
 --
 -- https://gym.openai.com/envs/MountainCarContinuous-v0
 --------------------------------------------------------------------------------
-module Environments.Gym.MountainCarContinuousV0
+module Environments.Gym.ClassicControl.MountainCarContinuousV0
   ( module Env
   , runEnvironment
   , runDefaultEnvironment
   ) where
 
 import OpenAI.Gym (GymEnv(MountainCarContinuousV0))
-import Environments.Gym.MountainCarV0 as Env hiding (runEnvironment, runDefaultEnvironment)
+import Environments.Gym.ClassicControl.MountainCarV0 as Env hiding (runEnvironment, runDefaultEnvironment)
 import qualified Environments.Gym.Internal as I
 
 runEnvironment = I.runEnvironment MountainCarContinuousV0

@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Module : Environments.Gym.MountainCarV0
+-- Module : Environments.Gym.ClassicControl.MountainCarV0
 --
 -- Environment description:
 -- > A car is on a one-dimensional track, positioned between two "mountains".
@@ -20,7 +20,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE InstanceSigs #-}
-module Environments.Gym.MountainCarV0 where
+module Environments.Gym.ClassicControl.MountainCarV0 where
 
 import Reinforce.Prelude hiding (State)
 import Control.MonadEnv.Internal

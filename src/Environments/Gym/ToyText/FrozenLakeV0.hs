@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Module : Environment.Gym.FrozenLakeV0
+-- Module : Environment.Gym.ToyText.FrozenLakeV0
 --
 -- The agent controls the movement of a character in a grid world. Some tiles of
 -- the grid are walkable, and others lead to the agent falling into the water.
@@ -13,7 +13,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE InstanceSigs #-}
-module Environments.Gym.FrozenLakeV0 where
+module Environments.Gym.ToyText.FrozenLakeV0 where
 
 import Reinforce.Prelude
 import Control.MonadEnv.Internal
