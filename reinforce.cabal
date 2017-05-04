@@ -54,6 +54,7 @@ library
       Environments.CartPole
       Environments.Gym.AcrobotV1
       Environments.Gym.CartPoleV0
+      Environments.Gym.CartPoleV1
       Environments.Gym.FrozenLakeV0
       Environments.Gym.Internal
       Environments.Gym.PendulumV0
