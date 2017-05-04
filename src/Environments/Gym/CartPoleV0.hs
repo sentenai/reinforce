@@ -11,76 +11,23 @@
 --
 -- https://gym.openai.com/envs/CartPole-v0
 --------------------------------------------------------------------------------
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE InstanceSigs #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
 module Environments.Gym.CartPoleV0 where
 
 import Reinforce.Prelude
 import Control.MonadEnv.Internal
-import Control.MonadMWCRandom
 import Data.CartPole
 import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
-
-import Data.DList
-import Data.Aeson
-import qualified Data.Text as T (pack)
-import qualified OpenAI.Gym as OpenAI
-import Servant.Client
-import Data.Logger (Logger)
-import qualified Data.Logger as Logger
-import Network.HTTP.Client
-import OpenAI.Gym
-  ( GymEnv(..)
-  , InstID(..)
-  , Observation(..)
-  )
+import OpenAI.Gym (GymEnv(CartPoleV0))
 
 
-newtype Environment a = Environment
-  { getEnvironment :: RWST GymConfigs (DList Event) (LastState StateCP) ClientM a }
-  deriving
-    ( Functor
-    , Applicative
-    , Monad
-    , MonadIO
-    , MonadThrow
-    , MonadReader GymConfigs
-    , MonadWriter (DList Event)
-    , MonadState (LastState StateCP)
-    , MonadRWS GymConfigs (DList Event) (LastState StateCP)
-    , Logger
-    )
+type Environment = GymEnvironment StateCP Action
 
--------------------------------------------------------------------------------
--- Helper functions
-
-runEnvironment :: Manager -> BaseUrl -> Bool -> Environment a -> IO (Either ServantError (DList Event))
 runEnvironment = I.runEnvironment CartPoleV0
-
-runDefaultEnvironment :: Bool -> Environment a -> IO (Either ServantError (DList Event))
 runDefaultEnvironment = I.runDefaultEnvironment CartPoleV0
 
-
-instance GymEnvironment Environment StateCP Action Reward where
-  inEnvironment = Environment . lift
-  getEnvironment = getEnvironment
-
-instance MonadMWCRandom Environment where
-  getGen = liftIO getGen
-
-
--------------------------------------------------------------------------------
--- Instances
--------------------------------------------------------------------------------
-
 instance MonadEnv Environment StateCP Action Reward where
-  reset :: Environment (Initial StateCP)
   reset = I._reset
-
-  step :: Action -> Environment (Obs Reward StateCP)
   step = I._step
 

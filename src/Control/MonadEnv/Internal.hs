@@ -25,8 +25,7 @@ type Reward = Double
 
 -- | When starting an episode, we want to send an indication that the environment
 -- is starting without conflating this type with future steps (in @Obs r o@)
--- TODO: add @Terminal@, and return this (or return ()) on failure
-data Initial o = Initial !o
+data Initial o = Initial !o | EmptyEpisode
 
 -- | An observation of the environment will either show that the environment is
 -- done with the episode (yielding 'Done'), that the environment has already
@@ -41,7 +40,7 @@ data Obs r o = Next !r !o | Done !r | Terminated
 
 -- | Our environment monad
 -- TODO: Think about two typeclasses: ContinuousMonadEnv and EpisodicMonadEnv
-class (Num r, Monad e, Enum a) => MonadEnv e s a r | e -> s a r where
+class (Num r, Monad e) => MonadEnv e s a r | e -> s a r where
   -- | A process (in this case an episode of json indexing) gets started
   -- by calling reset, which returns an initial observation.
   reset :: e (Initial s)

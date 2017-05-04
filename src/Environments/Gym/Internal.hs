@@ -2,6 +2,8 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Environments.Gym.Internal where
 
 import Control.MonadEnv
@@ -9,6 +11,7 @@ import Reinforce.Prelude
 import Data.DList
 import Data.Logger
 import Data.Aeson
+import Control.MonadMWCRandom
 import qualified Data.Text as T (pack)
 import qualified OpenAI.Gym as OpenAI
 import Servant.Client
@@ -21,6 +24,29 @@ import OpenAI.Gym
   , Observation(..)
   )
 
+
+newtype GymEnvironment s a x = GymEnvironment
+  { getEnvironment :: RWST GymConfigs (DList (Event Reward s a)) (LastState s) ClientM x }
+  deriving
+    ( Functor
+    , Applicative
+    , Monad
+    , MonadIO
+    , MonadThrow
+    , MonadReader GymConfigs
+    , MonadWriter (DList (Event Reward s a))
+    , MonadState (LastState s)
+    , MonadRWS GymConfigs (DList (Event Reward s a)) (LastState s)
+    , Logger
+    )
+
+instance MonadMWCRandom (GymEnvironment s a) where
+  getGen = liftIO getGen
+
+inEnvironment :: ClientM x -> GymEnvironment s a x
+inEnvironment c = GymEnvironment $ lift c
+
+-- ========================================================================= --
 
 data GymConfigs
   = GymConfigs InstID Bool    -- ^ the instance id, as well as a flag of if we want to render the state
@@ -41,53 +67,34 @@ data GymException
 instance Exception GymException where
 
 
-class GymEnvironment m o a r | m -> o a r where
-  inEnvironment :: ClientM x -> m x
-  getEnvironment :: m x -> RWST GymConfigs (DList (Event r o a)) (LastState o) ClientM x
-
-
--- FIXME: chop this down
-type GymContext m o a r =
-  ( MonadIO m
-  , MonadThrow m
-  , Num r
-  , MonadWriter (DList (Event r o a)) m
-  , MonadReader GymConfigs m
-  , MonadState (LastState o) m
-  , MonadRWS GymConfigs (DList (Event r o a)) (LastState o) m
-  , GymEnvironment m o a r
-  , Logger m
-  )
-
-runEnvironment :: forall m o a r x . GymContext m o a r => GymEnv -> Manager -> BaseUrl -> Bool -> m x -> IO (Either ServantError (DList (Event r o a)))
+runEnvironment :: forall o a x . GymEnv -> Manager -> BaseUrl -> Bool -> GymEnvironment o a x -> IO (Either ServantError (DList (Event Reward o a)))
 runEnvironment t m u mon env = runClientM action (ClientEnv m u)
   where
-  action :: ClientM (DList (Event r o a))
+  action :: ClientM (DList (Event Reward o a))
   action = do
     i <- OpenAI.envCreate t
     (_, w) <- execRWST (getEnvironment renderableEnv) (GymConfigs i mon) (Uninitialized 0)
     OpenAI.envClose i
     return w
 
-  renderableEnv :: m ()
+  renderableEnv :: GymEnvironment o a ()
   renderableEnv =
     if mon
     then withMonitor env
     else env >> return ()
 
-runDefaultEnvironment
-  :: forall m o a r x . GymContext m o a r
-  => GymEnv -> Bool -> m x -> IO (Either ServantError (DList (Event r o a)))
+
+runDefaultEnvironment :: GymEnv -> Bool -> GymEnvironment o a x -> IO (Either ServantError (DList (Event Reward o a)))
 runDefaultEnvironment t m e = do
   mngr <- newManager defaultManagerSettings
   runEnvironment t mngr (BaseUrl Http "localhost" 5000 "") m e
 
 
-getInstID :: MonadReader GymConfigs m => m InstID
+getInstID :: GymEnvironment o a InstID
 getInstID = ask >>= \(GymConfigs i _) -> return i
 
 
-withMonitor :: (GymEnvironment m o a r, MonadReader GymConfigs m) => m x -> m ()
+withMonitor :: GymEnvironment o a x -> GymEnvironment o a ()
 withMonitor env = do
   i <- getInstID
   inEnvironment $ OpenAI.envMonitorStart i (m i)
@@ -98,14 +105,15 @@ withMonitor env = do
     m :: InstID -> OpenAI.Monitor
     m (InstID t) = OpenAI.Monitor ("/tmp/"<> T.pack (show CartPoleV0) <>"-" <> t) True False False
 
-stepCheck :: (MonadThrow m, MonadState (LastState o) m) => m ()
+
+stepCheck :: GymEnvironment o a ()
 stepCheck =
   get >>= \case
     Uninitialized _ -> throwM EnvironmentRequiresReset
     LastState _ _   -> return ()
 
 
-_reset :: (GymContext m o a r, FromJSON o) => m (Initial o)
+_reset :: FromJSON o => GymEnvironment o a (Initial o)
 _reset = do
   i <- getInstID
   Observation o <- inEnvironment . OpenAI.envReset $ i
@@ -115,7 +123,8 @@ _reset = do
     LastState   ep _ -> put $ LastState (ep+1) s
   return $ Initial s
 
-_step :: (GymContext m o a r, ToJSON a, r ~ Reward, FromJSON o) => a -> m (Obs r o)
+
+_step :: (ToJSON a, r ~ Reward, FromJSON o) => a -> GymEnvironment o a (Obs r o)
 _step a = do
   stepCheck
   GymConfigs i mon <- ask
@@ -141,5 +150,3 @@ aesonToState o =
   case (fromJSON o :: Result o) of
     Error str -> throw $ UnexpectedServerResponse str
     Success o -> return o
-
-
