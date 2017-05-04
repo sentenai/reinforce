@@ -57,6 +57,8 @@ library
       Environments.Gym.CartPoleV1
       Environments.Gym.FrozenLakeV0
       Environments.Gym.Internal
+      Environments.Gym.MountainCarContinuousV0
+      Environments.Gym.MountainCarV0
       Environments.Gym.PendulumV0
       Reinforce.Prelude
       Spaces

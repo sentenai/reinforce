@@ -1,17 +1,26 @@
 --------------------------------------------------------------------------------
--- Module : Environment.Gym.AcrobotV1
+-- Module : Environments.Gym.MountainCarV0
 --
--- The inverted pendulum swingup problem is a classic problem in the control
--- literature. In this version of the problem, the pendulum starts in a random
--- position, and the goal is to swing it up so it stays upright.
+-- Environment description:
+-- > A car is on a one-dimensional track, positioned between two "mountains".
+-- > The goal is to drive up the mountain on the right; however, the car's
+-- > engine is not strong enough to scale the mountain in a single pass.
+-- > Therefore, the only way to succeed is to drive back and forth to build up
+-- > momentum.
+-- >
+-- > MountainCar-v0 defines "solving" as getting average reward of -110.0 over
+-- > 100 consecutive trials.
+-- >
+-- > This problem was first described by Andrew Moore in his PhD thesis
+-- > [Moore90].
 --
--- https://gym.openai.com/envs/Acrobot-v1
+-- https://gym.openai.com/envs/MountainCar-v0
 --------------------------------------------------------------------------------
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE InstanceSigs #-}
-module Environments.Gym.AcrobotV1 where
+module Environments.Gym.MountainCarV0 where
 
 import Reinforce.Prelude hiding (State)
 import Control.MonadEnv.Internal
@@ -19,29 +28,24 @@ import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 
 import Data.Aeson.Types
-import OpenAI.Gym (GymEnv(AcrobotV1))
+import OpenAI.Gym (GymEnv(MountainCarV0))
 
 
--- FIXME: keep semantics or move to a tuple?
 data State = State
-  { cosVel0     :: Float
-  , sinVel0     :: Float
-  , cosVel1     :: Float
-  , sinVel1     :: Float
-  , joint0Angle :: Float
-  , joint1Angle :: Float
+  { position :: Float
+  , velocity :: Float
   } deriving (Show, Eq, Generic, Ord, Hashable)
 
 
 instance FromJSON State where
   parseJSON :: Value -> Parser State
   parseJSON arr@(Array _)= do
-    (a, b, c, d, e, f) <- parseJSON arr :: Parser (Float, Float, Float, Float, Float, Float)
-    return $ State a b c d e f
+    (a, b) <- parseJSON arr :: Parser (Float, Float)
+    return $ State a b
   parseJSON invalid = typeMismatch "Environment State" invalid
 
 
-data Action = RightTorque | NoTorque | LeftTorque
+data Action = MoveLeft | DoNothing | MoveRight
   deriving (Enum, Bounded, Ord, Show, Eq, Generic, Hashable)
 
 instance ToJSON Action where
@@ -52,8 +56,8 @@ instance ToJSON Action where
 
 type Environment = GymEnvironment State Action
 
-runEnvironment = I.runEnvironment AcrobotV1
-runDefaultEnvironment = I.runDefaultEnvironment AcrobotV1
+runEnvironment = I.runEnvironment MountainCarV0
+runDefaultEnvironment = I.runDefaultEnvironment MountainCarV0
 
 instance MonadEnv Environment State Action Reward where
   reset = I._reset

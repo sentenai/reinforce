@@ -18,9 +18,7 @@ import Control.MonadEnv.Internal
 import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 
-import Data.Aeson
 import Data.Aeson.Types
-import Data.DList (DList)
 import OpenAI.Gym (GymEnv(PendulumV0))
 
 
