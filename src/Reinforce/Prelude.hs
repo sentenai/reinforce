@@ -17,7 +17,7 @@ import Control.Exception.Safe   as X
 import Control.Monad.Identity   as X
 import Control.Monad.Reader     as X
 import Control.Monad.RWS.Strict as X hiding ((<>))
-import Control.Monad.Writer.Strict as X (Writer(..))
+import Control.Monad.Writer.Strict as X (Writer)
 import Control.Monad.State      as X
 
 import Data.DList  as X (DList(..))
@@ -40,7 +40,7 @@ import System.Random.MWC              as X (GenIO, Variate)
 -- ========================================================================= --
 -- Gym-required types:
 import Servant.Client as X (BaseUrl(..), ServantError(..))
-import Network.HTTP.Client as X (Manager(..))
+import Network.HTTP.Client as X (Manager)
 
 -- ========================================================================= --
 

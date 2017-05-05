@@ -8,7 +8,6 @@ module Environments.Gym.Internal where
 
 import Control.MonadEnv
 import Reinforce.Prelude
-import Data.DList
 import Data.Logger
 import Data.Aeson
 import Control.MonadMWCRandom

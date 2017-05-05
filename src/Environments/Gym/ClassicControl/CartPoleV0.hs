@@ -12,6 +12,7 @@
 -- https://gym.openai.com/envs/CartPole-v0
 --------------------------------------------------------------------------------
 {-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 module Environments.Gym.ClassicControl.CartPoleV0 where
 
 import Reinforce.Prelude

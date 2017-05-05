@@ -23,7 +23,6 @@ import qualified Environments.Gym.Internal as I
 import Data.Aeson
 import Data.Aeson.Types
 import OpenAI.Gym (GymEnv(FrozenLakeV0))
-import qualified Data.Logger as Logger
 
 
 newtype StateFL = Position { unPosition :: Int }

@@ -9,11 +9,8 @@ import Control.MonadMWCRandom
 import qualified Data.Vector as V
 import Data.Vector ((!))
 import Data.DList
-import Data.Maybe
 import qualified Data.Logger as Logger
-import qualified System.Random.MWC as MWC
 import Control.Exception.Safe (assert)
-import Spaces.Shared
 
 import Reinforce.Prelude
 
@@ -57,9 +54,7 @@ newtype Environment a = Environment { getEnvironment :: RWST Config (DList Event
     )
 
 runEnvironment :: Config -> Environment () -> IO (DList Event)
-runEnvironment c (Environment m) = do
-  g <- MWC.createSystemRandom
-  snd <$> evalRWST m c ()
+runEnvironment c (Environment m) = snd <$> evalRWST m c ()
 
 defaultBandits :: GenIO -> Config
 defaultBandits = mkBandits 10 2 0.1

@@ -19,7 +19,6 @@ module Control.MonadEnv
   , Reward
   ) where
 
-import Reinforce.Prelude
 import Control.MonadEnv.Internal (Obs(..), Reward, MonadEnv, Initial)
 import qualified Control.MonadEnv.Internal as I
 
