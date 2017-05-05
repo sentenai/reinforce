@@ -46,6 +46,9 @@ instance MonadMWCRandom (GymEnvironment s a) where
 inEnvironment :: ClientM x -> GymEnvironment s a x
 inEnvironment c = GymEnvironment $ lift c
 
+
+type Runner s a x = Bool -> GymEnvironment s a x -> IO (Either ServantError (DList (Event Reward s a)))
+
 -- ========================================================================= --
 
 data GymConfigs

@@ -22,8 +22,8 @@ import qualified Environments.Gym.Internal as I
 
 import Data.Aeson
 import Data.Aeson.Types
-import Data.DList (DList)
 import OpenAI.Gym (GymEnv(FrozenLakeV0))
+import qualified Data.Logger as Logger
 
 
 newtype StateFL = Position { unPosition :: Int }
@@ -49,10 +49,12 @@ instance ToJSON Action where
   toJSON = toJSON . fromEnum
 
 -- ========================================================================= --
-
 type Environment = GymEnvironment StateFL Action
 
+runEnvironment :: Manager -> BaseUrl -> I.Runner StateFL Action x
 runEnvironment = I.runEnvironment FrozenLakeV0
+
+runDefaultEnvironment :: I.Runner StateFL Action x
 runDefaultEnvironment = I.runDefaultEnvironment FrozenLakeV0
 
 instance MonadEnv Environment StateFL Action Reward where

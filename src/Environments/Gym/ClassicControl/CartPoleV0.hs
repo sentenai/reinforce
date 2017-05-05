@@ -21,10 +21,12 @@ import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 import OpenAI.Gym (GymEnv(CartPoleV0))
 
-
 type Environment = GymEnvironment StateCP Action
 
+runEnvironment :: Manager -> BaseUrl -> I.Runner StateCP Action x
 runEnvironment = I.runEnvironment CartPoleV0
+
+runDefaultEnvironment :: I.Runner StateCP Action x
 runDefaultEnvironment = I.runDefaultEnvironment CartPoleV0
 
 instance MonadEnv Environment StateCP Action Reward where

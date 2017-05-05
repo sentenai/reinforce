@@ -23,10 +23,17 @@ module Environments.Gym.ClassicControl.CartPoleV1
   , runDefaultEnvironment
   ) where
 
+import Reinforce.Prelude hiding (State)
+import Data.CartPole
 import OpenAI.Gym (GymEnv(CartPoleV1))
 import Environments.Gym.ClassicControl.CartPoleV0 as Env hiding (runEnvironment, runDefaultEnvironment)
 import qualified Environments.Gym.Internal as I
 
+
+runEnvironment :: Manager -> BaseUrl -> I.Runner StateCP Action x
 runEnvironment = I.runEnvironment CartPoleV1
+
+runDefaultEnvironment :: I.Runner StateCP Action x
 runDefaultEnvironment = I.runDefaultEnvironment CartPoleV1
+
 

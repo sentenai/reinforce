@@ -52,7 +52,10 @@ instance ToJSON Action where
 
 type Environment = GymEnvironment State Action
 
+runEnvironment :: Manager -> BaseUrl -> I.Runner State Action x
 runEnvironment = I.runEnvironment AcrobotV1
+
+runDefaultEnvironment :: I.Runner State Action x
 runDefaultEnvironment = I.runDefaultEnvironment AcrobotV1
 
 instance MonadEnv Environment State Action Reward where

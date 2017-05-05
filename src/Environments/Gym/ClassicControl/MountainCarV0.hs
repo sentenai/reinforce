@@ -56,7 +56,10 @@ instance ToJSON Action where
 
 type Environment = GymEnvironment State Action
 
+runEnvironment :: Manager -> BaseUrl -> I.Runner State Action x
 runEnvironment = I.runEnvironment MountainCarV0
+
+runDefaultEnvironment :: I.Runner State Action x
 runDefaultEnvironment = I.runDefaultEnvironment MountainCarV0
 
 instance MonadEnv Environment State Action Reward where

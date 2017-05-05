@@ -20,6 +20,7 @@ import Control.Monad.RWS.Strict as X hiding ((<>))
 import Control.Monad.Writer.Strict as X (Writer(..))
 import Control.Monad.State      as X
 
+import Data.DList  as X (DList(..))
 import Data.List   as X (intercalate)
 import Data.Monoid as X
 import Data.Proxy  as X (Proxy)
@@ -35,6 +36,12 @@ import Lens.Micro.Platform as X
 import Data.Hashable as X
 import Statistics.Distribution.Normal as X (normalDistr, NormalDistribution)
 import System.Random.MWC              as X (GenIO, Variate)
+
+-- ========================================================================= --
+-- Gym-required types:
+import Servant.Client as X (BaseUrl(..), ServantError(..))
+import Network.HTTP.Client as X (Manager(..))
+
 -- ========================================================================= --
 
 import qualified Prelude as P (head)
