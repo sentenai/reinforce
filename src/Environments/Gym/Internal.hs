@@ -132,15 +132,18 @@ _step a = do
   GymConfigs i mon <- ask
   out <- inEnvironment . OpenAI.envStep i $ renderStep mon
   if OpenAI.done out
-  then return $ Done (OpenAI.reward out)
+  then do
+    let r = OpenAI.reward out
+    LastState ep prior <- get
+    tell . pure $ Logger.Event ep r prior a
+    return $ Done r
   else do
     s <- aesonToState (OpenAI.observation out)
     let r = OpenAI.reward out
         n = Next r s
-
     LastState ep prior <- get
     put $ LastState ep s
-    tell . pure  $ Logger.Event ep r prior a
+    tell . pure $ Logger.Event ep r prior a
     return n
   where
     renderStep :: Bool -> OpenAI.Step
