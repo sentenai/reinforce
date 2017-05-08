@@ -45,7 +45,8 @@ instance Defaulted StateCP where
 
 instance Monoid StateCP where
   mempty = defaulted
-  -- FIXME : remove this
+  mappend (StateCP a0 b0 c0 d0) (StateCP a1 b1 c1 d1)
+    = StateCP (a0+a1) (b0+b1) (c0+c1) (d0+d1)
 
 instance Spaces.StateSpace StateCP where
   toVector (StateCP p a v r) = Spaces.toVector [p, a, v, r]
