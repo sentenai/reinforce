@@ -1,6 +1,10 @@
 flags: {}
 packages:
 - '.'
-- location: gym-http-api/binding-hs
+- location:
+    git: git@github.com:stites/gym-http-api.git
+    commit: '93ce33'
+  subdirs:
+    - binding-hs
   extra-dep: true
 resolver: lts-8.5
