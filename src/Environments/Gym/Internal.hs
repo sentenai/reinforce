@@ -11,6 +11,7 @@ import Reinforce.Prelude
 import Data.Logger
 import Data.Aeson
 import Control.MonadMWCRandom
+import Control.Monad.Except
 import qualified Data.Text as T (pack)
 import qualified OpenAI.Gym as OpenAI
 import Servant.Client
@@ -23,9 +24,28 @@ import OpenAI.Gym
   , Observation(..)
   )
 
+newtype ClientT t a
+  = ClientT (ReaderT ClientEnv (ExceptT ServantError t) a)
+  deriving
+    ( Functor
+    , Applicative
+    , Monad
+    , MonadError ServantError
+    , MonadReader ClientEnv
+    , MonadIO
+    , MonadThrow
+    )
 
-newtype GymEnvironment s a x = GymEnvironment
-  { getEnvironment :: RWST GymConfigs (DList (Event Reward s a)) (LastState s) ClientM x }
+runClientT :: MonadIO t => ClientT t a -> ClientEnv -> t (Either ServantError a)
+runClientT (ClientT m) env = runExceptT $ runReaderT m env
+
+
+liftClientM :: MonadIO t => ClientM a -> ClientT t a
+liftClientM m = ClientT . ReaderT $ \env -> ExceptT $ liftIO (runClientM m env)
+
+
+newtype GymEnvironmentT s a t x = GymEnvironmentT
+  { getEnvironmentT :: RWST GymConfigs (DList (Event Reward s a)) (LastState s) (ClientT t) x }
   deriving
     ( Functor
     , Applicative
@@ -36,14 +56,17 @@ newtype GymEnvironment s a x = GymEnvironment
     , MonadWriter (DList (Event Reward s a))
     , MonadState (LastState s)
     , MonadRWS GymConfigs (DList (Event Reward s a)) (LastState s)
-    , Logger
     )
 
-instance MonadMWCRandom (GymEnvironment s a) where
+
+type GymEnvironment s a = GymEnvironmentT s a IO
+
+instance (MonadIO t, MonadMWCRandom t) => MonadMWCRandom (GymEnvironmentT s a t) where
   getGen = liftIO getGen
 
-inEnvironment :: ClientM x -> GymEnvironment s a x
-inEnvironment c = GymEnvironment $ lift c
+
+inEnvironment :: MonadIO t => ClientM x -> GymEnvironmentT s a t x
+inEnvironment c = GymEnvironmentT $ lift $ liftClientM c
 
 
 type Runner s a x = Bool -> GymEnvironment s a x -> IO (Either ServantError (DList (Event Reward s a)))
@@ -69,34 +92,57 @@ data GymException
 instance Exception GymException where
 
 
-runEnvironment :: forall o a x . GymEnv -> Manager -> BaseUrl -> Bool -> GymEnvironment o a x -> IO (Either ServantError (DList (Event Reward o a)))
-runEnvironment t m u mon env = runClientM action (ClientEnv m u)
+runEnvironmentT
+  :: forall o a t x . MonadIO t
+  => GymEnv
+  -> Manager
+  -> BaseUrl
+  -> Bool
+  -> GymEnvironmentT o a t x
+  -> t (Either ServantError (DList (Event Reward o a)))
+runEnvironmentT t m u mon env = runClientT action (ClientEnv m u)
   where
-  action :: ClientM (DList (Event Reward o a))
+  action :: ClientT t (DList (Event Reward o a))
   action = do
-    i <- OpenAI.envCreate t
-    (_, w) <- execRWST (getEnvironment renderableEnv) (GymConfigs i mon) (Uninitialized 0)
-    OpenAI.envClose i
+    i <- liftClientM $ OpenAI.envCreate t
+    (_, w) <- execRWST (getEnvironmentT renderableEnv) (GymConfigs i mon) (Uninitialized 0)
+    liftClientM $ OpenAI.envClose i
     return w
 
-  renderableEnv :: GymEnvironment o a ()
+  renderableEnv :: GymEnvironmentT o a t ()
   renderableEnv =
     if mon
     then withMonitor env
     else env >> return ()
 
+runEnvironment
+  :: GymEnv
+  -> Manager
+  -> BaseUrl
+  -> Bool
+  -> GymEnvironment o a x
+  -> IO (Either ServantError (DList (Event Reward o a)))
+runEnvironment = runEnvironmentT
 
-runDefaultEnvironment :: GymEnv -> Bool -> GymEnvironment o a x -> IO (Either ServantError (DList (Event Reward o a)))
-runDefaultEnvironment t m e = do
-  mngr <- newManager defaultManagerSettings
-  runEnvironment t mngr (BaseUrl Http "localhost" 5000 "") m e
+runDefaultEnvironmentT :: MonadIO t => GymEnv -> Bool -> GymEnvironmentT o a t x -> t (Either ServantError (DList (Event Reward o a)))
+runDefaultEnvironmentT t m e = do
+  mngr <- liftIO (newManager defaultManagerSettings)
+  runEnvironmentT t mngr (BaseUrl Http "localhost" 5000 "") m e
+
+runDefaultEnvironment
+  :: GymEnv
+  -> Bool
+  -> GymEnvironment o a x
+  -> IO (Either ServantError (DList (Event Reward o a)))
+runDefaultEnvironment = runDefaultEnvironmentT
 
 
-getInstID :: GymEnvironment o a InstID
-getInstID = ask >>= \(GymConfigs i _) -> return i
+
+getInstID :: Monad t => GymEnvironmentT o a t InstID
+getInstID = ask >>= \(GymConfigs i _) -> pure i
 
 
-withMonitor :: GymEnvironment o a x -> GymEnvironment o a ()
+withMonitor :: MonadIO t => GymEnvironmentT o a t x -> GymEnvironmentT o a t ()
 withMonitor env = do
   i <- getInstID
   inEnvironment $ OpenAI.envMonitorStart i (m i)
@@ -108,14 +154,14 @@ withMonitor env = do
     m (InstID t) = OpenAI.Monitor ("/tmp/"<> T.pack (show CartPoleV0) <>"-" <> t) True False False
 
 
-stepCheck :: GymEnvironment o a ()
+stepCheck :: MonadThrow t => GymEnvironmentT o a t ()
 stepCheck =
   get >>= \case
     Uninitialized _ -> throwM EnvironmentRequiresReset
     LastState _ _   -> return ()
 
 
-_reset :: FromJSON o => GymEnvironment o a (Initial o)
+_reset :: (MonadIO t, MonadThrow t, FromJSON o) => GymEnvironmentT o a t (Initial o)
 _reset = do
   i <- getInstID
   Observation o <- inEnvironment . OpenAI.envReset $ i
@@ -126,7 +172,9 @@ _reset = do
   return $ Initial s
 
 
-_step :: (ToJSON a, r ~ Reward, FromJSON o) => a -> GymEnvironment o a (Obs r o)
+_step
+  :: (MonadIO t, MonadThrow t, ToJSON a, r ~ Reward, FromJSON o)
+  => a -> GymEnvironmentT o a t (Obs r o)
 _step a = do
   stepCheck
   GymConfigs i mon <- ask

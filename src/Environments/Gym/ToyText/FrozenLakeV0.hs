@@ -13,7 +13,15 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE InstanceSigs #-}
-module Environments.Gym.ToyText.FrozenLakeV0 where
+module Environments.Gym.ToyText.FrozenLakeV0
+  ( I.Runner
+  , StateFL(..)
+  , mkStateFL
+  , Environment
+  , Environments.Gym.ToyText.FrozenLakeV0.runEnvironment
+  , Environments.Gym.ToyText.FrozenLakeV0.runDefaultEnvironment
+  , Action(..)
+  ) where
 
 import Reinforce.Prelude
 import Control.MonadEnv.Internal
