@@ -54,15 +54,22 @@ instance ToJSON Action where
 
 -- ========================================================================= --
 
-type Environment = GymEnvironment State Action
+type EnvironmentT t = GymEnvironmentT State Action t
+type Environment = EnvironmentT IO
 
-runEnvironment :: Manager -> BaseUrl -> I.Runner State Action x
-runEnvironment = I.runEnvironment MountainCarV0
+runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT State Action t x
+runEnvironmentT = I.runEnvironmentT MountainCarV0
 
-runDefaultEnvironment :: I.Runner State Action x
-runDefaultEnvironment = I.runDefaultEnvironment MountainCarV0
+runEnvironment :: Manager -> BaseUrl -> I.RunnerT State Action IO x
+runEnvironment = I.runEnvironmentT MountainCarV0
 
-instance MonadEnv Environment State Action Reward where
+runDefaultEnvironmentT :: MonadIO t => I.RunnerT State Action t x
+runDefaultEnvironmentT = I.runDefaultEnvironmentT MountainCarV0
+
+runDefaultEnvironment :: I.RunnerT State Action IO x
+runDefaultEnvironment = I.runDefaultEnvironmentT MountainCarV0
+
+instance (MonadThrow t, MonadIO t) => MonadEnv (EnvironmentT t) State Action Reward where
   reset = I._reset
   step = I._step
 

@@ -21,18 +21,32 @@
 module Environments.Gym.ClassicControl.MountainCarContinuousV0
   ( module Env
   , runEnvironment
+  , runEnvironmentT
   , runDefaultEnvironment
+  , runDefaultEnvironmentT
   ) where
 
 import Reinforce.Prelude hiding (State)
 import OpenAI.Gym (GymEnv(MountainCarContinuousV0))
-import Environments.Gym.ClassicControl.MountainCarV0 as Env hiding (runEnvironment, runDefaultEnvironment)
+import Environments.Gym.ClassicControl.MountainCarV0 as Env hiding
+  ( runEnvironment
+  , runDefaultEnvironment
+  , runEnvironmentT
+  , runDefaultEnvironmentT
+  )
 import qualified Environments.Gym.Internal as I
 
 
-runEnvironment :: Manager -> BaseUrl -> I.Runner State Action x
-runEnvironment = I.runEnvironment MountainCarContinuousV0
+runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT State Action t x
+runEnvironmentT = I.runEnvironmentT MountainCarContinuousV0
 
-runDefaultEnvironment :: I.Runner State Action x
-runDefaultEnvironment = I.runDefaultEnvironment MountainCarContinuousV0
+runEnvironment :: Manager -> BaseUrl -> I.RunnerT State Action IO x
+runEnvironment = I.runEnvironmentT MountainCarContinuousV0
+
+runDefaultEnvironmentT :: MonadIO t => I.RunnerT State Action t x
+runDefaultEnvironmentT = I.runDefaultEnvironmentT MountainCarContinuousV0
+
+runDefaultEnvironment :: I.RunnerT State Action IO x
+runDefaultEnvironment = I.runDefaultEnvironmentT MountainCarContinuousV0
+
 

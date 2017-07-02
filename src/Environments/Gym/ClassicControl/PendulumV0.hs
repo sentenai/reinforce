@@ -14,8 +14,8 @@
 module Environments.Gym.ClassicControl.PendulumV0 where
 
 import Reinforce.Prelude hiding (State)
-import Control.MonadEnv.Internal
-import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
+import Control.MonadEnv.Internal (MonadEnv(..), Reward)
+import Environments.Gym.Internal (GymEnvironmentT)
 import qualified Environments.Gym.Internal as I
 
 import Data.Aeson.Types
@@ -47,15 +47,22 @@ instance ToJSON Action where
 
 -- ========================================================================= --
 
-type Environment = GymEnvironment State Action
+type EnvironmentT t = GymEnvironmentT State Action t
+type Environment = EnvironmentT IO
 
-runEnvironment :: Manager -> BaseUrl -> I.Runner State Action x
-runEnvironment = I.runEnvironment PendulumV0
+runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT State Action t x
+runEnvironmentT = I.runEnvironmentT PendulumV0
 
-runDefaultEnvironment :: I.Runner State Action x
-runDefaultEnvironment = I.runDefaultEnvironment PendulumV0
+runEnvironment :: Manager -> BaseUrl -> I.RunnerT State Action IO x
+runEnvironment = I.runEnvironmentT PendulumV0
 
-instance MonadEnv Environment State Action Reward where
+runDefaultEnvironmentT :: MonadIO t => I.RunnerT State Action t x
+runDefaultEnvironmentT = I.runDefaultEnvironmentT PendulumV0
+
+runDefaultEnvironment :: I.RunnerT State Action IO x
+runDefaultEnvironment = I.runDefaultEnvironmentT PendulumV0
+
+instance (MonadIO t, MonadThrow t) => MonadEnv (EnvironmentT t) State Action Reward where
   reset = I._reset
   step = I._step
 

@@ -68,8 +68,9 @@ instance (MonadIO t, MonadMWCRandom t) => MonadMWCRandom (GymEnvironmentT s a t)
 inEnvironment :: MonadIO t => ClientM x -> GymEnvironmentT s a t x
 inEnvironment c = GymEnvironmentT $ lift $ liftClientM c
 
+type RunnerT s a t x = Bool -> GymEnvironmentT s a t x -> t (Either ServantError (DList (Event Reward s a)))
 
-type Runner s a x = Bool -> GymEnvironment s a x -> IO (Either ServantError (DList (Event Reward s a)))
+type Runner s a x = RunnerT s a IO x
 
 -- ========================================================================= --
 
@@ -124,10 +125,17 @@ runEnvironment
   -> IO (Either ServantError (DList (Event Reward o a)))
 runEnvironment = runEnvironmentT
 
-runDefaultEnvironmentT :: MonadIO t => GymEnv -> Bool -> GymEnvironmentT o a t x -> t (Either ServantError (DList (Event Reward o a)))
+
+runDefaultEnvironmentT
+  :: MonadIO t
+  => GymEnv
+  -> Bool
+  -> GymEnvironmentT o a t x
+  -> t (Either ServantError (DList (Event Reward o a)))
 runDefaultEnvironmentT t m e = do
   mngr <- liftIO (newManager defaultManagerSettings)
   runEnvironmentT t mngr (BaseUrl Http "localhost" 5000 "") m e
+
 
 runDefaultEnvironment
   :: GymEnv
@@ -135,7 +143,6 @@ runDefaultEnvironment
   -> GymEnvironment o a x
   -> IO (Either ServantError (DList (Event Reward o a)))
 runDefaultEnvironment = runDefaultEnvironmentT
-
 
 
 getInstID :: Monad t => GymEnvironmentT o a t InstID

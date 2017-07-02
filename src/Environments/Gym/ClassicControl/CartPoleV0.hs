@@ -16,21 +16,28 @@
 module Environments.Gym.ClassicControl.CartPoleV0 where
 
 import Reinforce.Prelude
-import Control.MonadEnv.Internal
 import Data.CartPole
-import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
+import Control.MonadEnv.Internal (MonadEnv(..), Reward)
+import Environments.Gym.Internal (GymEnvironmentT)
 import qualified Environments.Gym.Internal as I
 import OpenAI.Gym (GymEnv(CartPoleV0))
 
-type Environment = GymEnvironment StateCP Action
+type EnvironmentT t = GymEnvironmentT StateCP Action t
+type Environment = EnvironmentT IO
 
-runEnvironment :: Manager -> BaseUrl -> I.Runner StateCP Action x
-runEnvironment = I.runEnvironment CartPoleV0
+runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT StateCP Action t x
+runEnvironmentT = I.runEnvironmentT CartPoleV0
 
-runDefaultEnvironment :: I.Runner StateCP Action x
-runDefaultEnvironment = I.runDefaultEnvironment CartPoleV0
+runEnvironment :: Manager -> BaseUrl -> I.RunnerT StateCP Action IO x
+runEnvironment = I.runEnvironmentT CartPoleV0
 
-instance MonadEnv Environment StateCP Action Reward where
+runDefaultEnvironmentT :: MonadIO t => I.RunnerT StateCP Action t x
+runDefaultEnvironmentT = I.runDefaultEnvironmentT CartPoleV0
+
+runDefaultEnvironment :: I.RunnerT StateCP Action IO x
+runDefaultEnvironment = I.runDefaultEnvironmentT CartPoleV0
+
+instance (MonadIO t, MonadThrow t) => MonadEnv (EnvironmentT t) StateCP Action Reward where
   reset = I._reset
   step = I._step
 

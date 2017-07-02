@@ -27,6 +27,7 @@ import Reinforce.Prelude
 import Control.MonadEnv.Internal
 import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
+import Data.Logger (Event)
 
 import Data.Aeson
 import Data.Aeson.Types
@@ -56,15 +57,22 @@ instance ToJSON Action where
   toJSON = toJSON . fromEnum
 
 -- ========================================================================= --
-type Environment = GymEnvironment StateFL Action
+type EnvironmentT t = GymEnvironmentT StateFL Action t
+type Environment = EnvironmentT IO
 
-runEnvironment :: Manager -> BaseUrl -> I.Runner StateFL Action x
-runEnvironment = I.runEnvironment FrozenLakeV0
+runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT StateFL Action t x
+runEnvironmentT = I.runEnvironmentT FrozenLakeV0
 
-runDefaultEnvironment :: I.Runner StateFL Action x
-runDefaultEnvironment = I.runDefaultEnvironment FrozenLakeV0
+runEnvironment :: Manager -> BaseUrl -> I.RunnerT StateFL Action IO x
+runEnvironment = I.runEnvironmentT FrozenLakeV0
 
-instance MonadEnv Environment StateFL Action Reward where
+runDefaultEnvironmentT :: MonadIO t => I.RunnerT StateFL Action t x
+runDefaultEnvironmentT = I.runDefaultEnvironmentT FrozenLakeV0
+
+runDefaultEnvironment :: I.RunnerT StateFL Action IO x
+runDefaultEnvironment = I.runDefaultEnvironmentT FrozenLakeV0
+
+instance (MonadThrow t, MonadIO t) => MonadEnv (EnvironmentT t) StateFL Action Reward where
   reset = I._reset
   step = I._step
 
