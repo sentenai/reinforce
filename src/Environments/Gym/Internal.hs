@@ -36,6 +36,11 @@ newtype ClientT t a
     , MonadThrow
     )
 
+
+instance MonadTrans ClientT where
+   lift = ClientT . lift . lift
+
+
 runClientT :: MonadIO t => ClientT t a -> ClientEnv -> t (Either ServantError a)
 runClientT (ClientT m) env = runExceptT $ runReaderT m env
 
@@ -58,6 +63,8 @@ newtype GymEnvironmentT s a t x = GymEnvironmentT
     , MonadRWS GymConfigs (DList (Event Reward s a)) (LastState s)
     )
 
+instance MonadTrans (GymEnvironmentT s a) where
+   lift = GymEnvironmentT . lift . lift
 
 type GymEnvironment s a = GymEnvironmentT s a IO
 
