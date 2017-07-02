@@ -16,6 +16,7 @@
 module Environments.Gym.ToyText.FrozenLakeV0
   ( I.Runner
   , StateFL(..)
+  , toVector
   , mkStateFL
   , Environment
   , EnvironmentT
@@ -32,6 +33,7 @@ import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 import Data.Logger (Event)
 
+import qualified Data.Vector as V
 import Data.Aeson
 import Data.Aeson.Types
 import OpenAI.Gym (GymEnv(FrozenLakeV0))
@@ -39,6 +41,10 @@ import OpenAI.Gym (GymEnv(FrozenLakeV0))
 
 newtype StateFL = Position { unPosition :: Int }
   deriving (Show, Eq, Generic, Ord, Hashable)
+
+
+toVector :: StateFL -> Vector Int
+toVector (Position p) = V.generate 16 (\i -> fromEnum (i == p))
 
 
 mkStateFL :: MonadThrow m => Int -> m StateFL
