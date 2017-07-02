@@ -18,8 +18,11 @@ module Environments.Gym.ToyText.FrozenLakeV0
   , StateFL(..)
   , mkStateFL
   , Environment
+  , EnvironmentT
   , Environments.Gym.ToyText.FrozenLakeV0.runEnvironment
+  , Environments.Gym.ToyText.FrozenLakeV0.runEnvironmentT
   , Environments.Gym.ToyText.FrozenLakeV0.runDefaultEnvironment
+  , Environments.Gym.ToyText.FrozenLakeV0.runDefaultEnvironmentT
   , Action(..)
   ) where
 
