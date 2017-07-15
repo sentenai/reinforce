@@ -38,6 +38,7 @@ library
     , microlens-platform
     , mtl
     , mwc-random
+    , primitive
     , safe-exceptions
     , servant-client
     , statistics

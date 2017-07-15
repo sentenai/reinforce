@@ -193,16 +193,16 @@ _step a = do
   stepCheck
   GymConfigs i mon <- ask
   out <- inEnvironment . OpenAI.envStep i $ renderStep mon
+  let r = OpenAI.reward out
   if OpenAI.done out
   then do
-    let r = OpenAI.reward out
+    s <- aesonToMaybeState (OpenAI.observation out)
     LastState ep prior <- get
     tell . pure $ Logger.Event ep r prior a
-    return $ Done r
+    return $ Done r s
   else do
     s <- aesonToState (OpenAI.observation out)
-    let r = OpenAI.reward out
-        n = Next r s
+    let n = Next r s
     LastState ep prior <- get
     put $ LastState ep s
     tell . pure $ Logger.Event ep r prior a
@@ -213,7 +213,14 @@ _step a = do
 
 
 aesonToState :: forall o m . (FromJSON o, MonadThrow m) => Value -> m o
-aesonToState o =
+aesonToState = aesonToMaybeState >=> \case
+  Nothing -> throw $ UnexpectedServerResponse "observation returned was null"
+  Just o -> pure o
+
+aesonToMaybeState :: forall o m . (FromJSON o, MonadThrow m) => Value -> m (Maybe o)
+aesonToMaybeState Null = pure Nothing
+aesonToMaybeState    o =
   case (fromJSON o :: Result o) of
     Error str -> throw $ UnexpectedServerResponse str
-    Success o -> return o
+    Success o -> pure  $ Just o
+

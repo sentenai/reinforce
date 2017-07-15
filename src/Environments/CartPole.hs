@@ -174,9 +174,9 @@ instance MonadEnv Environment StateCP Action Reward where
     if not fallen
     then putNextState st >> return (Next 1 next)
     else case st of
-      Nothing ->            putNextState (Just 0)     >> return (Done 1)  -- pole just fell!
-      Just 0  -> warning >> putNextState (Just 1)     >> return (Done 0)
-      Just nsteps -> putNextState (Just $ nsteps + 1) >> return (Done 0)
+      Nothing ->            putNextState (Just 0)     >> return (Done 1 Nothing)  -- pole just fell!
+      Just 0  -> warning >> putNextState (Just 1)     >> return (Done 0 Nothing)
+      Just nsteps -> putNextState (Just $ nsteps + 1) >> return (Done 0 Nothing)
 
     where
       warning :: MonadIO io => io ()

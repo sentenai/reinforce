@@ -32,7 +32,7 @@ data Initial o = Initial !o | EmptyEpisode
 -- 'Terminated', or will return the reward of the last action performed and the
 -- next state
 -- TODO: return @Terminal@ (or return ()) on failure
-data Obs r o = Next !r !o | Done !r | Terminated
+data Obs r o = Next !r !o | Done !r !(Maybe o) | Terminated
   deriving (Show, Eq)
 
 

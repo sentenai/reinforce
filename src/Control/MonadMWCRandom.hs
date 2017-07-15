@@ -34,13 +34,18 @@ module Control.MonadMWCRandom
   , Control.MonadMWCRandom.genContVar
   -- * extras
   , sampleFrom
+  , Variate
+  , _uniform
   ) where
 
 import Reinforce.Prelude
 import qualified System.Random.MWC as MWC
 import qualified Statistics.Distribution as Stats
 import Control.MonadEnv.Internal (MonadEnv(..), Obs, Initial)
+import Control.Monad.Primitive (PrimState, PrimMonad)
 
+_uniform :: (PrimMonad m, Variate a) => MWC.Gen (PrimState m) -> m a
+_uniform = MWC.uniform
 
 -- | MonadMWCRandom for public use. FIXME: use with PrimState so that we can use ST
 class Monad m => MonadMWCRandom m where
@@ -125,7 +130,7 @@ runMWCRandT = runReaderT . getMWCRandT
 
 
 -- | simple type alias for transformer-less variant
-type MWCRand a = MWCRandT Identity a
+type MWCRand = MWCRandT Identity
 
 
 -- | run a transformerless MWC-random Monad
