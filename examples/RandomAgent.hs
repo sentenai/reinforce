@@ -19,12 +19,16 @@ main = runEnvironment_ $
     maxEpisodes :: Int
     maxEpisodes = 100
 
+
     rolloutEpisode :: StateCP -> Environment ()
     rolloutEpisode obs = do
       a <- liftIO randomChoice
       Env.step a >>= \case
-        Done r mobs  -> liftIO . print $ "Done! final reward: " ++ show r ++ ", final state: " ++ show mobs
+        Done r mobs  ->
+          liftIO . print
+            $ "Done! final reward: " ++ show r ++ ", final state: " ++ show mobs
         Next r  obs' -> do
-          liftIO . print $ "Stepped with " ++ show a ++ ". reward: " ++ show r ++ ", next state: " ++ show obs'
+          liftIO . print
+            $ "Stepped with " ++ show a ++ ". reward: " ++ show r ++ ", next state: " ++ show obs'
           rolloutEpisode obs'
 
