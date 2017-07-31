@@ -5,7 +5,7 @@
 {-# LANGUAGE RankNTypes #-}
 module Agents.DoubleQTable where
 
-import Agents.Prelude
+import Reinforce.Prelude
 import Control.MonadEnv as Env
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM

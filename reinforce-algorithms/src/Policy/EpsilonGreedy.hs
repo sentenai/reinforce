@@ -1,6 +1,6 @@
 module Policy.EpsilonGreedy where
 
-import Agents.Prelude
+import Reinforce.Prelude
 import Control.MonadMWCRandom
 
 epsilonGreedy :: (MonadIO m, Ord r, Variate r, MonadMWCRandom m) => [(a, r)] -> r -> m a

@@ -33,8 +33,9 @@ import Control.Monad.State      as X
 import Control.Monad            as X (void)
 
 import Data.DList  as X (DList(..))
-import Data.List   as X (intercalate)
+import Data.List   as X (intercalate, maximumBy)
 import Data.Monoid as X
+import Data.Ord    as X
 import Data.Proxy  as X (Proxy(..))
 import Data.Text   as X (Text)
 import Data.Vector as X (Vector)

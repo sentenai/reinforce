@@ -1,6 +1,6 @@
 module Algorithms.Internal where
 
-import Agents.Prelude
+import Reinforce.Prelude
 
 
 class Monad m => RLParams m r where

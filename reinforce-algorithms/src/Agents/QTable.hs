@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Agents.QTable where
 
-import Agents.Prelude
+import Reinforce.Prelude
 import Control.MonadEnv as Env
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM

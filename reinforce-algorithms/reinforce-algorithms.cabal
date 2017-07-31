@@ -33,7 +33,6 @@ library
   exposed-modules:
       Agents
       Agents.DoubleQTable
-      Agents.Prelude
       Agents.QTable
       Algorithms.Double.Internal
       Algorithms.DoubleQLearning

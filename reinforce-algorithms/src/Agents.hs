@@ -1,6 +1,6 @@
 module Agents where
 
-import Agents.Prelude
+import Reinforce.Prelude
 import Control.MonadEnv
 
 runLearner

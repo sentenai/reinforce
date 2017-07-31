@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 module Internal.MonadHistory where
 
-import Agents.Prelude
+import Reinforce.Prelude
 
 -- Just a writer alias for the time being... which probably means I should replace it with Writer...
 class (Monoid h, Monad m) => MonadHistory h m | m -> h where

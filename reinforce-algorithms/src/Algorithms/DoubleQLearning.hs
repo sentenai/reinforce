@@ -1,7 +1,7 @@
 module Algorithms.DoubleQLearning where
 
 import Agents
-import Agents.Prelude
+import Reinforce.Prelude
 import Control.MonadEnv (MonadEnv, Initial(..), Obs(..))
 import Control.MonadMWCRandom
 import qualified Control.MonadEnv as Env
