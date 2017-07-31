@@ -13,7 +13,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module Spaces.Action
+module Reinforce.Spaces.Action
   ( DiscreteActionSpace(..)
   , oneHot
   , oneHot'

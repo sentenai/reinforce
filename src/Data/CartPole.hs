@@ -20,13 +20,13 @@ module Data.CartPole
   ) where
 
 import Reinforce.Prelude
-import qualified Spaces.State as Spaces
+import qualified Reinforce.Spaces.State as Spaces
 
 import Data.Aeson
 import Data.Aeson.Types
 import Control.Exception (AssertionFailed(..))
-import Spaces
-import Spaces.Action (Size)
+import Reinforce.Spaces
+import Reinforce.Spaces.Action (Size)
 import Numeric.LinearAlgebra.Static
 import qualified Data.Logger as Logger
 import qualified Data.Vector as V

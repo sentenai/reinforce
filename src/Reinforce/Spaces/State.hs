@@ -12,7 +12,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module Spaces.State
+module Reinforce.Spaces.State
   ( StateSpace(..)
   , StateSpaceStatic(..)
   ) where

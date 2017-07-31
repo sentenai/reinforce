@@ -5,11 +5,13 @@
 name:           reinforce
 version:        0.0.0.1
 synopsis:       Reinforcement learning in Haskell
-description:    Please see README.md
+description:    See <https://github.com/Sentenai/reinforce README.md>. @reinforce@ is a library which exports an OpenAI-gym-like typeclass, @MonadEnv@, with both an interface to the <https://github.com/openai/gym-http-api/ gym-http-api>, as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
+                This is an environment-first library, with basic reinforcment learning algorithms being developed on branches in subpackages (see <https://github.com/Sentenai/reinforce#development-and-milestones Development and Milestones>). @reinforce@ is currently an "alpha" release since it still needs some work defining some formal structures around what state-spaces and action-spaces should look like, however haskell's typesystem is expressive enough that this seems to be more of a "nice-to-have."
+                It's in active development and has some beginner-friendly contributions - from porting new gym environments to implementing new algorithms.
 category:       Reinforcement learning, machine learning, artificial intelligence
 homepage:       https://github.com/Sentenai/reinforce#readme
 bug-reports:    https://github.com/Sentenai/reinforce/issues
-author:         Sentenai, Inc.
+author:         Sam Stites, Sentenai Inc.
 maintainer:     sam@sentenai.com
 copyright:      2017 Sentenai, Inc.
 license:        BSD3
@@ -58,9 +60,9 @@ library
       Environments.Gym.Internal
       Environments.Gym.ToyText.FrozenLakeV0
       Reinforce.Prelude
-      Spaces
-      Spaces.Action
-      Spaces.State
+      Reinforce.Spaces
+      Reinforce.Spaces.Action
+      Reinforce.Spaces.State
   default-language: Haskell2010
 
 executable random-agent-example

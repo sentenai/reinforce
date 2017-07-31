@@ -26,12 +26,12 @@ import Reinforce.Prelude
 import Environments.CartPole (Environment, runEnvironment_)
 import Control.MonadEnv      (Initial(..), Obs(..))
 
-import qualified Control.MonadEnv       as Env (step, reset)
-import qualified Environments.CartPole  as Env (StateCP, Action)
+import qualified Control.MonadEnv        as Env (step, reset)
+import qualified Environments.CartPole   as Env (StateCP)
     -- Comments:
     --     StateCP - An "observation" or "the state of the agent" - note that State overloaded, so StateCP
     --     Action  - A performable action in the environment.
-import qualified Spaces.Action          as Actions (randomChoice)
+import qualified Reinforce.Spaces.Action as Actions (randomChoice)
 
 main :: IO ()
 main = runEnvironment_ gogoRandomAgent
@@ -53,6 +53,7 @@ main = runEnvironment_ gogoRandomAgent
     rolloutEpisode obs totalRwd = do
       a <- liftIO Actions.randomChoice
       Env.step a >>= \case
+        Terminated   -> pure ()
         Done r mobs  ->
           liftIO . print
             $ "Done! final reward: " ++ show (totalRwd+r) ++ ", final state: " ++ show mobs
