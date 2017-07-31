@@ -54,6 +54,15 @@ main = runEnvironment_ $
           rolloutEpisode obs'
 ```
 
+You can build and run this with the following commands:
+
+```
+git clone https://github.com/Sentenai/reinforce
+cd reinforce
+stack build
+stack exec random-agent-example
+```
+
 
 Note that if you want to run a gym environment, you'll have to run the [OpenAi/gym-http-api][gym-http] server with the following steps:
 
@@ -64,7 +73,7 @@ pip install -r requirements.txt
 python ./gym_http_server.py
 ```
 
-Currently, I've been primarily focused around classic control, so if you want to add any of the Atari environments, this would be an easy contribution!
+Currently, development has been primarily focused around classic control, so if you want to add any of the Atari environments, this would be an easy contribution!
 
 Installing
 =============
