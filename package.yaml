@@ -17,25 +17,20 @@ default-extensions:
   - TypeFamilies
 
 dependencies:
-  - aeson
-  - base
-# - binary
-# - bytestring
-  - containers
-  - dlist
-  - hashable
-  - hmatrix
-  - http-client
-# - microlens-platform
-  - mtl
-  - mwc-random
-  - primitive
-  - safe-exceptions
-  - servant-client
-  - statistics
-  - text
-  - unordered-containers
-  - vector
+  - aeson           >  1.0      && <= 1.2
+  - base            >  4.9      && <= 4.10
+  - dlist           == 0.8.0.2
+  - hashable        >= 1.2.5.0  && <= 1.2.6.1
+  - hmatrix         == 0.18.0.0
+  - http-client     == 0.5.6.1
+  - mtl             == 2.2.1
+  - mwc-random      == 0.13.5.0
+  - primitive       == 0.6.1.0
+  - safe-exceptions == 0.1.5.0
+  - servant-client  == 0.9.1.1
+  - statistics      == 0.13.3.0
+  - text            == 1.2.2.1
+  - vector          == 0.11.0.0
 
 library:
   source-dirs: src
