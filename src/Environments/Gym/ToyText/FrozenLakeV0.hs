@@ -28,7 +28,7 @@ module Environments.Gym.ToyText.FrozenLakeV0
   ) where
 
 import Reinforce.Prelude
-import Control.MonadEnv.Internal
+import Control.MonadEnv
 import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 

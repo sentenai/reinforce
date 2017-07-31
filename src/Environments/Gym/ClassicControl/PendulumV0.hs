@@ -14,7 +14,7 @@
 module Environments.Gym.ClassicControl.PendulumV0 where
 
 import Reinforce.Prelude hiding (State)
-import Control.MonadEnv.Internal (MonadEnv(..), Reward)
+import Control.MonadEnv (MonadEnv(..), Reward)
 import Environments.Gym.Internal (GymEnvironmentT)
 import qualified Environments.Gym.Internal as I
 

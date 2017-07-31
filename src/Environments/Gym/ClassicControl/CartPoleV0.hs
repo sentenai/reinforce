@@ -17,7 +17,7 @@ module Environments.Gym.ClassicControl.CartPoleV0 where
 
 import Reinforce.Prelude
 import Data.CartPole
-import Control.MonadEnv.Internal (MonadEnv(..), Reward)
+import Control.MonadEnv (MonadEnv(..), Reward)
 import Environments.Gym.Internal (GymEnvironmentT)
 import qualified Environments.Gym.Internal as I
 import OpenAI.Gym (GymEnv(CartPoleV0))

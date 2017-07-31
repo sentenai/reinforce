@@ -23,7 +23,7 @@
 module Environments.Gym.ClassicControl.MountainCarV0 where
 
 import Reinforce.Prelude hiding (State)
-import Control.MonadEnv.Internal
+import Control.MonadEnv
 import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
 import qualified Environments.Gym.Internal as I
 
