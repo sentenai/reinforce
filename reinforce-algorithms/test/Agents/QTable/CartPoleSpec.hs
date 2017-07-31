@@ -5,7 +5,7 @@ import Agents.Prelude
 import Agents
 import Agents.QTable
 import Algorithms.QLearning
-import Environments.Gym.CartPoleV0
+import Environments.Gym.ClassicControl.CartPoleV0
 import Test.Hspec
 
 main :: IO ()

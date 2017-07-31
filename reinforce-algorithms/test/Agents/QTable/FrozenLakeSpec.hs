@@ -5,7 +5,7 @@ import Agents.Prelude
 import Agents
 import Agents.QTable
 import Algorithms.QLearning
-import Environments.Gym.FrozenLakeV0 (runDefaultEnvironment)
+import Environments.Gym.ToyText.FrozenLakeV0 (runDefaultEnvironment)
 import Test.Hspec
 
 main :: IO ()
