@@ -25,7 +25,17 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-module Environments.CartPole where
+module Environments.CartPole
+  ( Environment(..)
+  , runEnvironmentWithSeed
+  , runEnvironmentWithSeed_
+  , runEnvironment
+  , runEnvironment_
+  , cartPoleConf
+  , Logger.Event(..)
+  , Action
+  , StateCP
+  ) where
 
 import Control.MonadEnv
 import Control.MonadMWCRandom
@@ -56,8 +66,14 @@ runEnvironmentWithSeed :: Environment () -> GenIO -> IO (DList Event)
 runEnvironmentWithSeed (Environment m) g =
   snd <$> evalRWST m (cartPoleConf g) initialCartPoleState
 
+runEnvironmentWithSeed_ :: Environment () -> GenIO -> IO ()
+runEnvironmentWithSeed_ a b = runEnvironmentWithSeed a b >> pure ()
+
 runEnvironment :: Environment () -> IO (DList Event)
 runEnvironment m = MWC.createSystemRandom >>= runEnvironmentWithSeed m
+
+runEnvironment_ :: Environment () -> IO ()
+runEnvironment_ m = runEnvironment m >> pure ()
 
 
 data CartPoleConf = CartPoleConf

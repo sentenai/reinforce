@@ -41,6 +41,15 @@ dependencies:
 library:
   source-dirs: src
 
+executables:
+  random-agent-example:
+    source-dirs: examples
+    main: RandomAgent.hs
+    dependencies:
+      - reinforce
+
+
+
 # tests:
 #   spec:
 #     source-dirs: test
