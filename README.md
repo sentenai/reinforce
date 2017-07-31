@@ -23,7 +23,6 @@ module Main where
 -- This project builds with NoImplicitPrelude
 import Reinforce.Prelude
 import Control.MonadEnv as Env
-import Control.MonadMWCRandom
 import Environments.CartPole
 import Spaces.Action (randomChoice)
 

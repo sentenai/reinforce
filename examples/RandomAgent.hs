@@ -2,7 +2,6 @@ module Main where
 
 import Reinforce.Prelude
 import Control.MonadEnv as Env
-import Control.MonadMWCRandom
 import Environments.CartPole
 import Spaces.Action (randomChoice)
 
@@ -18,7 +17,6 @@ main = runEnvironment_ $
   where
     maxEpisodes :: Int
     maxEpisodes = 100
-
 
     rolloutEpisode :: StateCP -> Environment ()
     rolloutEpisode obs = do
