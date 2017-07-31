@@ -1,0 +1,47 @@
+name: reinforce-agents
+version: 0.1.0.0
+
+ghc-options: -Wall
+
+default-extensions:
+  - BangPatterns
+  - FunctionalDependencies
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - LambdaCase
+  - MultiParamTypeClasses
+  - NamedFieldPuns
+  - NoImplicitPrelude
+  - OverloadedStrings
+  - ScopedTypeVariables
+  - ViewPatterns
+
+dependencies:
+  - base
+  - bytestring
+  - containers
+  - dlist
+  - hashable
+  - hmatrix
+  - microlens-platform
+  - monad-loops
+  - mtl
+  - mwc-random
+  - reinforce
+  - safe-exceptions
+  - statistics
+  - text
+  - unordered-containers
+  - vector
+
+library:
+  source-dirs: src
+
+tests:
+  spec:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+      - reinforce-agents
+      - hspec
+      - QuickCheck

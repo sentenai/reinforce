@@ -1,0 +1,13 @@
+resolver: lts-8.12
+
+packages:
+- '.'
+- location: reinforce
+  extra-dep: true
+- location: reinforce/gym-http-api/binding-hs
+  extra-dep: true
+
+extra-deps: []
+flags: {}
+extra-package-dbs: []
+require-stack-version: ">=1.4"   # for hpack
