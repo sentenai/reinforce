@@ -43,8 +43,6 @@ import GHC.Float    as X
 import GHC.Generics as X (Generic)
 import GHC.TypeLits as X
 
-import Lens.Micro.Platform as X
-
 import Data.Hashable as X
 import Statistics.Distribution.Normal as X (normalDistr, NormalDistribution)
 import System.Random.MWC              as X (GenIO, Variate)

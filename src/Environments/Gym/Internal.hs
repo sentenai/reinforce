@@ -27,7 +27,7 @@ import qualified OpenAI.Gym as OpenAI
 import Servant.Client
 import Data.Logger (Logger, Event)
 import qualified Data.Logger as Logger
-import Network.HTTP.Client
+import Network.HTTP.Client (Manager, newManager, defaultManagerSettings)
 import OpenAI.Gym
   ( GymEnv(..)
   , InstID(..)

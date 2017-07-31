@@ -23,11 +23,10 @@ dependencies:
   - bytestring
   - containers
   - dlist
-  - gym-http-api
   - hashable
   - hmatrix
   - http-client
-  - microlens-platform
+    # - microlens-platform
   - mtl
   - mwc-random
   - primitive
@@ -40,6 +39,9 @@ dependencies:
 
 library:
   source-dirs: src
+  dependencies:
+    - gym-http-api
+
 
 executables:
   random-agent-example:

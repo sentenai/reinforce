@@ -32,11 +32,9 @@ library
     , bytestring
     , containers
     , dlist
-    , gym-http-api
     , hashable
     , hmatrix
     , http-client
-    , microlens-platform
     , mtl
     , mwc-random
     , primitive
@@ -46,6 +44,7 @@ library
     , text
     , unordered-containers
     , vector
+    , gym-http-api
   exposed-modules:
       Control.MonadEnv
       Control.MonadMWCRandom
@@ -79,11 +78,9 @@ executable random-agent-example
     , bytestring
     , containers
     , dlist
-    , gym-http-api
     , hashable
     , hmatrix
     , http-client
-    , microlens-platform
     , mtl
     , mwc-random
     , primitive
