@@ -35,7 +35,7 @@ import Control.Monad            as X (void)
 import Data.DList  as X (DList(..))
 import Data.List   as X (intercalate)
 import Data.Monoid as X
-import Data.Proxy  as X (Proxy)
+import Data.Proxy  as X (Proxy(..))
 import Data.Text   as X (Text)
 import Data.Vector as X (Vector)
 

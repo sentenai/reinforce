@@ -1,3 +1,12 @@
+-------------------------------------------------------------------------------
+-- |
+-- Module    :  Spaces.State
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
+-- Portability: non-portable
+-------------------------------------------------------------------------------
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE DataKinds #-}
@@ -10,6 +19,7 @@ import qualified Data.Vector as V
 import Numeric.LinearAlgebra.Static
 
 
+-- State space information to convert to and from a static hmatrix vector
 class StateSpaceStatic s where
   type Size s :: Nat
   toR   :: s -> R (Size s)
@@ -22,6 +32,7 @@ instance StateSpaceStatic () where
 
 -- ========================================================================= --
 
+-- State space information to convert to and from a Data.Vector
 class StateSpace s where
   toVector   :: s -> Vector Double
   fromVector :: MonadThrow m => Vector Double -> m s
@@ -29,7 +40,7 @@ class StateSpace s where
 
 instance StateSpace (Vector Double) where
   toVector   = id
-  fromVector = return . id
+  fromVector = pure
 
 instance Integral n => StateSpace (Vector n) where
   toVector   = fmap fromIntegral
@@ -40,12 +51,5 @@ instance StateSpace [Float] where
   fromVector = return . fmap double2Float . V.toList
 
 -- ========================================================================= --
-
--- | one-hot encode a bounded enumerable
-oneHot :: forall a . (Bounded a, Enum a) => a -> Vector Double
-oneHot e = V.unsafeUpd zeros [(fromEnum e, 1)]
-  where
-    zeros :: Vector Double
-    zeros = V.fromList $ replicate (fromEnum (maxBound :: a) + 1) 0
 
 
