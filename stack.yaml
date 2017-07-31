@@ -3,7 +3,7 @@ packages:
 - '.'
 - location:
     git: git@github.com:stites/gym-http-api.git
-    commit: '93ce33'
+    commit: 'd8e689a'
   subdirs:
     - binding-hs
   extra-dep: true

@@ -59,7 +59,7 @@ replicateZeros _ = V.fromList $ replicate (fromEnum (maxBound :: a) + 1) 0
 allActions :: DiscreteActionSpace a => [a]
 allActions = [minBound..maxBound]
 
-
+-- | make a uniform-random selection of an Action in a discrete action space
 randomChoice
   :: forall m a . (MonadIO m , MonadMWCRandom m, DiscreteActionSpace a)
   => m a

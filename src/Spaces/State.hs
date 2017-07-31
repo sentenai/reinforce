@@ -12,14 +12,17 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module Spaces.State where
+module Spaces.State
+  ( StateSpace(..)
+  , StateSpaceStatic(..)
+  ) where
 
 import Reinforce.Prelude
 import qualified Data.Vector as V
 import Numeric.LinearAlgebra.Static
 
 
--- State space information to convert to and from a static hmatrix vector
+-- | State space information to convert to and from a static hmatrix vector
 class StateSpaceStatic s where
   type Size s :: Nat
   toR   :: s -> R (Size s)
@@ -32,7 +35,7 @@ instance StateSpaceStatic () where
 
 -- ========================================================================= --
 
--- State space information to convert to and from a Data.Vector
+-- | State space information to convert to and from a Data.Vector
 class StateSpace s where
   toVector   :: s -> Vector Double
   fromVector :: MonadThrow m => Vector Double -> m s

@@ -1,4 +1,5 @@
 --------------------------------------------------------------------------------
+-- |
 -- Module    :  Environments.Gym.ClassicControl.MountainCarContinuousV0
 -- Copyright :  (c) Sentenai 2017
 -- License   :  BSD3
@@ -23,7 +24,11 @@
 -- https://gym.openai.com/envs/MountainCarContinuous-v0
 --------------------------------------------------------------------------------
 module Environments.Gym.ClassicControl.MountainCarContinuousV0
-  ( module Env
+  ( Env.Action(..)
+  , Env.Runner
+  , Env.State(..)
+  , Env.Environment
+  , Env.EnvironmentT
   , runEnvironment
   , runEnvironmentT
   , runDefaultEnvironment
@@ -40,17 +45,19 @@ import Environments.Gym.ClassicControl.MountainCarV0 as Env hiding
   )
 import qualified Environments.Gym.Internal as I
 
-
+-- | Alias to 'Environments.Gym.Internal.runEnvironmentT'
 runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT State Action t x
 runEnvironmentT = I.runEnvironmentT MountainCarContinuousV0
 
+-- | Alias to 'Environments.Gym.Internal.runEnvironment' in IO
 runEnvironment :: Manager -> BaseUrl -> I.RunnerT State Action IO x
 runEnvironment = I.runEnvironmentT MountainCarContinuousV0
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironmentT'
 runDefaultEnvironmentT :: MonadIO t => I.RunnerT State Action t x
 runDefaultEnvironmentT = I.runDefaultEnvironmentT MountainCarContinuousV0
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironment' in IO
 runDefaultEnvironment :: I.RunnerT State Action IO x
 runDefaultEnvironment = I.runDefaultEnvironmentT MountainCarContinuousV0
-
 

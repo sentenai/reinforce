@@ -4,7 +4,7 @@
 
 name:           reinforce
 version:        0.0.0.1
-synopsis:       a refinforcement learning framework in Haskell
+synopsis:       Reinforcement learning in Haskell
 description:    Please see README.md
 category:       Reinforcement learning, machine learning, artificial intelligence
 homepage:       https://github.com/Sentenai/reinforce#readme
@@ -25,11 +25,12 @@ library
   hs-source-dirs:
       src
   default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      aeson           >  1.0      && <= 1.2
-    , base            >  4.9      && <= 4.10
+      aeson           == 1.0.2.1
+    , base            >= 4.9 && <= 4.10
     , dlist           == 0.8.0.2
-    , hashable        >= 1.2.5.0  && <= 1.2.6.1
+    , hashable        == 1.2.5.0
     , hmatrix         == 0.18.0.0
     , http-client     == 0.5.6.1
     , mtl             == 2.2.1
@@ -67,11 +68,12 @@ executable random-agent-example
   hs-source-dirs:
       examples
   default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      aeson           >  1.0      && <= 1.2
-    , base            >  4.9      && <= 4.10
+      aeson           == 1.0.2.1
+    , base            >= 4.9 && <= 4.10
     , dlist           == 0.8.0.2
-    , hashable        >= 1.2.5.0  && <= 1.2.6.1
+    , hashable        == 1.2.5.0
     , hmatrix         == 0.18.0.0
     , http-client     == 0.5.6.1
     , mtl             == 2.2.1

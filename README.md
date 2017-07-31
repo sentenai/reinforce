@@ -6,7 +6,7 @@ reinforce
 `reinforce` is a library which exports an OpenAI-gym-like typeclass, `MonadEnv`, with both an interface to the [`gym-http-api`][gym-http], as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
 
 This is an environment-first library, with basic reinforcment learning algorithms being developed on branches in subpackages (see [#Development and Milestones](#development-and-milestones)).
-At present, this library is currently in of alpha quality since it still needs some work defining some formal structures around what state-spaces and action-spaces should look like, however haskell's typesystem is expressive enough that this seems to be more of a "nice-to-have."
+`reinforce` is currently an "alpha" release since it still needs some work defining some formal structures around what state-spaces and action-spaces should look like, however haskell's typesystem is expressive enough that this seems to be more of a "nice-to-have."
 
 It's in active development and has some beginner-friendly contributions: from porting new gym environments to implementing new algorithms.
 

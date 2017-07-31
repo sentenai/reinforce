@@ -16,7 +16,16 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE DeriveGeneric #-}
-module Environments.Bandits where
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
+module Environments.Bandits
+  ( Environment(..)
+  , runEnvironment
+  , Logger.Event(..)
+  , Action
+  , mkBandits
+  , defaultBandits
+  , mkAction
+  ) where
 
 import Control.MonadEnv
 import Control.MonadMWCRandom
@@ -40,6 +49,7 @@ data Config = Config
 
 type Event = Logger.Event Reward () Action
 
+-- | The slot machine index whose arm will be pulled
 newtype Action = Action { unAction :: Int }
   deriving (Eq, Ord, Show, Enum, Generic)
 
@@ -56,6 +66,7 @@ mkAction i = Environment $ do
   n <- nBandits <$> ask
   assert (i > n || i < 0) (pure $ Action i)
 
+-- | Monad for an n-armed bandit environment
 newtype Environment a = Environment
   { getEnvironment :: RWST Config (DList Event) () IO a }
   deriving
@@ -70,6 +81,7 @@ newtype Environment a = Environment
     , MonadRWS Config (DList Event) ()
     )
 
+-- | run an n-armed bandit environment
 runEnvironment :: Config -> Environment () -> IO (DList Event)
 runEnvironment c (Environment m) = snd <$> evalRWST m c ()
 
@@ -80,8 +92,8 @@ defaultBandits = mkBandits 10 2 0.1
 -- | helper function to build a bandits config with normally-distributed
 -- reward functions
 mkBandits :: Int -> Int -> Float -> GenIO -> Config
-mkBandits n offset std = Config n offset std $
-  V.fromList $ fmap (`rewardDist` std) [offset .. offset + n - 1]
+mkBandits n offset' std = Config n offset' std $
+  V.fromList $ fmap (`rewardDist` std) [offset' .. offset' + n - 1]
   where
     rewardDist :: Int -> Float -> NormalDistribution
     rewardDist m s = normalDistr (fromIntegral m) (realToFrac s)

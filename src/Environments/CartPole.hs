@@ -31,7 +31,6 @@ module Environments.CartPole
   , runEnvironmentWithSeed_
   , runEnvironment
   , runEnvironment_
-  , cartPoleConf
   , Logger.Event(..)
   , Action
   , StateCP
@@ -47,7 +46,7 @@ import Reinforce.Prelude
 import Data.CartPole
 import qualified Data.Logger as Logger
 
-
+-- | A cartpole environment
 newtype Environment a = Environment
   { getEnvironment :: RWST CartPoleConf (DList Event) CartPoleState IO a }
   deriving
@@ -62,16 +61,20 @@ newtype Environment a = Environment
     , MonadRWS CartPoleConf (DList Event) CartPoleState
     )
 
+-- | run an environment with an explicit seed
 runEnvironmentWithSeed :: Environment () -> GenIO -> IO (DList Event)
 runEnvironmentWithSeed (Environment m) g =
   snd <$> evalRWST m (cartPoleConf g) initialCartPoleState
 
+-- | same as 'runEnvironmentWithSeed' but don't return history
 runEnvironmentWithSeed_ :: Environment () -> GenIO -> IO ()
 runEnvironmentWithSeed_ a b = runEnvironmentWithSeed a b >> pure ()
 
+-- | run an environment and create a new random generator for each effectful action
 runEnvironment :: Environment () -> IO (DList Event)
 runEnvironment m = MWC.createSystemRandom >>= runEnvironmentWithSeed m
 
+-- | same as 'runEnvironment' but don't return history
 runEnvironment_ :: Environment () -> IO ()
 runEnvironment_ m = runEnvironment m >> pure ()
 
@@ -137,6 +140,7 @@ hasFallen s
 
 
 -- Angle limit set to 2 * thetaThresholdRadians so failing observation is still within bounds
+{-
 high :: StateCP
 high = StateCP
   { position  = xThreshold * 2
@@ -144,6 +148,7 @@ high = StateCP
   , velocity  = 500 -- maxBound
   , angleRate = 500 -- maxBound
   }
+-}
 
 
 instance MonadMWCRandom Environment where
