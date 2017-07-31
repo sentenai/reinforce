@@ -49,8 +49,10 @@ before_install:
 - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar -xzO --wildcards '*/stack' > ~/.local/bin/stack
 - chmod a+x ~/.local/bin/stack
 - stack setup
-- stack install weeder
+- cd ..
+- stack install weeder 
 - stack install hlint
+- cd -
 
 install:
 - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
