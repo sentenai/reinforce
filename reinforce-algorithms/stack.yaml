@@ -2,9 +2,12 @@ resolver: lts-8.12
 
 packages:
 - '.'
-- location: reinforce
-  extra-dep: true
-- location: reinforce/gym-http-api/binding-hs
+- '..'
+- location:
+    git: git@github.com:stites/gym-http-api.git
+    commit: '93ce33'
+  subdirs:
+    - binding-hs
   extra-dep: true
 
 extra-deps: []
