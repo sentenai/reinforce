@@ -6,7 +6,7 @@
 module Agents.DoubleQTable where
 
 import Agents.Prelude
-import Control.MonadEnv.Internal as Env
+import Control.MonadEnv as Env
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM
 import Control.MonadMWCRandom

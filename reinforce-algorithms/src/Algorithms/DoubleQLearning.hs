@@ -48,12 +48,15 @@ rolloutDoubleQLearning maxSteps = do
       a <- choose s
       Env.step a >>= \case
         Terminated -> return ()
-        Done _     -> return ()
-        Next r s'  -> do
-          compare (0.5 :: Float) <$> uniform >>= \case
-            LT -> calcQ value1 actions1 value2 s a r s' >>= update1 s a
-            _  -> calcQ value2 actions2 value1 s a r s' >>= update2 s a
-          clock maxSteps (st+1) (goM s')
+        Done r ms' -> maybe (pure ()) (learn st s a r) ms'
+        Next r s'  -> learn st s a r s'
+
+    learn :: Integer -> o -> a -> r -> o -> m ()
+    learn st s a r s' = do
+      compare (0.5 :: Float) <$> uniform >>= \case
+        LT -> calcQ value1 actions1 value2 s a r s' >>= update1 s a
+        _  -> calcQ value2 actions2 value1 s a r s' >>= update2 s a
+      clock maxSteps (st+1) (goM s')
 
 
 calcQ

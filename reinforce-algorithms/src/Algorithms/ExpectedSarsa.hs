@@ -33,17 +33,20 @@ rolloutExpectedSarsa maxSteps = do
     goM :: o -> a -> Integer -> m ()
     goM s a st =
       Env.step a >>= \case
-        Terminated -> return ()
-        Done _     -> return ()
-        Next rwd s'-> do
-          lambda <- getLambda
-          gamma  <- getGamma
-          a'     <- choose s'
+        Terminated -> pure ()
+        Done r ms' -> maybe (pure ()) (learn st s a r) ms'
+        Next r s'  -> learn st s a r s'
 
-          -- Note that we don't hold distributions seperate from reward currently
-          oldQ   <- value s  a
-          nextQs <- sequence . map (value s') =<< actions s'
-          let expectedQ = sum nextQs / (fromIntegral $ length nextQs)
-          update s a $ oldQ + lambda * (rwd + gamma * expectedQ - oldQ)
-          clock maxSteps (st+1) (goM s' a')
+    learn :: Integer -> o -> a -> r -> o -> m ()
+    learn st s a r s' = do
+      lambda <- getLambda
+      gamma  <- getGamma
+      a'     <- choose s'
+
+      -- Note that we don't hold distributions seperate from reward currently
+      oldQ   <- value s  a
+      nextQs <- sequence . map (value s') =<< actions s'
+      let expectedQ = sum nextQs / (fromIntegral $ length nextQs)
+      update s a $ oldQ + lambda * (r + gamma * expectedQ - oldQ)
+      clock maxSteps (st+1) (goM s' a')
 

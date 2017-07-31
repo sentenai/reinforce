@@ -37,15 +37,18 @@ rolloutQLearning maxSteps = do
       a <- choose s
       Env.step a >>= \case
         Terminated -> return ()
-        Done _     -> return ()
-        Next rwd s'  -> do
-          lambda <- getLambda
-          gamma  <- getGamma
+        Done r ms' -> maybe (pure ()) (learn st s a r) ms'
+        Next r s'  -> learn st s a r s'
 
-          oldQ <- value s a
-          nextQs <- sequence . fmap (value s) =<< actions s
-          update s a $ oldQ + lambda * (rwd + gamma * (maximum nextQs) - oldQ)
-          clock maxSteps (st+1) (goM s')
+    learn :: Integer -> o -> a -> r -> o -> m ()
+    learn st s a r s' = do
+      lambda <- getLambda
+      gamma  <- getGamma
+
+      oldQ <- value s a
+      nextQs <- sequence . fmap (value s) =<< actions s
+      update s a $ oldQ + lambda * (r + gamma * (maximum nextQs) - oldQ)
+      clock maxSteps (st+1) (goM s')
 
 rolloutEpsQLearning :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> m ()
 rolloutEpsQLearning maxSteps = do
@@ -57,13 +60,16 @@ rolloutEpsQLearning maxSteps = do
       a <- choose s
       Env.step a >>= \case
         Terminated -> return ()
-        Done _     -> return ()
-        Next rwd s'  -> do
-          lambda <- getLambda
-          gamma  <- getGamma
+        Done r ms' -> maybe (pure ()) (learn st s a r) ms'
+        Next r s'  -> learn st s a r s'
 
-          oldQ <- value s a
-          nextQs <- sequence . fmap (value s) =<< actions s
-          update s a $ oldQ + lambda * (rwd + gamma * (maximum nextQs) - oldQ)
-          clock maxSteps (st+1) (goM s')
+    learn :: Integer -> o -> a -> r -> o -> m ()
+    learn st s a r s' = do
+      lambda <- getLambda
+      gamma  <- getGamma
+
+      oldQ <- value s a
+      nextQs <- sequence . fmap (value s) =<< actions s
+      update s a $ oldQ + lambda * (r + gamma * (maximum nextQs) - oldQ)
+      clock maxSteps (st+1) (goM s')
 
