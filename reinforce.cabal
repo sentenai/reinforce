@@ -47,7 +47,6 @@ library
     , vector
   exposed-modules:
       Control.MonadEnv
-      Control.MonadEnv.Internal
       Control.MonadMWCRandom
       Data.CartPole
       Data.Logger
