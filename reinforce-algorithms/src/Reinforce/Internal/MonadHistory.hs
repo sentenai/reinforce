@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
-module Internal.MonadHistory where
+module Reinforce.Internal.MonadHistory where
 
 import Reinforce.Prelude
 

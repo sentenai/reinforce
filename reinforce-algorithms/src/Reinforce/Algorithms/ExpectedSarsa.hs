@@ -1,10 +1,10 @@
-module Algorithms.ExpectedSarsa where
+module Reinforce.Algorithms.ExpectedSarsa where
 
-import Agents
+import Reinforce.Agents
 import Reinforce.Prelude
 import Control.MonadEnv (MonadEnv, Initial(..), Obs(..))
 import qualified Control.MonadEnv as Env
-import Algorithms.Internal
+import Reinforce.Algorithms.Internal
 
 
 -- ========================================================================= --

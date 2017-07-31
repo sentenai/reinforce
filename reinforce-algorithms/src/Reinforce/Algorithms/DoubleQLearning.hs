@@ -1,12 +1,12 @@
-module Algorithms.DoubleQLearning where
+module Reinforce.Algorithms.DoubleQLearning where
 
-import Agents
+import Reinforce.Agents
 import Reinforce.Prelude
 import Control.MonadEnv (MonadEnv, Initial(..), Obs(..))
 import Control.MonadMWCRandom
 import qualified Control.MonadEnv as Env
-import Algorithms.Internal (RLParams(..))
-import Algorithms.Double.Internal (DoubleTDLearning(..))
+import Reinforce.Algorithms.Internal (RLParams(..))
+import Reinforce.Algorithms.Double.Internal (DoubleTDLearning(..))
 
 
 -- ============================================================================= --

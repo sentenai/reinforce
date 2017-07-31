@@ -1,4 +1,4 @@
-module Policy.EpsilonGreedy where
+module Reinforce.Policy.EpsilonGreedy where
 
 import Reinforce.Prelude
 import Control.MonadMWCRandom

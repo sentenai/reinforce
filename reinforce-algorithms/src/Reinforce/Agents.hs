@@ -1,4 +1,4 @@
-module Agents where
+module Reinforce.Agents where
 
 import Reinforce.Prelude
 import Control.MonadEnv

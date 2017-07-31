@@ -1,4 +1,4 @@
-module Algorithms.Internal where
+module Reinforce.Algorithms.Internal where
 
 import Reinforce.Prelude
 

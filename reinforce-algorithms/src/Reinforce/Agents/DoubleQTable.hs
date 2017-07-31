@@ -1,9 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE ConstraintKinds #-}
-{- LANGUAGE TypeFamilies #-}
-{- LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE RankNTypes #-}
-module Agents.DoubleQTable where
+module Reinforce.Agents.DoubleQTable where
 
 import Reinforce.Prelude
 import Control.MonadEnv as Env
@@ -11,9 +9,9 @@ import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM
 import Control.MonadMWCRandom
 import Data.Logger
-import Algorithms.Internal (RLParams(..))
-import Algorithms.Double.Internal (DoubleTDLearning(..))
-import Policy.EpsilonGreedy
+import Reinforce.Algorithms.Internal (RLParams(..))
+import Reinforce.Algorithms.Double.Internal (DoubleTDLearning(..))
+import Reinforce.Policy.EpsilonGreedy
 
 type EnvC m    = (MonadIO m, MonadMWCRandom m)
 type ActionC a = (Ord a, Hashable a, Enum a, Bounded a)

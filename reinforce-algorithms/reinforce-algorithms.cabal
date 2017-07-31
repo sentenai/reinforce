@@ -31,17 +31,17 @@ library
     , unordered-containers
     , vector
   exposed-modules:
-      Agents
-      Agents.DoubleQTable
-      Agents.QTable
-      Algorithms.Double.Internal
-      Algorithms.DoubleQLearning
-      Algorithms.ExpectedSarsa
-      Algorithms.Internal
-      Algorithms.QLearning
-      Algorithms.Sarsa
-      Internal.MonadHistory
-      Policy.EpsilonGreedy
+      Reinforce.Agents
+      Reinforce.Agents.DoubleQTable
+      Reinforce.Agents.QTable
+      Reinforce.Algorithms.Double.Internal
+      Reinforce.Algorithms.DoubleQLearning
+      Reinforce.Algorithms.ExpectedSarsa
+      Reinforce.Algorithms.Internal
+      Reinforce.Algorithms.QLearning
+      Reinforce.Algorithms.Sarsa
+      Reinforce.Internal.MonadHistory
+      Reinforce.Policy.EpsilonGreedy
   default-language: Haskell2010
 
 test-suite spec

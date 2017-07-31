@@ -3,7 +3,7 @@
 
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeSynonymInstances #-}
-module Agents.QTable where
+module Reinforce.Agents.QTable where
 
 import Reinforce.Prelude
 import Control.MonadEnv as Env
@@ -11,8 +11,8 @@ import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM
 import Control.MonadMWCRandom
 import Data.Logger
-import Algorithms.Internal (TDLearning(..), RLParams(..))
-import Policy.EpsilonGreedy
+import Reinforce.Algorithms.Internal (TDLearning(..), RLParams(..))
+import Reinforce.Policy.EpsilonGreedy
 
 
 type EnvC m    = (MonadIO m, MonadMWCRandom m)
