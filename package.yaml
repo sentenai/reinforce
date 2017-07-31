@@ -19,14 +19,14 @@ default-extensions:
 dependencies:
   - aeson
   - base
-  - binary
-  - bytestring
+# - binary
+# - bytestring
   - containers
   - dlist
   - hashable
   - hmatrix
   - http-client
-    # - microlens-platform
+# - microlens-platform
   - mtl
   - mwc-random
   - primitive

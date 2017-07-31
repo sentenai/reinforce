@@ -28,8 +28,6 @@ library
   build-depends:
       aeson
     , base
-    , binary
-    , bytestring
     , containers
     , dlist
     , hashable
@@ -74,8 +72,6 @@ executable random-agent-example
   build-depends:
       aeson
     , base
-    , binary
-    , bytestring
     , containers
     , dlist
     , hashable
