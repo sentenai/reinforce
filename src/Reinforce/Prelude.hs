@@ -1,3 +1,14 @@
+-------------------------------------------------------------------------------
+-- |
+-- Module    :  Reinforce.Prelude
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
+-- Portability: non-portable
+--
+-- Re-exports of common functions and newer functions
+-------------------------------------------------------------------------------
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -19,6 +30,7 @@ import Control.Monad.Reader     as X
 import Control.Monad.RWS.Strict as X hiding ((<>))
 import Control.Monad.Writer.Strict as X (Writer, WriterT)
 import Control.Monad.State      as X
+import Control.Monad            as X (void)
 
 import Data.DList  as X (DList(..))
 import Data.List   as X (intercalate)

@@ -1,3 +1,15 @@
+-------------------------------------------------------------------------------
+-- |
+-- Module    :  Data.Logger
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
+-- Portability: non-portable
+--
+-- In lieu of a history monad embedded in models maintain a logger monad for
+-- easily debugging environments.
+-------------------------------------------------------------------------------
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
@@ -7,21 +19,30 @@ import Reinforce.Prelude
 import Control.MonadMWCRandom
 import Servant.Client
 import Debug.Trace
-import Control.MonadEnv.Internal
+import Control.MonadEnv
 import qualified Data.Text as T
 
 -- ========================================================================= --
-
+-- | Our primary datatype for an event in a trace. Contains the episode number,
+-- reward, state, and action taken (in that order).
+-- TODO: change the ordering to @Event Integer s a r@
 data Event r o a = Event Integer r o a
   deriving Show
 
 -- ========================================================================= --
 
-
 class Monad m => Logger m where
+
+  -- | log at the 'info' level.
   info   :: Text -> m ()
+
+  -- | log at the 'info' level, appending information on the left.
   info_  :: Text -> Text -> m ()
+
+  -- | log at the 'debug' level.
   debug  :: Text -> m ()
+
+  -- | log at the 'debug' level, appending information on the left.
   debug_ :: Text -> Text -> m ()
 
 instance (Logger m) => Logger (StateT s m) where
@@ -56,7 +77,7 @@ instance Logger IO where
 
 -- ========================================================================= --
 
-
+-- | A prebuilt type which doesn't actually log anything.
 newtype NoopLogger m x = NoopLogger { runNoopLogger :: m x }
   deriving (Functor, Applicative, Monad, MonadIO, MonadThrow)
 
@@ -70,6 +91,8 @@ instance MonadEnv m s a r => MonadEnv (NoopLogger m) s a r where
   reset = NoopLogger reset
   step a = NoopLogger $ step a
 
+
+-- | A prebuilt type that does all levels of logging
 newtype DebugLogger m x = DebugLogger { runDebugLogger :: m x }
   deriving (Functor, Applicative, Monad, MonadIO, MonadThrow)
 

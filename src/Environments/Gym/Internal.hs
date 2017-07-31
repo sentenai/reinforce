@@ -1,5 +1,16 @@
+-------------------------------------------------------------------------------
+-- |
+-- Module    :  Environments.Gym.Internal
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
+-- Portability: non-portable
+--
+-- Underlying implementation to run a Gym environment using the
+-- @gym-http-client@.
+-------------------------------------------------------------------------------
 {-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DeriveFunctor #-}
@@ -8,14 +19,13 @@ module Environments.Gym.Internal where
 
 import Control.MonadEnv
 import Reinforce.Prelude
-import Data.Logger
 import Data.Aeson
 import Control.MonadMWCRandom
 import Control.Monad.Except
 import qualified Data.Text as T (pack)
 import qualified OpenAI.Gym as OpenAI
 import Servant.Client
-import Data.Logger (Logger)
+import Data.Logger (Logger, Event)
 import qualified Data.Logger as Logger
 import Network.HTTP.Client
 import OpenAI.Gym
@@ -92,8 +102,8 @@ data LastState o
 
 
 data GymException
-  = UnexpectedServerResponse [Char]
-  | TypeError [Char]
+  = UnexpectedServerResponse String
+  | TypeError String
   | EnvironmentRequiresReset
   deriving (Show)
 
@@ -110,18 +120,18 @@ runEnvironmentT
   -> t (Either ServantError (DList (Event Reward o a)))
 runEnvironmentT t m u mon env = runClientT action (ClientEnv m u)
   where
-  action :: ClientT t (DList (Event Reward o a))
-  action = do
-    i <- liftClientM $ OpenAI.envCreate t
-    (_, w) <- execRWST (getEnvironmentT renderableEnv) (GymConfigs i mon) (Uninitialized 0)
-    liftClientM $ OpenAI.envClose i
-    return w
+    action :: ClientT t (DList (Event Reward o a))
+    action = do
+      i <- liftClientM $ OpenAI.envCreate t
+      (_, w) <- execRWST (getEnvironmentT renderableEnv) (GymConfigs i mon) (Uninitialized 0)
+      liftClientM $ OpenAI.envClose i
+      return w
 
-  renderableEnv :: GymEnvironmentT o a t ()
-  renderableEnv =
-    if mon
-    then withMonitor env
-    else env >> return ()
+    renderableEnv :: GymEnvironmentT o a t ()
+    renderableEnv =
+      if mon
+      then withMonitor env
+      else void env
 
 runEnvironment
   :: GymEnv
@@ -216,6 +226,7 @@ aesonToState :: forall o m . (FromJSON o, MonadThrow m) => Value -> m o
 aesonToState = aesonToMaybeState >=> \case
   Nothing -> throw $ UnexpectedServerResponse "observation returned was null"
   Just o -> pure o
+
 
 aesonToMaybeState :: forall o m . (FromJSON o, MonadThrow m) => Value -> m (Maybe o)
 aesonToMaybeState Null = pure Nothing

@@ -1,5 +1,9 @@
 --------------------------------------------------------------------------------
--- Module : Environments.Gym.ClassicControl.MountainCarContinuousV0
+-- Module    :  Environments.Gym.ClassicControl.MountainCarContinuousV0
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
 --
 -- Environment description:
 -- > A car is on a one-dimensional track, positioned between two "mountains".

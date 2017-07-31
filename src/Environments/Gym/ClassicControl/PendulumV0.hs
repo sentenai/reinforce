@@ -1,5 +1,9 @@
 --------------------------------------------------------------------------------
--- Module : Environment.Gym.ClassicControl.PendulumV0
+-- Module    :  Environment.Gym.ClassicControl.PendulumV0
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
 --
 -- The inverted pendulum swingup problem is a classic problem in the control
 -- literature. In this version of the problem, the pendulum starts in a random

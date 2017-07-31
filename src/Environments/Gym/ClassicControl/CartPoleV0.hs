@@ -1,5 +1,10 @@
 --------------------------------------------------------------------------------
--- Module : Environment.CartPoleV0
+-- Module    :  Environment.CartPoleV0
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
+-- Portability: non-portable
 --
 -- Environment description:
 -- > A pole is attached by an un-actuated joint to a cart, which moves along a

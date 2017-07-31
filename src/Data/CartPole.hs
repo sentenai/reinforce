@@ -1,3 +1,15 @@
+-------------------------------------------------------------------------------
+-- |
+-- Module    :  Data.CartPole
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
+-- Portability: non-portable
+--
+-- Shared datatypes between Gym environments and the haskell implementation of
+-- CartPole.
+-------------------------------------------------------------------------------
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DataKinds #-}
@@ -8,16 +20,25 @@ import qualified Spaces.State as Spaces
 
 import Data.Aeson
 import Data.Aeson.Types
-import qualified Data.Vector as V
 import Control.Exception (AssertionFailed(..))
 import Spaces
 import Spaces.Action (Size)
 import Numeric.LinearAlgebra.Static
 import qualified Data.Logger as Logger
+import qualified Data.Vector as V
 
+-- | Specific datatype for a CartPole event
 type Event = Logger.Event Double StateCP Action
 
-data Action = GoLeft | GoRight
+-- | Cartpole can only go left or right has an action space
+-- of "discrete 2" containing {0..n-1}.
+--
+-- FIXME: Migrate this to either a more generic "directions" actions
+-- (would need things like "up", "down" versions as well) or a "discrete
+-- actions" version. I'm a fan of the former.
+data Action
+  = GoLeft
+  | GoRight
   deriving (Show, Eq, Enum, Bounded, Ord, Generic)
 
 instance Hashable Action
@@ -25,7 +46,6 @@ instance Hashable Action
 instance DiscreteActionSpace Action where
   type Size Action = 2
 
--- | CartPole has an action space of "discrete 2" containing {0..n-1}
 instance ToJSON Action where
   toJSON :: Action -> Value
   toJSON GoLeft  = toJSON (0 :: Int)
@@ -40,11 +60,9 @@ data StateCP = StateCP
   } deriving (Show, Eq, Generic, Ord)
 
 instance Hashable StateCP
-instance Defaulted StateCP where
-  defaulted = StateCP 0 0 0 0
 
 instance Monoid StateCP where
-  mempty = defaulted
+  mempty = StateCP 0 0 0 0
   mappend (StateCP a0 b0 c0 d0) (StateCP a1 b1 c1 d1)
     = StateCP (a0+a1) (b0+b1) (c0+c1) (d0+d1)
 

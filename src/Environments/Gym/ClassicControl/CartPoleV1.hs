@@ -1,5 +1,9 @@
 --------------------------------------------------------------------------------
--- Module : Environment.Gym.ClassicControl.CartPoleV1
+-- Module    :  Environment.Gym.ClassicControl.CartPoleV1
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
 --
 -- Environment description:
 -- > A pole is attached by an un-actuated joint to a cart, which moves along a

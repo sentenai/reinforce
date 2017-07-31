@@ -1,5 +1,9 @@
 --------------------------------------------------------------------------------
--- Module : Environment.Gym.ToyText.FrozenLakeV0
+-- Module    :  Environment.Gym.ToyText.FrozenLakeV0
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
 --
 -- The agent controls the movement of a character in a grid world. Some tiles of
 -- the grid are walkable, and others lead to the agent falling into the water.

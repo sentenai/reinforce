@@ -1,5 +1,10 @@
 --------------------------------------------------------------------------------
--- Module : Environment.Gym.ClassicControl.AcrobotV1
+-- Module    :  Environment.Gym.ClassicControl.AcrobotV1
+-- Copyright :  (c) Sentenai 2017
+-- License   :  BSD3
+-- Maintainer:  sam@sentenai.com
+-- Stability :  experimental
+-- Portability: non-portable
 --
 -- The inverted pendulum swingup problem is a classic problem in the control
 -- literature. In this version of the problem, the pendulum starts in a random
