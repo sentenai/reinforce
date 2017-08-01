@@ -31,13 +31,13 @@ matrix:
     compiler: ": #stack default"
     addons: {apt: {packages: [ghc-7.10.3], sources: [hvr-ghc]}}
 
-  # Nightly builds are allowed to fail
-  - env: ARGS="--resolver nightly"
-    compiler: ": #stack nightly"
-    addons: {apt: {packages: [libgmp,libgmp-dev]}}
+# # Nightly builds are allowed to fail
+# - env: ARGS="--resolver nightly"
+#   compiler: ": #stack nightly"
+#   addons: {apt: {packages: [libgmp,libgmp-dev]}}
 
-  allow_failures:
-  - env: ARGS="--resolver nightly"
+# allow_failures:
+# - env: ARGS="--resolver nightly"
 
 before_install:
 # Using compiler above sets CC to an invalid value, so unset it
