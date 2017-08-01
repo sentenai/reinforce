@@ -2,12 +2,12 @@ reinforce
 =============
 ![Build Status](https://travis-ci.org/Sentenai/reinforce.svg?branch=master)
 
-`reinforce` is a library which exports an OpenAI-gym-like typeclass, `MonadEnv`, with both an interface to the [`gym-http-api`][gym-http], as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
+`reinforce` is a library which exports an openai-gym-like typeclass, `MonadEnv`, with both an interface to the [`gym-http-api`][gym-http], as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
 
 This is an environment-first library, with basic reinforcment learning algorithms being developed on branches in subpackages (see [#Development and Milestones](#development-and-milestones)).
 `reinforce` is currently an "alpha" release since it still needs some work defining some formal structures around what state-spaces and action-spaces should look like, however haskell's typesystem is expressive enough that this seems to be more of a "nice-to-have."
 
-It's in active development and has some beginner-friendly contributions: from porting new gym environments to implementing new algorithms.
+It's in active development and has some beginner-friendly contributions: from porting new gym environments to implementing new algorithms. Because this library is not on hackage, if you would like to see the haddocks, [you can find it here](https://sentenai.github.io/reinforce/).
 
 [gym-http]: https://github.com/openai/gym-http-api/
 
@@ -72,7 +72,7 @@ stack exec random-agent-example
 ```
 
 
-Note that if you want to run a gym environment, you'll have to run the [OpenAi/gym-http-api][gym-http] server with the following steps:
+Note that if you want to run a gym environment, you'll have to run the [openai/gym-http-api][gym-http] server with the following steps:
 
 ```
 git clone https://github.com/openai/gym-http-api
@@ -114,7 +114,7 @@ While you can check the [Github issues](https://github.com/Sentenai/reinforce/is
 A few quick environment contributions might be the following:
 - #1 (easy) - add an Atari environment to the api (like pong! others might require directly commiting to `gym-http-api`)
 - #8 (med) - Port Richard Sutton's Acrobot code to haskell
-- #6 (hard) - break the dependency on the `OpenAI/gym-http-api` server -- this would speed up performance considerably
+- #6 (hard) - break the dependency on the `openai/gym-http-api` server -- this would speed up performance considerably
 - #9 (harder) - render the haskell CartPole environment with SDL
 
 Some longer-running algorithmic contributions which would take place on the `algorithms` or `deep-rl` branches might be:
