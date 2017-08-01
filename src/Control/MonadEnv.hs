@@ -14,9 +14,7 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE UndecidableInstances #-}
 module Control.MonadEnv
-  ( MonadEnv
-  , reset
-  , step
+  ( MonadEnv(..)
   , Obs(..)
   , Initial(..)
   , Reward
