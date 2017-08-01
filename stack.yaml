@@ -2,7 +2,7 @@ flags: {}
 packages:
 - '.'
 - location:
-    git: git@github.com:stites/gym-http-api.git
+    git: https://github.com/stites/gym-http-api.git
     commit: 'd8e689a'
   subdirs:
     - binding-hs
