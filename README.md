@@ -2,7 +2,6 @@ reinforce
 =============
 ![Hackage](https://img.shields.io/hackage/v/reinforce.svg)
 ![Build Status](https://travis-ci.org/Sentenai/reinforce.svg?branch=master)
-![Github Release](https://img.shields.io/github/release/Sentenai/reinforce.svg)
 
 `reinforce` is a library which exports an OpenAI-gym-like typeclass, `MonadEnv`, with both an interface to the [`gym-http-api`][gym-http], as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
 
@@ -107,7 +106,8 @@ Development and Milestones
 =============
 
 If you want to contribute, you're in luck! There are a range of things to do from the beginner haskeller to, even, advanced pythonistas!
-Please file an issue mentioning where you'd like to help, or track down @stites in the [dataHaskell gitter](https://gitter.im/dataHaskell/) or directly through [keybase.io](https://keybase.io/stites).
+
+Please [file an issue mentioning where you'd like to help](https://github.com/Sentenai/reinforce/issues), or track down @stites in the [dataHaskell gitter](https://gitter.im/dataHaskell/) or directly through [keybase.io](https://keybase.io/stites).
 
 
 While you can check the [Github issues](https://github.com/Sentenai/reinforce/issues), here are some items off the top of my head which could use some immediate attention (and may also need to be filed).
