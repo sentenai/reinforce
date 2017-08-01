@@ -1,6 +1,5 @@
 reinforce
 =============
-![Hackage](https://img.shields.io/hackage/v/reinforce.svg)
 ![Build Status](https://travis-ci.org/Sentenai/reinforce.svg?branch=master)
 
 `reinforce` is a library which exports an OpenAI-gym-like typeclass, `MonadEnv`, with both an interface to the [`gym-http-api`][gym-http], as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
