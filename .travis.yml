@@ -50,7 +50,7 @@ before_install:
 - chmod a+x ~/.local/bin/stack
 - stack setup
 - cd ..
-- stack install weeder 
+- stack install weeder
 - stack install hlint
 - cd -
 
@@ -64,8 +64,8 @@ install:
 script:
 - |
   set -ex
-  weeder
-  hlint ./src/
   stack --no-terminal $ARGS test --bench --no-run-benchmarks --haddock --no-haddock-deps
+  # hlint ./src/
+  # weeder
   set +ex
 
