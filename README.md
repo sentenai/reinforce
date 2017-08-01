@@ -106,7 +106,10 @@ Development and Milestones
 =============
 
 If you want to contribute, you're in luck! There are a range of things to do from the beginner haskeller to, even, advanced pythonistas!
-You can check the [Github issues](https://github.com/Sentenai/reinforce/issues)
+Please file an issue mentioning where you'd like to help, or track down @stites in the [dataHaskell gitter](https://gitter.im/dataHaskell/) or directly through [keybase.io](https://keybase.io/stites).
+
+
+While you can check the [Github issues](https://github.com/Sentenai/reinforce/issues), here are some items off the top of my head which could use some immediate attention (and may also need to be filed).
 
 A few quick environment contributions might be the following:
 - (easy) add an Atari environment to the api (like pong! others might require directly commiting to `gym-http-api`)
@@ -121,24 +124,8 @@ Some longer-running algorithmic contributions which would take place on the `alg
 - (med - requires RL-foo) Add some policy gradient methods to the `algorithms` branch
 - (hard - requires RL-foo) head over to the `deep-rl` branch and convert some of the deep reinforcement learning models into haskell with [tensorflow-haskell][tfhs], and/or [backprop][bp]
 
+For a longer-term view, feel free to check out [MILESTONES.md](./MILESTONES.md).
+
 [tfhs]:https://github.com/tensorflow/haskell
 [bp]:https://github.com/mstksg/backprop
-
-
-Currently, MonadEnv works as needed to create baseline agents. Some rough Milestones for `reinforce-*`
-
-#### Milestones:
-
-+ (v0.1.0) (envs) Formalize ActionSpace and StateSpace
-+ (v0.1.0) (envs) Port over all gym-atari environments
-+ (v0.1.0) (envs) Add universe environment
-+ (v0.1.0) (envs) Add roboschool environment
-+ (v0.1.0) (envs) Figure out how to speed up gym-http-api code (call to python directly?)
-+ (v0.2.0) (envs) Possibly split `reinforce` into third-party dependencies (ie: `-envs-gym` and `-envs-atari`)
-+ (v0.2.0) (envs) Introduce some kind of `History` monad to cleanly seperate debug logging from agent or environment reporting
-+ (v0.2.0) (algos) write out more baseline algorithms in reinforce-algorithms (in progress)
-+ (v0.2.0) (algos) modify project structure to so that reinforce and reinforce-algorithms are siblings
-+ (v0.3.0) (envs) Have some kind of reporting system (live reporting?) or server in place for model inspection
-+ (v0.3.0) (algos) port all v0.2.0 python prototypes into backprop in reinforce-deep-algorithms
-+ (v0.3.0) (algos) port all v0.2.0 python prototypes into tensorflow-haskell in reinforce-deep-algorithms
 
