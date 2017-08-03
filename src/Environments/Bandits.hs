@@ -2,7 +2,7 @@
 -- |
 -- Module    :  Environments.Bandits
 -- Copyright :  (c) Sentenai 2017
--- License   :  Proprietary
+-- License   :  BSD3
 -- Maintainer:  sam@sentenai.com
 -- Stability :  experimental
 -- Portability: non-portable
