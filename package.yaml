@@ -29,6 +29,7 @@ description: See <https://github.com/Sentenai/reinforce README.md>.
     It's in active development and has some beginner-friendly contributions -
     from porting new gym environments to implementing new algorithms.
 
+
 default-extensions:
   - NoImplicitPrelude
   - MultiParamTypeClasses
@@ -36,21 +37,24 @@ default-extensions:
   - LambdaCase
   - TypeFamilies
 
+
 dependencies:
-  - aeson           == 1.0.2.1
-  - base            >= 4.9 && <= 4.10
-  - dlist           == 0.8.0.2
-  - hashable        == 1.2.5.0
-  - hmatrix         == 0.18.0.0
-  - http-client     == 0.5.6.1
-  - mtl             == 2.2.1
-  - mwc-random      == 0.13.5.0
-  - primitive       == 0.6.1.0
-  - safe-exceptions == 0.1.5.0
-  - servant-client  == 0.9.1.1
-  - statistics      == 0.13.3.0
-  - text            == 1.2.2.1
-  - vector          == 0.11.0.0
+  - aeson           # >= 1.0  &&  <  1.1
+  - base            # >= 4.9  &&  < 4.10
+  - dlist           # >= 0.8  &&  <  0.9
+  - hashable        # >= 1.2  &&  <  1.3
+  - hmatrix         # >= 0.18 &&  < 0.19
+  - http-client     # >= 0.4  &&  <  0.6
+  - mtl             # >= 2.2  &&  <  2.3
+  - mwc-random      # >= 0.13 &&  < 0.14
+  - primitive       # >= 0.6  &&  <  0.7
+  - safe-exceptions # >= 0.1  &&  <  0.2
+  - servant-client  # >= 0.10 &&  < 0.11
+  - servant-client  # >= 0.9  &&  < 0.10
+  - statistics      # >= 0.13 &&  < 0.14
+  - text            # >= 1.2  &&  <  1.3
+  - vector          # >= 0.11 &&  < 0.12
+
 
 library:
   source-dirs: src
@@ -64,7 +68,6 @@ executables:
     main: RandomAgent.hs
     dependencies:
       - reinforce
-
 
 
 # tests:

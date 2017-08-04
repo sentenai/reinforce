@@ -30,7 +30,7 @@ main = runEnvironment_ gogoRandomAgent
 
     -- this is usually the structure of a rollout:
     rolloutEpisode :: Env.StateCP -> Double -> Environment ()
-    rolloutEpisode obs totalRwd = do
+    rolloutEpisode _ totalRwd = do
       a <- liftIO Actions.randomChoice
       Env.step a >>= \case
         Terminated   -> pure ()
