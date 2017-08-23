@@ -4,10 +4,10 @@ reinforce
 
 `reinforce` is a library which exports an openai-gym-like typeclass, `MonadEnv`, with both an interface to the [`gym-http-api`][gym-http], as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
 
-This is an environment-first library, with basic reinforcment learning algorithms being developed on branches in subpackages (see [#Development and Milestones](#development-and-milestones)).
-`reinforce` is currently an "alpha" release since it still needs some work defining some formal structures around what state-spaces and action-spaces should look like, however haskell's typesystem is expressive enough that this seems to be more of a "nice-to-have."
+This is an environment-first library, with basic reinforcement learning algorithms being developed on branches in subpackages (see [#Development and Milestones](#development-and-milestones)).
+`reinforce` is currently an "alpha" release since it still needs some work defining some formal structures around what state-spaces and action-spaces should look like, however haskell's typesystem is expressive enough that this seems to be more of a "nice-to-have".
 
-It's in active development and has some beginner-friendly contributions: from porting new gym environments to implementing new algorithms. Because this library is not on hackage, if you would like to see the haddocks, [you can find it here](https://sentenai.github.io/reinforce/).
+This repo is in active development and has some beginner-friendly contributions, from porting new gym environments to implementing new algorithms. Because this library is not on hackage, if you would like to see the haddocks, [you can find it here](https://sentenai.github.io/reinforce/).
 
 [gym-http]: https://github.com/openai/gym-http-api/
 
@@ -86,7 +86,7 @@ Currently, development has been primarily focused around classic control, so if 
 Installing
 =============
 
-Right now, reinforce doesn't exist on hackage or stackage, so your best bet is to add this git repo to your stack.yaml file:
+Reinforce doesn't exist on hackage or stackage (yet), so your best bet is to add this git repo to your stack.yaml file:
 
 ```yaml
 packages:
@@ -120,17 +120,17 @@ Please [file an issue mentioning where you'd like to help](https://github.com/Se
 While you can check the [Github issues](https://github.com/Sentenai/reinforce/issues), here are some items off the top of my head which could use some immediate attention (and may also need to be filed).
 
 A few quick environment contributions might be the following:
-- #1 (easy) - add an Atari environment to the api (like pong! others might require directly commiting to `gym-http-api`)
+- #1 (easy) - Add an Atari environment to the api (like pong! others might require directly commiting to `gym-http-api`)
 - #8 (med) - Port Richard Sutton's Acrobot code to haskell
-- #6 (hard) - break the dependency on the `openai/gym-http-api` server -- this would speed up performance considerably
-- #9 (harder) - render the haskell CartPole environment with SDL
+- #6 (hard) - Break the dependency on the `openai/gym-http-api` server -- this would speed up performance considerably
+- #9 (harder) - Render the haskell CartPole environment with SDL
 
 Some longer-running algorithmic contributions which would take place on the `algorithms` or `deep-rl` branches might be:
-- #10 (easy) - convert algorithms into agents
-- #11 (med) - add a testable "convergence" criteria
+- #10 (easy) - Convert algorithms into agents
+- #11 (med) - Add a testable "convergence" criteria
 - #12 (med) - Implement some eligibility trace variants to the `algorithms` branch
 - #13 (med) - Add some policy gradient methods to the `algorithms` branch
-- #14 (hard) - head over to the `deep-rl` branch and convert some of the deep reinforcement learning models into haskell with [tensorflow-haskell][tfhs], and/or [backprop][bp]
+- #14 (hard) - Head over to the `deep-rl` branch and convert some of the deep reinforcement learning models into haskell with [tensorflow-haskell][tfhs], and/or [backprop][bp]
 
 For a longer-term view, feel free to check out [MILESTONES.md](./MILESTONES.md).
 
