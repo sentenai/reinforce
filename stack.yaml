@@ -1,11 +1,21 @@
+resolver: lts-8.13
 flags: {}
+
 packages:
-- '.'
+- reinforce
+- reinforce-algorithms
+- reinforce-environments
+- reinforce-zoo
 - location:
     git: https://github.com/stites/gym-http-api.git
     commit: '5b72789'
   subdirs:
     - binding-hs
   extra-dep: true
-resolver: lts-8.5
 
+extra-lib-dirs:
+- /usr/local/lib/
+- /compat/linux/lib/
+
+extra-include-dirs:
+- /usr/local/include/

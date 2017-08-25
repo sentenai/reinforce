@@ -1,7 +1,9 @@
 module Main where
 
-import Reinforce.Prelude
+import Prelude
     -- ^ NoImplicitPrelude is on
+import Control.Monad (forM_)
+import Control.Monad.IO.Class (liftIO)
 
 import Environments.CartPole (Environment, runEnvironment_)
 import Control.MonadEnv      (Initial(..), Obs(..))

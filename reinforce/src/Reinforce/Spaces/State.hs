@@ -19,18 +19,17 @@ module Reinforce.Spaces.State
 
 import Reinforce.Prelude
 import qualified Data.Vector as V
-import Numeric.LinearAlgebra.Static
 
 
 -- | State space information to convert to and from a static hmatrix vector
 class StateSpaceStatic s where
   type Size s :: Nat
-  toR   :: s -> R (Size s)
+  -- toR   :: s -> R (Size s)
   -- fromR :: MonadThrow m => R (Size s) -> m s
 
 instance StateSpaceStatic () where
   type Size () = 0
-  toR = const $ vector []
+  -- toR = const $ vector []
   -- fromR _ = return ()
 
 -- ========================================================================= --

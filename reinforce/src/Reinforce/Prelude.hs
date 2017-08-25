@@ -31,21 +31,22 @@ import Control.Monad.Writer.Strict as X (Writer, WriterT)
 import Control.Monad.State      as X
 import Control.Monad            as X (void)
 
-import Data.DList  as X (DList(..))
-import Data.List   as X (intercalate, maximumBy)
-import Data.Monoid as X
-import Data.Ord    as X
-import Data.Proxy  as X (Proxy(..))
-import Data.Text   as X (Text)
-import Data.Vector as X (Vector)
+import Data.DList     as X (DList(..))
+import Data.Hashable  as X
+import Data.List      as X (intercalate, maximumBy)
+import Data.Monoid    as X
+import Data.Ord       as X
+import Data.Proxy     as X (Proxy(..))
+import Data.Text      as X (Text)
+import Data.Vector    as X (Vector)
 
-import GHC.Float    as X
-import GHC.Generics as X (Generic)
-import GHC.TypeLits as X
+import GHC.Float     as X
+import GHC.Generics  as X (Generic)
+import GHC.TypeLits  as X
 
-import Data.Hashable as X
-import Statistics.Distribution.Normal as X (normalDistr, NormalDistribution)
-import System.Random.MWC              as X (GenIO, Variate)
+import Lens.Micro.Platform             as X
+import Statistics.Distribution.Normal  as X (normalDistr, NormalDistribution)
+import System.Random.MWC               as X (GenIO, Variate)
 
 -- ========================================================================= --
 -- Gym-required types:

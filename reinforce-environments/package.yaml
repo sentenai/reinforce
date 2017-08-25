@@ -1,0 +1,77 @@
+name:        reinforce-environments
+version:     0.0.0.1
+synopsis:    Reinforcement learning in Haskell
+category:    Reinforcement learning, machine learning, artificial intelligence
+author:      Sam Stites, Sentenai Inc.
+maintainer:  sam@sentenai.com
+github:      Sentenai/reinforce
+license:     BSD3
+copyright:   2017 Sentenai, Inc.
+ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+    # -Wmissing-import-lists <-- due to NoImplicitPrelude.
+
+description: See <https://github.com/Sentenai/reinforce README.md>.
+    @reinforce@ is a library which exports an OpenAI-gym-like
+    typeclass, @MonadEnv@, with both an interface to the
+    <https://github.com/openai/gym-http-api/ gym-http-api>, as well as
+    haskell-native environments which provide a substantial speed-up to the
+    http-server interface.
+    
+    This is an environment-first library, with basic reinforcment
+    learning algorithms being developed on branches in subpackages (see
+    <https://github.com/Sentenai/reinforce#development-and-milestones
+    Development and Milestones>). @reinforce@ is currently an "alpha"
+    release since it still needs some work defining some formal structures
+    around what state-spaces and action-spaces should look like,
+    however haskell's typesystem is expressive enough that this seems to be
+    more of a "nice-to-have."
+
+    It's in active development and has some beginner-friendly contributions -
+    from porting new gym environments to implementing new algorithms.
+
+
+default-extensions:
+  - NoImplicitPrelude
+  - MultiParamTypeClasses
+  - OverloadedStrings
+  - LambdaCase
+  - TypeFamilies
+
+
+dependencies:
+  - aeson           # >= 1.0  &&  <  1.1
+  - base            # >= 4.9  &&  < 4.10
+  - dlist           # >= 0.8  &&  <  0.9
+  - hashable        # >= 1.2  &&  <  1.3
+#  - hmatrix         # >= 0.18 &&  < 0.19
+  - http-client     # >= 0.4  &&  <  0.6
+  - mtl             # >= 2.2  &&  <  2.3
+  - microlens-platform
+  - mwc-random      # >= 0.13 &&  < 0.14
+  - primitive       # >= 0.6  &&  <  0.7
+  - reinforce
+  - safe-exceptions # >= 0.1  &&  <  0.2
+  - servant-client  # >= 0.10 &&  < 0.11
+  - servant-client  # >= 0.9  &&  < 0.10
+  - statistics      # >= 0.13 &&  < 0.14
+  - text            # >= 1.2  &&  <  1.3
+  - unordered-containers
+  - vector          # >= 0.11 &&  < 0.12
+
+
+library:
+  source-dirs: src
+  dependencies:
+    - gym-http-api
+  reexported-modules:
+    - Control.MonadEnv, Reinforce.Spaces.Action, Data.Logger, Data.Event, Reinforce.Spaces, Reinforce.Spaces.State
+
+# tests:
+#   spec:
+#     source-dirs: test
+#     main: Spec.hs
+#     dependencies:
+#       - hspec
+#       - QuickCheck
+
+

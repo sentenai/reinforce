@@ -15,7 +15,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Reinforce.Spaces.Action
   ( DiscreteActionSpace(..)
-  , oneHot
+  -- , oneHot
   , oneHot'
   , allActions
   , randomChoice
@@ -23,8 +23,8 @@ module Reinforce.Spaces.Action
 
 import Reinforce.Prelude
 import Control.MonadMWCRandom
-import Numeric.LinearAlgebra.Static (R)
-import qualified Numeric.LinearAlgebra.Static as LA
+-- import Numeric.LinearAlgebra.Static (R)
+-- import qualified Numeric.LinearAlgebra.Static as LA
 import qualified Data.Vector as V
 
 -- | Mostly tags around an Enum, but includes information about the size of
@@ -40,9 +40,9 @@ class (Bounded a, Enum a) => DiscreteActionSpace a where
 
 
 -- | one-hot encode a bounded enumerable. Doesn't care if minBound is < or > 0
-oneHot :: forall a . (KnownNat (Size a), DiscreteActionSpace a) => a -> R (Size a)
-oneHot e = LA.vector . V.toList
-  $ V.unsafeUpd (replicateZeros (Proxy :: Proxy a)) [(fromEnum e, 1)]
+-- oneHot :: forall a . (KnownNat (Size a), DiscreteActionSpace a) => a -> R (Size a)
+-- oneHot e = LA.vector . V.toList
+--   $ V.unsafeUpd (replicateZeros (Proxy :: Proxy a)) [(fromEnum e, 1)]
 
 
 -- | one-hot encode a bounded enumerable

@@ -36,8 +36,8 @@ import Control.Monad.Except
 import qualified Data.Text as T (pack)
 import qualified OpenAI.Gym as OpenAI
 import Servant.Client
-import Data.Logger (Event)
-import qualified Data.Logger as Logger
+import Data.Event (Event)
+import qualified Data.Event as Event
 import Network.HTTP.Client (Manager, newManager, defaultManagerSettings)
 import OpenAI.Gym
   ( GymEnv(..)
@@ -241,14 +241,14 @@ _step a = do
   then do
     s <- aesonToMaybeState (OpenAI.observation out)
     LastState ep prior <- get
-    tell . pure $ Logger.Event ep r prior a
+    tell . pure $ Event.Event ep r prior a
     return $ Done r s
   else do
     s <- aesonToState (OpenAI.observation out)
     let n = Next r s
     LastState ep prior <- get
     put $ LastState ep s
-    tell . pure $ Logger.Event ep r prior a
+    tell . pure $ Event.Event ep r prior a
     return n
   where
     renderStep :: Bool -> OpenAI.Step

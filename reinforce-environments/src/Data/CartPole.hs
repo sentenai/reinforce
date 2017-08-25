@@ -27,7 +27,7 @@ import Data.Aeson.Types
 import Control.Exception (AssertionFailed(..))
 import Reinforce.Spaces
 import Reinforce.Spaces.Action (Size)
-import Numeric.LinearAlgebra.Static
+-- import Numeric.LinearAlgebra.Static
 import qualified Data.Logger as Logger
 import qualified Data.Vector as V
 
@@ -98,7 +98,7 @@ instance FromJSON StateCP where
 
 instance StateSpaceStatic StateCP where
   type Size StateCP = 4
-  toR = vector . V.toList . Spaces.toVector
+  -- toR = vector . V.toList . Spaces.toVector
   -- fromR = Spaces.fromVector . V.fromList . LA.toList . unwrap
 
 

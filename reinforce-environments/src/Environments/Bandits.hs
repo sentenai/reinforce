@@ -20,22 +20,22 @@
 module Environments.Bandits
   ( Environment(..)
   , runEnvironment
-  , Logger.Event(..)
+  , Event.Event(..)
   , Action
   , mkBandits
   , defaultBandits
   , mkAction
   ) where
 
+import Reinforce.Prelude
 import Control.MonadEnv
 import Control.MonadMWCRandom
 import qualified Data.Vector as V
 import Data.Vector ((!))
 import Data.DList
-import qualified Data.Logger as Logger
+import qualified Data.Event as Event
 import Control.Exception.Safe (assert)
 
-import Reinforce.Prelude
 
 -- | FIXME: only 10 arms for the time being. This is where a "discrete space"
 -- would be nice
@@ -47,7 +47,7 @@ data Config = Config
   , gen      :: GenIO
   }
 
-type Event = Logger.Event Reward () Action
+type Event = Event.Event Reward () Action
 
 -- | The slot machine index whose arm will be pulled
 newtype Action = Action { unAction :: Int }
@@ -109,5 +109,5 @@ instance MonadEnv Environment () Action Reward where
   step :: Action -> Environment (Obs Reward ())
   step (Action a) = do
     rwd <- genContVar =<< (! a) . bandits <$> ask
-    tell . pure $ Logger.Event 0 rwd () (Action a)
+    tell . pure $ Event.Event 0 rwd () (Action a)
     return $ Next rwd ()

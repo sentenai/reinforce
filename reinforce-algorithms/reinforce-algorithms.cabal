@@ -1,4 +1,4 @@
--- This file has been generated from package.yaml by hpack version 0.17.0.
+-- This file has been generated from package.yaml by hpack version 0.18.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -19,7 +19,6 @@ library
     , containers
     , dlist
     , hashable
-    , hmatrix
     , microlens-platform
     , monad-loops
     , mtl
@@ -42,6 +41,8 @@ library
       Reinforce.Algorithms.Sarsa
       Reinforce.Internal.MonadHistory
       Reinforce.Policy.EpsilonGreedy
+  other-modules:
+      Paths_reinforce_algorithms
   default-language: Haskell2010
 
 test-suite spec
@@ -57,7 +58,6 @@ test-suite spec
     , containers
     , dlist
     , hashable
-    , hmatrix
     , microlens-platform
     , monad-loops
     , mtl
@@ -69,6 +69,7 @@ test-suite spec
     , unordered-containers
     , vector
     , reinforce-algorithms
+    , reinforce-environments
     , hspec
     , QuickCheck
   other-modules:

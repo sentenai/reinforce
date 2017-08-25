@@ -23,7 +23,6 @@ dependencies:
   - containers
   - dlist
   - hashable
-  - hmatrix
   - microlens-platform
   - monad-loops
   - mtl
@@ -44,5 +43,6 @@ tests:
     source-dirs: test
     dependencies:
       - reinforce-algorithms
+      - reinforce-environments
       - hspec
       - QuickCheck
