@@ -32,7 +32,6 @@ import Control.MonadEnv
 import Control.MonadMWCRandom
 import qualified Data.Vector as V
 import Data.Vector ((!))
-import Data.DList
 import qualified Data.Event as Event
 import Control.Exception.Safe (assert)
 

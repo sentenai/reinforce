@@ -1,10 +1,10 @@
 module Agents.QTable.FrozenLakeSpec where
 
-import Agents.Prelude
+import Reinforce.Prelude
 
-import Agents
-import Agents.QTable
-import Algorithms.QLearning
+import Reinforce.Agents
+import Reinforce.Agents.QTable
+import Reinforce.Algorithms.QLearning
 import Environments.Gym.ToyText.FrozenLakeV0 (runDefaultEnvironment)
 import Test.Hspec
 

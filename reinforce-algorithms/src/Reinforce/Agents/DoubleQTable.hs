@@ -1,4 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE RankNTypes #-}
 module Reinforce.Agents.DoubleQTable where

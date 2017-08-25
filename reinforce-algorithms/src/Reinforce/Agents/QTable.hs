@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE ConstraintKinds #-}
-
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 module Reinforce.Agents.QTable where

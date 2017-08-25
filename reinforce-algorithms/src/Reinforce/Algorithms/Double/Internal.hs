@@ -1,6 +1,5 @@
 module Reinforce.Algorithms.Double.Internal where
 
-import Reinforce.Prelude
 import Reinforce.Algorithms.Internal (RLParams)
 
 class RLParams m r => DoubleTDLearning m s a r | m -> s a r where

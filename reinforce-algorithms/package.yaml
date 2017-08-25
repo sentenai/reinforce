@@ -7,7 +7,7 @@ ghc-options: -Wall
 default-extensions:
   - BangPatterns
   - FunctionalDependencies
-  - GeneralizedNewtypeDeriving
+# - GeneralizedNewtypeDeriving
   - InstanceSigs
   - LambdaCase
   - MultiParamTypeClasses
