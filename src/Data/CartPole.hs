@@ -13,16 +13,20 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DataKinds #-}
-module Data.CartPole where
+module Data.CartPole
+  ( StateCP(..)
+  , Action(..)
+  , Event
+  ) where
 
 import Reinforce.Prelude
-import qualified Spaces.State as Spaces
+import qualified Reinforce.Spaces.State as Spaces
 
 import Data.Aeson
 import Data.Aeson.Types
 import Control.Exception (AssertionFailed(..))
-import Spaces
-import Spaces.Action (Size)
+import Reinforce.Spaces
+import Reinforce.Spaces.Action (Size)
 import Numeric.LinearAlgebra.Static
 import qualified Data.Logger as Logger
 import qualified Data.Vector as V
@@ -52,6 +56,7 @@ instance ToJSON Action where
   toJSON GoRight = toJSON (1 :: Int)
 
 
+-- | The state of a cart on a pole in a CartPole environment
 data StateCP = StateCP
   { position  :: Float  -- ^ position of the cart on the track
   , angle     :: Float  -- ^ angle of the pole with the vertical

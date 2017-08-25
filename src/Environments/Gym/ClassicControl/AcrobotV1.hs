@@ -1,4 +1,5 @@
 --------------------------------------------------------------------------------
+-- |
 -- Module    :  Environment.Gym.ClassicControl.AcrobotV1
 -- Copyright :  (c) Sentenai 2017
 -- License   :  BSD3
@@ -16,7 +17,18 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE InstanceSigs #-}
-module Environments.Gym.ClassicControl.AcrobotV1 where
+module Environments.Gym.ClassicControl.AcrobotV1
+  ( Action(..)
+  , I.Runner
+  , State(..)
+  , Environment
+  , EnvironmentT
+  , Environments.Gym.ClassicControl.AcrobotV1.runEnvironment
+  , Environments.Gym.ClassicControl.AcrobotV1.runEnvironmentT
+  , Environments.Gym.ClassicControl.AcrobotV1.runDefaultEnvironment
+  , Environments.Gym.ClassicControl.AcrobotV1.runDefaultEnvironmentT
+  ) where
+
 
 import Reinforce.Prelude hiding (State)
 import Control.MonadEnv (MonadEnv(..), Reward)
@@ -27,6 +39,7 @@ import Data.Aeson.Types
 import OpenAI.Gym (GymEnv(AcrobotV1))
 
 
+-- | The Acrobot's State
 -- FIXME: keep semantics or move to a tuple?
 data State = State
   { cosVel0     :: Float
@@ -45,7 +58,7 @@ instance FromJSON State where
     return $ State a b c d e f
   parseJSON invalid = typeMismatch "Environment State" invalid
 
-
+-- | Acrobot Actions
 data Action = RightTorque | NoTorque | LeftTorque
   deriving (Enum, Bounded, Ord, Show, Eq, Generic, Hashable)
 
@@ -54,21 +67,28 @@ instance ToJSON Action where
   toJSON = toJSON . subtract 1 . fromEnum
 
 -- ========================================================================= --
-
+-- | Alias to 'Environments.Gym.Internal.GymEnvironmentT' with AcrobotV1 type dependencies
 type EnvironmentT t = GymEnvironmentT State Action t
+
+-- | Alias to 'EnvironmentT' in IO
 type Environment = EnvironmentT IO
 
+-- | Alias to 'Environments.Gym.Internal.runEnvironmentT'
 runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT State Action t x
 runEnvironmentT = I.runEnvironmentT AcrobotV1
 
+-- | Alias to 'Environments.Gym.Internal.runEnvironment' in IO
 runEnvironment :: Manager -> BaseUrl -> I.RunnerT State Action IO x
 runEnvironment = I.runEnvironmentT AcrobotV1
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironmentT'
 runDefaultEnvironmentT :: MonadIO t => I.RunnerT State Action t x
 runDefaultEnvironmentT = I.runDefaultEnvironmentT AcrobotV1
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironment' in IO
 runDefaultEnvironment :: I.RunnerT State Action IO x
 runDefaultEnvironment = I.runDefaultEnvironmentT AcrobotV1
+
 
 instance (MonadIO t, MonadThrow t) => MonadEnv (EnvironmentT t) State Action Reward where
   reset = I._reset

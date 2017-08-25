@@ -1,4 +1,5 @@
 --------------------------------------------------------------------------------
+-- |
 -- Module    :  Environments.Gym.ClassicControl.MountainCarV0
 -- Copyright :  (c) Sentenai 2017
 -- License   :  BSD3
@@ -24,17 +25,29 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE InstanceSigs #-}
-module Environments.Gym.ClassicControl.MountainCarV0 where
+module Environments.Gym.ClassicControl.MountainCarV0
+  ( Action(..)
+  , I.Runner
+  , State(..)
+  , Environment
+  , EnvironmentT
+  , Environments.Gym.ClassicControl.MountainCarV0.runEnvironment
+  , Environments.Gym.ClassicControl.MountainCarV0.runEnvironmentT
+  , Environments.Gym.ClassicControl.MountainCarV0.runDefaultEnvironment
+  , Environments.Gym.ClassicControl.MountainCarV0.runDefaultEnvironmentT
+  ) where
+
 
 import Reinforce.Prelude hiding (State)
 import Control.MonadEnv
-import Environments.Gym.Internal hiding (runEnvironment, getEnvironment)
+import Environments.Gym.Internal hiding (runEnvironment)
 import qualified Environments.Gym.Internal as I
 
 import Data.Aeson.Types
 import OpenAI.Gym (GymEnv(MountainCarV0))
 
 
+-- | State of a car stuck between two hills
 data State = State
   { position :: Float
   , velocity :: Float
@@ -49,6 +62,7 @@ instance FromJSON State where
   parseJSON invalid = typeMismatch "Environment State" invalid
 
 
+-- | Actions a car can perform to get out of it's predicament
 data Action = MoveLeft | DoNothing | MoveRight
   deriving (Enum, Bounded, Ord, Show, Eq, Generic, Hashable)
 
@@ -57,19 +71,25 @@ instance ToJSON Action where
   toJSON = toJSON . subtract 1 . fromEnum
 
 -- ========================================================================= --
-
+-- | Alias to 'Environments.Gym.Internal.GymEnvironmentT' with MountainCarV0 type dependencies
 type EnvironmentT t = GymEnvironmentT State Action t
+
+-- | Alias to 'EnvironmentT' in IO
 type Environment = EnvironmentT IO
 
+-- | Alias to 'Environments.Gym.Internal.runEnvironmentT'
 runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT State Action t x
 runEnvironmentT = I.runEnvironmentT MountainCarV0
 
+-- | Alias to 'Environments.Gym.Internal.runEnvironment' in IO
 runEnvironment :: Manager -> BaseUrl -> I.RunnerT State Action IO x
 runEnvironment = I.runEnvironmentT MountainCarV0
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironmentT'
 runDefaultEnvironmentT :: MonadIO t => I.RunnerT State Action t x
 runDefaultEnvironmentT = I.runDefaultEnvironmentT MountainCarV0
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironment' in IO
 runDefaultEnvironment :: I.RunnerT State Action IO x
 runDefaultEnvironment = I.runDefaultEnvironmentT MountainCarV0
 

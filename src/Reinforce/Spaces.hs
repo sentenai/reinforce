@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- |
--- Module    :  Spaces
+-- Module    :  Reinforce.Spaces
 -- Copyright :  (c) Sentenai 2017
 -- License   :  BSD3
 -- Maintainer:  sam@sentenai.com
@@ -9,9 +9,9 @@
 --
 -- re-exports of Action- and State- types.
 -------------------------------------------------------------------------------
-module Spaces ( module X ) where
+module Reinforce.Spaces ( module X ) where
 
-import Spaces.Action as X (DiscreteActionSpace)
-import Spaces.State  as X (StateSpaceStatic)
+import Reinforce.Spaces.Action as X (DiscreteActionSpace)
+import Reinforce.Spaces.State  as X (StateSpaceStatic)
 
 

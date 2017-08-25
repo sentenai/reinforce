@@ -14,9 +14,7 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE UndecidableInstances #-}
 module Control.MonadEnv
-  ( MonadEnv
-  , reset
-  , step
+  ( MonadEnv(..)
   , Obs(..)
   , Initial(..)
   , Reward
@@ -39,6 +37,7 @@ data Initial o = Initial !o | EmptyEpisode
 -- 'Terminated', or will return the reward of the last action performed and the
 -- next state
 -- TODO: return @Terminal@ (or return ()) on failure
+-- FIXME: do we always return o on done?
 data Obs r o = Next !r !o | Done !r !(Maybe o) | Terminated
   deriving (Show, Eq)
 

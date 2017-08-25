@@ -1,4 +1,5 @@
 --------------------------------------------------------------------------------
+-- |
 -- Module    :  Environment.Gym.ClassicControl.CartPoleV1
 -- Copyright :  (c) Sentenai 2017
 -- License   :  BSD3
@@ -22,22 +23,42 @@
 -- https://gym.openai.com/envs/CartPole-v1
 --------------------------------------------------------------------------------
 module Environments.Gym.ClassicControl.CartPoleV1
-  ( module Env
+  ( Env.Action(..)
+  , I.Runner
+  , Env.StateCP(..)
+  , Env.Environment
+  , Env.EnvironmentT
   , runEnvironment
+  , runEnvironmentT
   , runDefaultEnvironment
+  , runDefaultEnvironmentT
   ) where
 
 import Reinforce.Prelude hiding (State)
 import Data.CartPole
 import OpenAI.Gym (GymEnv(CartPoleV1))
-import Environments.Gym.ClassicControl.CartPoleV0 as Env hiding (runEnvironment, runDefaultEnvironment)
+import Environments.Gym.ClassicControl.CartPoleV0 as Env hiding
+  ( runEnvironment
+  , runEnvironmentT
+  , runDefaultEnvironmentT
+  , runDefaultEnvironment
+  )
 import qualified Environments.Gym.Internal as I
 
 
-runEnvironment :: Manager -> BaseUrl -> I.Runner StateCP Action x
-runEnvironment = I.runEnvironment CartPoleV1
+-- | Alias to 'Environments.Gym.Internal.runEnvironmentT'
+runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT StateCP Action t x
+runEnvironmentT = I.runEnvironmentT CartPoleV1
 
-runDefaultEnvironment :: I.Runner StateCP Action x
-runDefaultEnvironment = I.runDefaultEnvironment CartPoleV1
+-- | Alias to 'Environments.Gym.Internal.runEnvironment' in IO
+runEnvironment :: Manager -> BaseUrl -> I.RunnerT StateCP Action IO x
+runEnvironment = I.runEnvironmentT CartPoleV1
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironmentT'
+runDefaultEnvironmentT :: MonadIO t => I.RunnerT StateCP Action t x
+runDefaultEnvironmentT = I.runDefaultEnvironmentT CartPoleV1
+
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironment' in IO
+runDefaultEnvironment :: I.RunnerT StateCP Action IO x
+runDefaultEnvironment = I.runDefaultEnvironmentT CartPoleV1
 

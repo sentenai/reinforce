@@ -13,7 +13,12 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
-module Data.Logger where
+module Data.Logger
+  ( Event(..)
+  , Logger(..)
+  , NoopLogger(..)
+  , DebugLogger(..)
+  ) where
 
 import Reinforce.Prelude
 import Control.MonadMWCRandom
@@ -31,6 +36,12 @@ data Event r o a = Event Integer r o a
 
 -- ========================================================================= --
 
+-- | A logging monad, this is seperate from a History monad in that this is
+-- intended to be used for debugging and for toggling log information.
+--
+-- FIXME: In reality, this is halfway between commenting/uncommenting print
+-- statements, and passing CPP flags. Something should be done about this
+-- or a real logging Monad should be brought in.
 class Monad m => Logger m where
 
   -- | log at the 'info' level.

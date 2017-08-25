@@ -12,7 +12,6 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE CPP #-}
 module Reinforce.Prelude
   ( module X
@@ -44,8 +43,6 @@ import GHC.Float    as X
 import GHC.Generics as X (Generic)
 import GHC.TypeLits as X
 
-import Lens.Micro.Platform as X
-
 import Data.Hashable as X
 import Statistics.Distribution.Normal as X (normalDistr, NormalDistribution)
 import System.Random.MWC              as X (GenIO, Variate)
@@ -70,10 +67,12 @@ whileM_ p f = go
     decide True  = return ()
     decide False = f >> go
 
+-- | a safer @head@ with something safer
 head :: [a] -> Maybe a
 head [] = Nothing
 head as = Just $ P.head as
 
+-- | Prelude's @head@ - for capatability.
 unsafeHead :: [a] -> a
 unsafeHead = P.head
 

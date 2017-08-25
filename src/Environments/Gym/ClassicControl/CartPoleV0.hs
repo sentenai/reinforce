@@ -1,4 +1,5 @@
 --------------------------------------------------------------------------------
+-- |
 -- Module    :  Environment.CartPoleV0
 -- Copyright :  (c) Sentenai 2017
 -- License   :  BSD3
@@ -18,7 +19,18 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE FlexibleInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
-module Environments.Gym.ClassicControl.CartPoleV0 where
+module Environments.Gym.ClassicControl.CartPoleV0
+  ( Action(..)
+  , I.Runner
+  , StateCP(..)
+  , Environment
+  , EnvironmentT
+  , Environments.Gym.ClassicControl.CartPoleV0.runEnvironment
+  , Environments.Gym.ClassicControl.CartPoleV0.runEnvironmentT
+  , Environments.Gym.ClassicControl.CartPoleV0.runDefaultEnvironment
+  , Environments.Gym.ClassicControl.CartPoleV0.runDefaultEnvironmentT
+  ) where
+
 
 import Reinforce.Prelude
 import Data.CartPole
@@ -27,20 +39,30 @@ import Environments.Gym.Internal (GymEnvironmentT)
 import qualified Environments.Gym.Internal as I
 import OpenAI.Gym (GymEnv(CartPoleV0))
 
+
+-- ========================================================================= --
+-- | Alias to 'Environments.Gym.Internal.GymEnvironmentT' with CartPoleV0 type dependencies
 type EnvironmentT t = GymEnvironmentT StateCP Action t
+
+-- | Alias to 'EnvironmentT' in IO
 type Environment = EnvironmentT IO
 
+-- | Alias to 'Environments.Gym.Internal.runEnvironmentT'
 runEnvironmentT :: MonadIO t => Manager -> BaseUrl -> I.RunnerT StateCP Action t x
 runEnvironmentT = I.runEnvironmentT CartPoleV0
 
+-- | Alias to 'Environments.Gym.Internal.runEnvironment' in IO
 runEnvironment :: Manager -> BaseUrl -> I.RunnerT StateCP Action IO x
 runEnvironment = I.runEnvironmentT CartPoleV0
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironmentT'
 runDefaultEnvironmentT :: MonadIO t => I.RunnerT StateCP Action t x
 runDefaultEnvironmentT = I.runDefaultEnvironmentT CartPoleV0
 
+-- | Alias to 'Environments.Gym.Internal.runDefaultEnvironment' in IO
 runDefaultEnvironment :: I.RunnerT StateCP Action IO x
 runDefaultEnvironment = I.runDefaultEnvironmentT CartPoleV0
+
 
 instance (MonadIO t, MonadThrow t) => MonadEnv (EnvironmentT t) StateCP Action Reward where
   reset = I._reset

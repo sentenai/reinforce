@@ -13,14 +13,16 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module Spaces.Action
+module Reinforce.Spaces.Action
   ( DiscreteActionSpace(..)
   , oneHot
   , oneHot'
   , allActions
+  , randomChoice
   ) where
 
 import Reinforce.Prelude
+import Control.MonadMWCRandom
 import Numeric.LinearAlgebra.Static (R)
 import qualified Numeric.LinearAlgebra.Static as LA
 import qualified Data.Vector as V
@@ -56,5 +58,21 @@ replicateZeros _ = V.fromList $ replicate (fromEnum (maxBound :: a) + 1) 0
 -- | helper function to get all actions in a discrete action space
 allActions :: DiscreteActionSpace a => [a]
 allActions = [minBound..maxBound]
+
+-- | make a uniform-random selection of an Action in a discrete action space
+randomChoice
+  :: forall m a . (MonadIO m , MonadMWCRandom m, DiscreteActionSpace a)
+  => m a
+randomChoice = toEnum . fst <$> sampleFrom uniformDist
+  where
+    uniformDist :: [Double]
+    uniformDist = fmap (\a -> convert a / total) allActions
+      where
+        convert :: a -> Double
+        convert = fromIntegral . fromEnum
+
+        total :: Double
+        total = sum (fmap convert allActions)
+
 
 
