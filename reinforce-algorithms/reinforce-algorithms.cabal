@@ -12,7 +12,7 @@ library
   hs-source-dirs:
       src
   default-extensions: BangPatterns FunctionalDependencies InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns NoImplicitPrelude OverloadedStrings ScopedTypeVariables ViewPatterns
-  ghc-options: -Wall
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
       base
     , bytestring
@@ -51,7 +51,7 @@ test-suite spec
   hs-source-dirs:
       test
   default-extensions: BangPatterns FunctionalDependencies InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns NoImplicitPrelude OverloadedStrings ScopedTypeVariables ViewPatterns
-  ghc-options: -Wall
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
       base
     , bytestring

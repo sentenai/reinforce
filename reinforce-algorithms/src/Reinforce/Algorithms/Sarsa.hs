@@ -26,10 +26,13 @@ import Reinforce.Algorithms.Internal
 --     until s terminal
 -- ========================================================================= --
 rolloutSarsa :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> m ()
-rolloutSarsa maxSteps = do
-  Initial s <- Env.reset
-  a <- choose s
-  clock maxSteps 0 (goM s a)
+rolloutSarsa maxSteps =
+  Env.reset >>= \case
+    EmptyEpisode -> pure ()
+    Initial s -> do
+      a <- choose s
+      clock maxSteps 0 (goM s a)
+
   where
     goM :: o -> a -> Integer -> m ()
     goM s a st =

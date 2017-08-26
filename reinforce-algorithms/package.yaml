@@ -1,13 +1,12 @@
 name: reinforce-algorithms
 version: 0.1.0.0
 license-file: ../LICENSE
-
-ghc-options: -Wall
+ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+    # -Wmissing-import-lists <-- due to NoImplicitPrelude.
 
 default-extensions:
   - BangPatterns
   - FunctionalDependencies
-# - GeneralizedNewtypeDeriving
   - InstanceSigs
   - LambdaCase
   - MultiParamTypeClasses

@@ -18,6 +18,6 @@ runLearner maxEpisodes maxSteps rollout = clock maxEpisodes 0 goM
 
 
 clock :: Monad m => Maybe Integer -> Integer -> (Integer -> m ()) -> m ()
-clock   Nothing n goM = goM n
-clock (Just mx) n goM = unless (n >= mx) (goM n)
+clock   Nothing n !goM = goM n
+clock (Just mx) n !goM = unless (n >= mx) (goM n)
 
