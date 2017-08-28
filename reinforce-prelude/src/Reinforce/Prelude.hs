@@ -19,6 +19,7 @@ module Reinforce.Prelude
   , head
   , unsafeHead
   , printIO
+  , impossible
   ) where
 
 import Prelude as X hiding (head)
@@ -75,3 +76,6 @@ unsafeHead = P.head
 
 printIO :: (Show a, MonadIO m) => a -> m ()
 printIO = liftIO . print
+
+impossible :: String -> x
+impossible = error
