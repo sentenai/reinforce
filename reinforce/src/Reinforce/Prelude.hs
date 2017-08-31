@@ -18,6 +18,7 @@ module Reinforce.Prelude
   , whileM_
   , head
   , unsafeHead
+  , printIO
   ) where
 
 import Prelude as X hiding (head)
@@ -77,3 +78,5 @@ head as = Just $ P.head as
 unsafeHead :: [a] -> a
 unsafeHead = P.head
 
+printIO :: (Show a, MonadIO m) => a -> m ()
+printIO = liftIO . print
