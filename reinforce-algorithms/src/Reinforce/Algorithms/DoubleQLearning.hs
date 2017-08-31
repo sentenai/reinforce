@@ -37,11 +37,9 @@ import Reinforce.Algorithms.Double.Internal (DoubleTDLearning(..))
 -- ========================================================================= --
 rolloutDoubleQLearning
   :: forall m o a r . (MonadIO m, Variate r, MonadEnv m o a r, DoubleTDLearning m o a r, Ord r, MonadMWCRandom m)
-  => Maybe Integer
-  -> m ()
-rolloutDoubleQLearning maxSteps = do
-  Initial s <- Env.reset
-  clock maxSteps 0 (goM s)
+  => Maybe Integer -> o -> m ()
+rolloutDoubleQLearning maxSteps i =
+  clockSteps maxSteps 0 (goM i)
   where
     goM :: o -> Integer -> m ()
     goM s st = do
@@ -56,7 +54,7 @@ rolloutDoubleQLearning maxSteps = do
       compare (0.5 :: Float) <$> uniform >>= \case
         LT -> calcQ value1 actions1 value2 s a r s' >>= update1 s a
         _  -> calcQ value2 actions2 value1 s a r s' >>= update2 s a
-      clock maxSteps (st+1) (goM s')
+      clockSteps maxSteps (st+1) (goM s')
 
 
 calcQ

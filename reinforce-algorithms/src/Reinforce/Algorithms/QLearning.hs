@@ -27,49 +27,49 @@ import Reinforce.Algorithms.Internal
 --       s <- s'
 --     until s terminal
 -- ========================================================================= --
-rolloutQLearning :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> m ()
-rolloutQLearning maxSteps = do
-  Initial s <- Env.reset
-  clock maxSteps 0 (goM s)
+rolloutQLearning :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> o -> m ()
+rolloutQLearning maxSteps i = do
+  clockSteps maxSteps 0 (goM i)
   where
     goM :: o -> Integer -> m ()
     goM s st = do
       a <- choose s
       Env.step a >>= \case
         Terminated -> return ()
-        Done r ms' -> maybe (pure ()) (learn st s a r) ms'
-        Next r s'  -> learn st s a r s'
+        Done r ms' -> maybe (pure ()) (learn s a r) ms'
+        Next r s'  -> do
+          learn s a r s'
+          clockSteps maxSteps (st+1) (goM s')
 
-    learn :: Integer -> o -> a -> r -> o -> m ()
-    learn st s a r s' = do
+    learn :: o -> a -> r -> o -> m ()
+    learn s a r s' = do
       lambda <- getLambda
       gamma  <- getGamma
 
       oldQ <- value s a
       nextQs <- sequence . fmap (value s) =<< actions s
       update s a $ oldQ + lambda * (r + gamma * (maximum nextQs) - oldQ)
-      clock maxSteps (st+1) (goM s')
 
-rolloutEpsQLearning :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> m ()
-rolloutEpsQLearning maxSteps = do
-  Initial s <- Env.reset
-  clock maxSteps 0 (goM s)
+rolloutEpsQLearning :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> o -> m ()
+rolloutEpsQLearning maxSteps i = do
+  clockSteps maxSteps 0 (goM i)
   where
     goM :: o -> Integer -> m ()
     goM s st = do
       a <- choose s
       Env.step a >>= \case
         Terminated -> return ()
-        Done r ms' -> maybe (pure ()) (learn st s a r) ms'
-        Next r s'  -> learn st s a r s'
+        Done r ms' -> maybe (pure ()) (learn s a r) ms'
+        Next r s'  -> do
+          learn s a r s'
+          clockSteps maxSteps (st+1) (goM s')
 
-    learn :: Integer -> o -> a -> r -> o -> m ()
-    learn st s a r s' = do
+    learn :: o -> a -> r -> o -> m ()
+    learn s a r s' = do
       lambda <- getLambda
       gamma  <- getGamma
 
       oldQ <- value s a
       nextQs <- sequence . fmap (value s) =<< actions s
       update s a $ oldQ + lambda * (r + gamma * (maximum nextQs) - oldQ)
-      clock maxSteps (st+1) (goM s')
 

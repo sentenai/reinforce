@@ -24,29 +24,30 @@ import Reinforce.Algorithms.Internal
 rolloutExpectedSarsa
   :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Fractional r, Ord r)
   => Maybe Integer
+  -> o
   -> m ()
-rolloutExpectedSarsa maxSteps = do
-  Initial s <- Env.reset
-  a <- choose s
-  clock maxSteps 0 (goM s a)
+rolloutExpectedSarsa maxSteps i = do
+  a <- choose i
+  clockSteps maxSteps 0 (goM i a)
   where
     goM :: o -> a -> Integer -> m ()
     goM s a st =
       Env.step a >>= \case
         Terminated -> pure ()
-        Done r ms' -> maybe (pure ()) (learn st s a r) ms'
-        Next r s'  -> learn st s a r s'
+        Done r ms' -> maybe (pure ()) (\s' -> choose s' >>= \a' -> learn s a r s' a') ms'
+        Next r s'  -> do
+          a' <- choose s'
+          learn s a r s' a'
+          clockSteps maxSteps (st+1) (goM s' a')
 
-    learn :: Integer -> o -> a -> r -> o -> m ()
-    learn st s a r s' = do
+    learn :: o -> a -> r -> o -> a -> m ()
+    learn s a r s' _ = do
       lambda <- getLambda
       gamma  <- getGamma
-      a'     <- choose s'
 
       -- Note that we don't hold distributions seperate from reward currently
-      oldQ   <- value s  a
+      oldQ   <- value s a
       nextQs <- sequence . map (value s') =<< actions s'
       let expectedQ = sum nextQs / (fromIntegral $ length nextQs)
       update s a $ oldQ + lambda * (r + gamma * expectedQ - oldQ)
-      clock maxSteps (st+1) (goM s' a')
 

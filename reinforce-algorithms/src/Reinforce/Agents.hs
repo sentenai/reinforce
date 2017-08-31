@@ -1,23 +1,45 @@
-module Reinforce.Agents where
+module Reinforce.Agents
+  ( runLearner
+  , clockEpisodes
+  , clockSteps
+  ) where
 
 import Reinforce.Prelude
 import Control.MonadEnv
+import qualified Control.MonadEnv as Env (reset)
 
 runLearner
-  :: forall m o a r . MonadEnv m o a r
+  :: MonadEnv m o a r
+  => MonadIO m
   => Maybe Integer
   -> Maybe Integer
-  -> (Maybe Integer -> m ())
+  -> (Maybe Integer -> o -> m ())
   -> m ()
-runLearner maxEpisodes maxSteps rollout = clock maxEpisodes 0 goM
+runLearner maxEps maxSteps rollout =
+  clockEpisodes maxEps 0 maxSteps rollout
+
+
+clockEpisodes
+  :: forall m o a r . MonadEnv m o a r
+  => Maybe Integer
+  -> Integer
+  -> Maybe Integer
+  -> (Maybe Integer -> o -> m ())
+  -> m ()
+clockEpisodes maxEps epn maxSteps rollout = do
+  case maxEps of
+    Nothing -> tick
+    Just mx -> unless (epn > mx) $ tick
   where
-   goM :: Integer -> m ()
-   goM epn =
-     rollout maxSteps
-     >> clock maxEpisodes (epn + 1) goM
+    tick :: m ()
+    tick = Env.reset >>= \case
+      EmptyEpisode -> pure ()
+      Initial s    -> do
+        rollout maxSteps s
+        clockEpisodes maxEps (epn+1) maxSteps rollout
 
 
-clock :: Monad m => Maybe Integer -> Integer -> (Integer -> m ()) -> m ()
-clock   Nothing n !goM = goM n
-clock (Just mx) n !goM = unless (n >= mx) (goM n)
+clockSteps :: Monad m => Maybe Integer -> Integer -> (Integer -> m ()) -> m ()
+clockSteps   Nothing st tickAct = tickAct st
+clockSteps (Just mx) st tickAct = unless (st >= mx) (tickAct st)
 

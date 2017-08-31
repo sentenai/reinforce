@@ -2,7 +2,7 @@ module Reinforce.Algorithms.Sarsa where
 
 import Reinforce.Agents
 import Reinforce.Prelude
-import Control.MonadEnv (MonadEnv, Initial(..), Obs(..))
+import Control.MonadEnv (MonadEnv, Obs(..))
 import qualified Control.MonadEnv as Env
 import Reinforce.Algorithms.Internal
 
@@ -25,30 +25,34 @@ import Reinforce.Algorithms.Internal
 --       a <- a'
 --     until s terminal
 -- ========================================================================= --
-rolloutSarsa :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> m ()
-rolloutSarsa maxSteps =
-  Env.reset >>= \case
-    EmptyEpisode -> pure ()
-    Initial s -> do
-      a <- choose s
-      clock maxSteps 0 (goM s a)
+rolloutSarsa
+  :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)
+  => MonadIO m
+  => (Show a, Show o, Show r)
+  => Maybe Integer
+  -> o
+  -> m ()
+rolloutSarsa maxSteps i = do
+  a <- choose i
+  clockSteps maxSteps 0 (agentStep i a)
 
   where
-    goM :: o -> a -> Integer -> m ()
-    goM s a st =
+    agentStep :: o -> a -> Integer -> m ()
+    agentStep s a st = do
       Env.step a >>= \case
         Terminated -> return ()
-        Done r ms' -> maybe (pure ()) (learn st s a r) ms'
-        Next r s'  -> learn st s a r s'
+        Done r ms' -> maybe (pure ()) (\s' -> choose s' >>= learn s a r s') ms'
+        Next r  s' -> do
+          a' <- choose s'
+          learn s a r s' a'
+          clockSteps maxSteps (st+1) (agentStep s' a')
 
-    learn :: Integer -> o -> a -> r -> o -> m ()
-    learn st s a r s' = do
+    learn :: o -> a -> r -> o -> a -> m ()
+    learn s a r s' a' = do
       lambda <- getLambda
       gamma  <- getGamma
-      a'     <- choose s'
 
       oldQ   <- value s  a
       nextQ  <- value s' a'
       update s a $ oldQ + lambda * (r + gamma * nextQ - oldQ)
-      clock maxSteps (st+1) (goM s' a')
 
