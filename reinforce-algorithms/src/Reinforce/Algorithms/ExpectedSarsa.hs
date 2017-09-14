@@ -2,7 +2,7 @@ module Reinforce.Algorithms.ExpectedSarsa where
 
 import Reinforce.Agents
 import Reinforce.Prelude
-import Control.MonadEnv (MonadEnv, Initial(..), Obs(..))
+import Control.MonadEnv (MonadEnv, Obs(..))
 import qualified Control.MonadEnv as Env
 import Reinforce.Algorithms.Internal
 

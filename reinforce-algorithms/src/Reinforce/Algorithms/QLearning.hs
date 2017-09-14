@@ -2,7 +2,7 @@ module Reinforce.Algorithms.QLearning where
 
 import Reinforce.Agents
 import Reinforce.Prelude
-import Control.MonadEnv (MonadEnv, Initial(..), Obs(..))
+import Control.MonadEnv (MonadEnv, Obs(..))
 import qualified Control.MonadEnv as Env
 import Reinforce.Algorithms.Internal
 
@@ -36,13 +36,13 @@ rolloutQLearning maxSteps i = do
       a <- choose s
       Env.step a >>= \case
         Terminated -> return ()
-        Done r ms' -> maybe (pure ()) (learn s a r) ms'
+        Done r _   -> learn s a r
         Next r s'  -> do
-          learn s a r s'
+          learn s a r
           clockSteps maxSteps (st+1) (goM s')
 
-    learn :: o -> a -> r -> o -> m ()
-    learn s a r s' = do
+    learn :: o -> a -> r -> m ()
+    learn s a r = do
       lambda <- getLambda
       gamma  <- getGamma
 
@@ -59,13 +59,13 @@ rolloutEpsQLearning maxSteps i = do
       a <- choose s
       Env.step a >>= \case
         Terminated -> return ()
-        Done r ms' -> maybe (pure ()) (learn s a r) ms'
+        Done r _   -> learn s a r
         Next r s'  -> do
-          learn s a r s'
+          learn s a r
           clockSteps maxSteps (st+1) (goM s')
 
-    learn :: o -> a -> r -> o -> m ()
-    learn s a r s' = do
+    learn :: o -> a -> r -> m ()
+    learn s a r = do
       lambda <- getLambda
       gamma  <- getGamma
 
