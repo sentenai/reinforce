@@ -41,6 +41,8 @@ import qualified Data.Vector as V
 import Data.Aeson
 import Data.Aeson.Types
 import OpenAI.Gym (GymEnv(FrozenLakeV0))
+import Servant.Client as X (BaseUrl)
+import Network.HTTP.Client as X (Manager)
 
 
 -- | The current position of the agent on the frozen lake

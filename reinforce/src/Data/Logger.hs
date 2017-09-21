@@ -22,7 +22,6 @@ module Data.Logger
 
 import Reinforce.Prelude
 import Control.MonadMWCRandom
-import Servant.Client
 import Debug.Trace
 import Control.MonadEnv
 import qualified Data.Text as T
@@ -73,12 +72,6 @@ instance (Logger m, Monoid w) => Logger (RWST r w s m) where
   info_  a b = lift $ info_  a b
   debug  a   = lift $ debug  a
   debug_ a b = lift $ debug_ a b
-
-instance Logger ClientM where
-  info   a   = traceM $ T.unpack a
-  info_  a b = traceM $ T.unpack (a <> b)
-  debug  a   = traceM $ T.unpack a
-  debug_ a b = traceM $ T.unpack (a <> b)
 
 instance Logger IO where
   info   a   = traceM $ T.unpack a

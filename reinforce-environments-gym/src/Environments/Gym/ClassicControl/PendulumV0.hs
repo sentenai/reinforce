@@ -35,6 +35,8 @@ import qualified Environments.Gym.Internal as I
 
 import Data.Aeson.Types
 import OpenAI.Gym (GymEnv(PendulumV0))
+import Servant.Client as X (BaseUrl)
+import Network.HTTP.Client as X (Manager)
 
 
 -- | State of a PendulumV0 environment

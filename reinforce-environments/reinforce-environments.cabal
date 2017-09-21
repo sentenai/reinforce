@@ -29,14 +29,9 @@ library
   default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      aeson
-    , base
-    , dlist
-    , mwc-random
+      base
     , reinforce
-    , safe-exceptions
-    , vector
-    , gym-http-api
+    , reinforce-prelude
   exposed-modules:
       Data.CartPole
       Data.Gym

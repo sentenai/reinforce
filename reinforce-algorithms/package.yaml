@@ -18,20 +18,8 @@ default-extensions:
 
 dependencies:
   - base
-  - bytestring
-  - containers
-  - dlist
-  - hashable
-  - microlens-platform
-  - monad-loops
-  - mtl
-  - mwc-random
   - reinforce
-  - safe-exceptions
-  - statistics
-  - text
-  - unordered-containers
-  - vector
+  - reinforce-prelude
 
 library:
   source-dirs: src

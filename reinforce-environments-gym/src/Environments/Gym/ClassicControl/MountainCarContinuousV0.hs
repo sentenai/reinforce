@@ -37,6 +37,8 @@ module Environments.Gym.ClassicControl.MountainCarContinuousV0
 
 import Reinforce.Prelude hiding (State)
 import OpenAI.Gym (GymEnv(MountainCarContinuousV0))
+import Servant.Client (BaseUrl)
+import Network.HTTP.Client (Manager)
 import Environments.Gym.ClassicControl.MountainCarV0 as Env hiding
   ( runEnvironment
   , runDefaultEnvironment

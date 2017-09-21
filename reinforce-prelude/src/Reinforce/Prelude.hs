@@ -50,11 +50,6 @@ import Statistics.Distribution.Normal  as X (normalDistr, NormalDistribution)
 import System.Random.MWC               as X (GenIO, Variate)
 
 -- ========================================================================= --
--- Gym-required types:
-import Servant.Client as X (BaseUrl(..), ServantError(..))
-import Network.HTTP.Client as X (Manager)
-
--- ========================================================================= --
 
 import qualified Prelude as P (head)
 

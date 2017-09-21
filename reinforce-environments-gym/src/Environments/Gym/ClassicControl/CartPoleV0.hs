@@ -38,6 +38,8 @@ import Control.MonadEnv (MonadEnv(..), Reward)
 import Environments.Gym.Internal (GymEnvironmentT)
 import qualified Environments.Gym.Internal as I
 import OpenAI.Gym (GymEnv(CartPoleV0))
+import Servant.Client (BaseUrl)
+import Network.HTTP.Client (Manager)
 
 
 -- ========================================================================= --

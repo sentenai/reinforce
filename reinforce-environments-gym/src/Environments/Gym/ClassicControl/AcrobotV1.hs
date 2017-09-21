@@ -37,6 +37,8 @@ import qualified Environments.Gym.Internal as I
 
 import Data.Aeson.Types
 import OpenAI.Gym (GymEnv(AcrobotV1))
+import Servant.Client (BaseUrl)
+import Network.HTTP.Client (Manager)
 
 
 -- | The Acrobot's State

@@ -16,7 +16,7 @@ description: See <https://github.com/Sentenai/reinforce README.md>.
     <https://github.com/openai/gym-http-api/ gym-http-api>, as well as
     haskell-native environments which provide a substantial speed-up to the
     http-server interface.
-    
+
     This is an environment-first library, with basic reinforcment
     learning algorithms being developed on branches in subpackages (see
     <https://github.com/Sentenai/reinforce#development-and-milestones
@@ -39,19 +39,13 @@ default-extensions:
 
 
 dependencies:
-  - aeson           # >= 1.0  &&  <  1.1
   - base            # >= 4.9  &&  < 4.10
-  - dlist           #
-  - mwc-random      # >= 0.13 &&  < 0.14
   - reinforce
-  - safe-exceptions # >= 0.1  &&  <  0.2
-  - vector          # >= 0.11 &&  < 0.12
+  - reinforce-prelude
 
 
 library:
   source-dirs: src
-  dependencies:
-    - gym-http-api
   reexported-modules:
     - Control.MonadEnv, Reinforce.Spaces.Action, Data.Logger, Data.Event, Reinforce.Spaces, Reinforce.Spaces.State
 

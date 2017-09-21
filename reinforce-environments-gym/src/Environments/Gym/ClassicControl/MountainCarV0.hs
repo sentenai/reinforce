@@ -45,7 +45,8 @@ import qualified Environments.Gym.Internal as I
 
 import Data.Aeson.Types
 import OpenAI.Gym (GymEnv(MountainCarV0))
-
+import Servant.Client (BaseUrl)
+import Network.HTTP.Client (Manager)
 
 -- | State of a car stuck between two hills
 data State = State

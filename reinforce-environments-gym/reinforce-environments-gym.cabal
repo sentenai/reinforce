@@ -29,16 +29,13 @@ library
   default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      aeson
-    , base
+      base
     , http-client
-    , mtl
     , reinforce
     , reinforce-environments
+    , reinforce-prelude
     , gym-http-api
     , servant-client
-    , text
-    , vector
   exposed-modules:
       Environments.Gym.ClassicControl.AcrobotV1
       Environments.Gym.ClassicControl.CartPoleV0

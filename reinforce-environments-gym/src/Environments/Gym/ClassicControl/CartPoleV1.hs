@@ -37,6 +37,8 @@ module Environments.Gym.ClassicControl.CartPoleV1
 import Reinforce.Prelude hiding (State)
 import Data.CartPole
 import OpenAI.Gym (GymEnv(CartPoleV1))
+import Servant.Client (BaseUrl)
+import Network.HTTP.Client (Manager)
 import Environments.Gym.ClassicControl.CartPoleV0 as Env hiding
   ( runEnvironment
   , runEnvironmentT

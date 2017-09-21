@@ -15,20 +15,8 @@ library
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
       base
-    , bytestring
-    , containers
-    , dlist
-    , hashable
-    , microlens-platform
-    , monad-loops
-    , mtl
-    , mwc-random
     , reinforce
-    , safe-exceptions
-    , statistics
-    , text
-    , unordered-containers
-    , vector
+    , reinforce-prelude
   exposed-modules:
       Reinforce.Agents
       Reinforce.Agents.DoubleQTable
@@ -54,20 +42,8 @@ test-suite spec
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
       base
-    , bytestring
-    , containers
-    , dlist
-    , hashable
-    , microlens-platform
-    , monad-loops
-    , mtl
-    , mwc-random
     , reinforce
-    , safe-exceptions
-    , statistics
-    , text
-    , unordered-containers
-    , vector
+    , reinforce-prelude
     , reinforce-algorithms
     , reinforce-environments
     , hspec
