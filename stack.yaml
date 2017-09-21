@@ -5,6 +5,7 @@ packages:
 - reinforce
 - reinforce-algorithms
 - reinforce-environments
+- reinforce-environments-gym
 - reinforce-zoo
 - location:
     git: https://github.com/stites/gym-http-api.git
