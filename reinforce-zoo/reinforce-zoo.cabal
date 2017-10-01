@@ -32,4 +32,7 @@ executable random-agent-example
   build-depends:
       base
     , reinforce-environments
+  other-modules:
+      Agents.QTable.CartPoleSpec
+      Agents.QTable.FrozenLakeSpec
   default-language: Haskell2010
