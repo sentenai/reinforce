@@ -141,4 +141,14 @@ For a longer-term view, feel free to check out [MILESTONES.md](./MILESTONES.md).
 [tfhs]:https://github.com/tensorflow/haskell
 [bp]:https://github.com/mstksg/backprop
 
+Contributors
+======================
 
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+| [<img src="https://avatars3.githubusercontent.com/u/1694705?v=4" width="60px;"/><br /><sub>Sam Stites</sub>](https://www.stites.io)<br />[💻](https://github.com/stites/reinforce/commits?author=stites "Code") [🤔](#ideas-stites "Ideas, Planning, & Feedback") [📖](https://github.com/stites/reinforce/commits?author=stites "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/1074598?v=4" width="60px;"/><br /><sub>Mitchell Rosen</sub>](https://github.com/mitchellwrosen)<br />[🤔](#ideas-mitchellwrosen "Ideas, Planning, & Feedback") | [<img src="https://avatars0.githubusercontent.com/u/1494102?v=4" width="60px;"/><br /><sub>Anastasia Aizman</sub>](https://github.com/anastasia)<br />[📖](https://github.com/stites/reinforce/commits?author=anastasia "Documentation") |
+| :---: | :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
