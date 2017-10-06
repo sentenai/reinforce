@@ -108,6 +108,10 @@ packages:
 
 and add it to your cabal file or package.yaml (recommended) dependencies.
 
+Architecture
+=============
+
+TODO
 
 Development and Milestones
 =============
@@ -136,4 +140,5 @@ For a longer-term view, feel free to check out [MILESTONES.md](./MILESTONES.md).
 
 [tfhs]:https://github.com/tensorflow/haskell
 [bp]:https://github.com/mstksg/backprop
+
 
