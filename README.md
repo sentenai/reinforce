@@ -108,11 +108,6 @@ packages:
 
 and add it to your cabal file or package.yaml (recommended) dependencies.
 
-Architecture
-=============
-
-TODO
-
 Development and Milestones
 =============
 
