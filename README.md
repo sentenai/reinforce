@@ -124,19 +124,19 @@ Please [file an issue mentioning where you'd like to help](https://github.com/Se
 While you can check the [Github issues](https://github.com/Sentenai/reinforce/issues), here are some items off the top of my head which could use some immediate attention (and may also need to be filed).
 
 A few quick environment contributions might be the following:
-- #1 (easy) - Add an Atari environment to the api (like pong! others might require directly commiting to `gym-http-api`)
-- #8 (med) - Port Richard Sutton's Acrobot code to haskell
-- #6 (hard) - Break the dependency on the `openai/gym-http-api` server -- this would speed up performance considerably
-- #9 (harder) - Render the haskell CartPole environment with SDL
+- [#1](https://github.com/Sentenai/reinforce/issues/1) (easy) - Add an Atari environment to the api (like pong! others might require directly commiting to `gym-http-api`)
+- [#8](https://github.com/Sentenai/reinforce/issues/8) (med) - Port Richard Sutton's Acrobot code to haskell
+- [#6](https://github.com/Sentenai/reinforce/issues/6) (hard) - Break the dependency on the `openai/gym-http-api` server -- this would speed up performance considerably
+- [#9](https://github.com/Sentenai/reinforce/issues/9) (harder) - Render the haskell CartPole environment with SDL
 
 Some longer-running algorithmic contributions which would take place on the `algorithms` or `deep-rl` branches might be:
-- #10 (easy) - Convert algorithms into agents
-- #11 (med) - Add a testable "convergence" criteria
-- #12 (med) - Implement some eligibility trace variants to the `algorithms` branch
-- #13 (med) - Add some policy gradient methods to the `algorithms` branch
-- #14 (hard) - Head over to the `deep-rl` branch and convert some of the deep reinforcement learning models into haskell with [tensorflow-haskell][tfhs], and/or [backprop][bp]
+- [#10](https://github.com/Sentenai/reinforce/issues/10) (easy) - Convert algorithms into agents
+- [#11](https://github.com/Sentenai/reinforce/issues/11) (med) - Add a testable "convergence" criteria
+- [#12](https://github.com/Sentenai/reinforce/issues/12) (med) - Implement some eligibility trace variants to the `algorithms` branch
+- [#13](https://github.com/Sentenai/reinforce/issues/13) (med) - Add some policy gradient methods to the `algorithms` branch
+- [#14](https://github.com/Sentenai/reinforce/issues/14) (hard) - Head over to the `deep-rl` branch and convert some of the deep reinforcement learning models into haskell with [tensorflow-haskell][tfhs], and/or [backprop][bp]
 
-For a longer-term view, feel free to check out [MILESTONES.md](./MILESTONES.md).
+For a longer-term view, feel free to check out [Milestones](https://github.com/Sentenai/reinforce/milestones).
 
 [tfhs]:https://github.com/tensorflow/haskell
 [bp]:https://github.com/mstksg/backprop
