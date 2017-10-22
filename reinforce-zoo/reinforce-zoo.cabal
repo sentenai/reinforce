@@ -24,6 +24,25 @@ source-repository head
   location: https://github.com/Sentenai/reinforce
   subdir: reinforce-zoo
 
+executable egreedy-bandits-example
+  main-is: EGreedyBandits.hs
+  hs-source-dirs:
+      examples
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  build-depends:
+      base
+    , reinforce
+    , reinforce-algorithms
+    , reinforce-environments
+    , reinforce-prelude
+    , mwc-random
+    , vector
+  other-modules:
+      Agents.QTable.CartPoleSpec
+      Agents.QTable.FrozenLakeSpec
+      RandomAgent
+  default-language: Haskell2010
+
 executable random-agent-example
   main-is: RandomAgent.hs
   hs-source-dirs:
@@ -35,4 +54,5 @@ executable random-agent-example
   other-modules:
       Agents.QTable.CartPoleSpec
       Agents.QTable.FrozenLakeSpec
+      EGreedyBandits
   default-language: Haskell2010

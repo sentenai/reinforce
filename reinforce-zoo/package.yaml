@@ -38,4 +38,16 @@ executables:
       - base
       - reinforce-environments
 
+  egreedy-bandits-example:
+    source-dirs: examples
+    main: EGreedyBandits.hs
+    dependencies:
+      - base
+      - reinforce
+      - reinforce-algorithms
+      - reinforce-environments
+      - reinforce-prelude
+      - mwc-random
+      - vector
+
 

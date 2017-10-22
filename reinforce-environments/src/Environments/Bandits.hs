@@ -21,6 +21,7 @@ module Environments.Bandits
   ( Environment(..)
   , runEnvironment
   , Event.Event(..)
+  , Config
   , Action
   , mkBandits
   , defaultBandits
@@ -34,6 +35,7 @@ import qualified Data.Vector as V
 import Data.Vector ((!))
 import qualified Data.Event as Event
 import Control.Exception.Safe (assert)
+import qualified Statistics.Distribution as Dist
 
 
 -- | FIXME: only 10 arms for the time being. This is where a "discrete space"
@@ -45,6 +47,14 @@ data Config = Config
   , bandits  :: Vector NormalDistribution
   , gen      :: GenIO
   }
+
+instance Show Config where
+  show c = "Config" ++
+    "{nBandits="++ show (nBandits c)++
+    "{offset="++ show (offset c)++
+    "{bandit_stdDevs="++ show (stdDev c)++
+    "{bandit_means="++ show (fmap (Dist.mean) . V.toList $ bandits c)++
+    "}"
 
 type Event = Event.Event Reward () Action
 
