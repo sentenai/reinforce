@@ -41,14 +41,6 @@ rolloutQLearning maxSteps i = do
           learn s a r
           clockSteps maxSteps (st+1) (goM s')
 
-    learn :: o -> a -> r -> m ()
-    learn s a r = do
-      lambda <- getLambda
-      gamma  <- getGamma
-
-      oldQ <- value s a
-      nextQs <- sequence . fmap (value s) =<< actions s
-      update s a $ oldQ + lambda * (r + gamma * (maximum nextQs) - oldQ)
 
 rolloutEpsQLearning :: forall m o a r . (MonadEnv m o a r, TDLearning m o a r, Ord r)=> Maybe Integer -> o -> m ()
 rolloutEpsQLearning maxSteps i = do
@@ -64,12 +56,13 @@ rolloutEpsQLearning maxSteps i = do
           learn s a r
           clockSteps maxSteps (st+1) (goM s')
 
-    learn :: o -> a -> r -> m ()
-    learn s a r = do
-      lambda <- getLambda
-      gamma  <- getGamma
 
-      oldQ <- value s a
-      nextQs <- sequence . fmap (value s) =<< actions s
-      update s a $ oldQ + lambda * (r + gamma * (maximum nextQs) - oldQ)
+learn :: (MonadEnv m o a r, TDLearning m o a r, Ord r) => o -> a -> r -> m ()
+learn s a r = do
+  lambda <- getLambda
+  gamma  <- getGamma
+
+  oldQ <- value s a
+  nextQs <- traverse (value s) =<< actions s
+  update s a $ oldQ + lambda * (r + gamma * maximum nextQs - oldQ)
 

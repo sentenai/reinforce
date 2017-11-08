@@ -12,7 +12,7 @@ main :: IO ()
 main = do
   x <- runDefaultEnvironment False $
          runQTable defaultConfigs (Left 0.85) $
-           runLearner (Just 10) (Just 10) $
+           runLearner (Just 10) (Just 10)
              rolloutQLearning
   print x
 
@@ -20,5 +20,5 @@ main = do
 spec :: Spec
 spec =
   describe "running q-table over frozen lake" $ do
-    xit "should run and not break" $ True
+    xit "should run and not break" True
 

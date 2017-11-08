@@ -5,7 +5,6 @@
 -- Stability :  experimental
 -- Portability: non-portable
 -------------------------------------------------------------------------------
-{-# LANGUAGE DeriveGeneric #-}
 module Data.Gym
   where
 {-

@@ -36,6 +36,7 @@ import Control.Monad            as X (void)
 import Data.DList     as X (DList(..))
 import Data.Hashable  as X
 import Data.List      as X (intercalate, maximumBy)
+import Data.Maybe     as X
 import Data.Monoid    as X
 import Data.Ord       as X
 import Data.Proxy     as X (Proxy(..))

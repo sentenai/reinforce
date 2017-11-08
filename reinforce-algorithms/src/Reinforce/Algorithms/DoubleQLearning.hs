@@ -78,7 +78,7 @@ calcQ valueA actionsA valueB s a r s' = do
     arPairs :: m [(a, r)]
     arPairs = do
       as <- actionsA s
-      rs <- sequence $ (valueA s) <$> as
+      rs <- traverse (valueA s) as
       return $ zip as rs
 
     argmaxAction :: [(a, r)] -> a

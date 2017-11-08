@@ -47,7 +47,7 @@ rolloutExpectedSarsa maxSteps i = do
 
       -- Note that we don't hold distributions seperate from reward currently
       oldQ   <- value s a
-      nextQs <- sequence . map (value s') =<< actions s'
-      let expectedQ = sum nextQs / (fromIntegral $ length nextQs)
+      nextQs <- traverse (value s') =<< actions s'
+      let expectedQ = sum nextQs / fromIntegral (length nextQs)
       update s a $ oldQ + lambda * (r + gamma * expectedQ - oldQ)
 

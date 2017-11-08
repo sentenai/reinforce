@@ -63,8 +63,8 @@ main = do
 egreedyAgent :: Int -> Vector Float -> Environment ()
 egreedyAgent stepN table
   | stepN > maxSteps = do
-    printIO $ ""
-    printIO $ "maxSteps reached"
+    printIO   ""
+    printIO   "maxSteps reached"
     printIO $ "agent terminates with " ++ logMessage table
 
   | otherwise = do
@@ -78,7 +78,7 @@ egreedyAgent stepN table
       Next r _   -> do
         let
           oldQ = table V.! banditIdx
-          updatedQ = oldQ + learningRate * (realToFrac r + discountFactor * (V.maximum table) - oldQ)
+          updatedQ = oldQ + learningRate * (realToFrac r + discountFactor * V.maximum table - oldQ)
           updatedTable = table V.// [(banditIdx, updatedQ)]
 
         when (stepN `mod` updateModulous == 0 && stepN /= maxSteps) $

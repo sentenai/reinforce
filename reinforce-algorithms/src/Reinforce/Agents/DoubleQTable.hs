@@ -139,14 +139,14 @@ _actions qsL obs = do
 
 
 _update :: (Monad m, StateC o, ActionC a) => SARMapLens' o a r -> o -> a -> r -> DoubleQTable m o a r ()
-_update qsL obs act updQ = qsL %= (HM.update (Just . HM.insert act updQ) obs)
+_update qsL obs act updQ = qsL %= HM.update (Just . HM.insert act updQ) obs
 
 
 _value :: (Monad m, StateC o, ActionC a) => Lens' (DoubleQTableState o a r) (SARMap o a r) -> o -> a -> DoubleQTable m o a r r
 _value qsL obs act = do
   Configs{initialQ} <- ask
   qs <- use qsL
-  return $ maybe initialQ id (qs ^. at obs . _Just ^. at act)
+  return $ fromMaybe initialQ (qs ^. at obs . _Just ^. at act)
 
 
 

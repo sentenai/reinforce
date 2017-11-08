@@ -82,7 +82,7 @@ script:
     reinforce-zoo:random-agent-example \
     reinforce-zoo:egreedy-bandits-example
 
-  # hlint ./
+  hlint .
   # weeder
   set +ex
 

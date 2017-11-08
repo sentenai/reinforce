@@ -29,7 +29,7 @@ clockEpisodes
 clockEpisodes maxEps epn maxSteps rollout = do
   case maxEps of
     Nothing -> tick
-    Just mx -> unless (epn > mx) $ tick
+    Just mx -> unless (epn > mx) tick
   where
     tick :: m ()
     tick = Env.reset >>= \case

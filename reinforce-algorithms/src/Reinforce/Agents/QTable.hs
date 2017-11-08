@@ -98,14 +98,14 @@ instance (EnvC m, RewardC r, ActionC a, StateC o) => TDLearning (QTable m o a r)
     return $ HM.keys ars
 
   update :: o -> a -> r -> QTable m o a r ()
-  update obs act updQ = qsL %= (HM.update (Just . HM.insert act updQ) obs)
+  update obs act updQ = qsL %= HM.update (Just . HM.insert act updQ) obs
 
 
   value :: o -> a -> QTable m o a r r
   value obs act = do
     Configs{initialQ} <- ask
     QTableState{qs}   <- get
-    return $ maybe initialQ id (qs ^. at obs . _Just ^. at act)
+    return $ fromMaybe initialQ (qs ^. at obs . _Just ^. at act)
 
 
 initalTable :: (Enum a, Bounded a, Eq a, Hashable a, Enum r) => r -> HashMap a r

@@ -53,7 +53,7 @@ instance Show Config where
     "{nBandits="++ show (nBandits c)++
     "{offset="++ show (offset c)++
     "{bandit_stdDevs="++ show (stdDev c)++
-    "{bandit_means="++ show (fmap (Dist.mean) . V.toList $ bandits c)++
+    "{bandit_means="++ show (fmap Dist.mean . V.toList $ bandits c)++
     "}"
 
 type Event = Event.Event Reward () Action
