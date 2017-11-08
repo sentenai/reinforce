@@ -13,6 +13,7 @@ cache:
   - $HOME/.ghc
   - $HOME/.cabal
   - $HOME/.stack
+  - $HOME/.local/bin
 
 # The different configurations we want to test. We have BUILD=cabal which uses
 # cabal-install, and BUILD=stack which uses Stack. More documentation on each
@@ -64,8 +65,24 @@ install:
 script:
 - |
   set -ex
-  stack --no-terminal $ARGS test --bench --no-run-benchmarks --haddock --no-haddock-deps
-  # hlint ./src/
+  stack --no-terminal $ARGS test \
+    --bench --no-run-benchmarks \
+    --haddock --no-haddock-deps
+
+  # build all libraries
+  stack --no-terminal $ARGS build \
+    reinforce:lib \
+    reinforce-algorithms:lib \
+    reinforce-environments:lib \
+    reinforce-environments-gym:lib \
+    reinforce-prelude:lib \
+
+  # build all zoo examples and executables
+  stack --no-terminal $ARGS build \
+    reinforce-zoo:random-agent-example \
+    reinforce-zoo:egreedy-bandits-example
+
+  # hlint ./
   # weeder
   set +ex
 
