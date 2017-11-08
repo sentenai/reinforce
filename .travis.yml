@@ -83,6 +83,6 @@ script:
     reinforce-zoo:egreedy-bandits-example
 
   hlint .
-  # weeder
+  weeder
   set +ex
 

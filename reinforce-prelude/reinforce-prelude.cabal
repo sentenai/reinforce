@@ -30,19 +30,15 @@ library
   default-extensions: NoImplicitPrelude
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      aeson
-    , base
+      base
     , dlist
     , hashable
-    , http-client
     , mtl
     , microlens-platform
     , mwc-random
-    , primitive
     , safe-exceptions
     , statistics
     , text
-    , unordered-containers
     , vector
   exposed-modules:
       Reinforce.Prelude
