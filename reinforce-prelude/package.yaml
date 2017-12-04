@@ -36,22 +36,18 @@ default-extensions:
 library:
   source-dirs: src
   dependencies:
-  # - aeson           # >= 1.0  &&  <  1.1
     - base            # >= 4.9  &&  < 4.10
     - dlist           # >= 0.8  &&  <  0.9
     - hashable        # >= 1.2  &&  <  1.3
-  # - http-client     # >= 0.4  &&  <  0.6
     - mtl             # >= 2.2  &&  <  2.3
     - microlens-platform
     - mwc-random      # >= 0.13 &&  < 0.14
-  # - primitive       # >= 0.6  &&  <  0.7
     - safe-exceptions # >= 0.1  &&  <  0.2
     - statistics      # >= 0.13 &&  < 0.14
     - text            # >= 1.2  &&  <  1.3
-  # - unordered-containers
     - vector          # >= 0.11 &&  < 0.12
 
   reexported-modules:
-    - Control.Monad.Primitive, Data.Text, Data.Vector, Statistics.Distribution, System.Random.MWC, Data.HashMap.Strict, Control.Exception.Safe, Data.Aeson, Data.Aeson.Types, Data.DList, Control.Monad.Except
+    - Data.Text, Data.Vector, Statistics.Distribution, System.Random.MWC, Control.Exception.Safe, Data.DList, Control.Monad.Except
 
 

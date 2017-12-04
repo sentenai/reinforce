@@ -45,5 +45,5 @@ library
   other-modules:
       Paths_reinforce_prelude
   reexported-modules:
-      Control.Monad.Primitive, Data.Text, Data.Vector, Statistics.Distribution, System.Random.MWC, Data.HashMap.Strict, Control.Exception.Safe, Data.Aeson, Data.Aeson.Types, Data.DList, Control.Monad.Except
+      Data.Text, Data.Vector, Statistics.Distribution, System.Random.MWC, Control.Exception.Safe, Data.DList, Control.Monad.Except
   default-language: Haskell2010

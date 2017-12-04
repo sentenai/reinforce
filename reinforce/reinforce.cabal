@@ -31,6 +31,7 @@ library
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
       base
+    , primitive
     , reinforce-prelude
   exposed-modules:
       Control.MonadEnv

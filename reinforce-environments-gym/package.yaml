@@ -39,8 +39,9 @@ default-extensions:
 
 
 dependencies:
+  - aeson           # >= 1.0  &&  <  1.1
   - base            # >= 4.9  &&  < 4.10
-  - http-client
+  - http-client     # >= 0.4  &&  <  0.6
   - reinforce
   - reinforce-environments
   - reinforce-prelude

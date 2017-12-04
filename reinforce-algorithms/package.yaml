@@ -20,6 +20,7 @@ dependencies:
   - base
   - reinforce
   - reinforce-prelude
+  - unordered-containers
 
 library:
   source-dirs: src

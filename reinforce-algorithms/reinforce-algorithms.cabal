@@ -17,6 +17,7 @@ library
       base
     , reinforce
     , reinforce-prelude
+    , unordered-containers
   exposed-modules:
       Reinforce.Agents
       Reinforce.Agents.DoubleQTable
@@ -44,6 +45,7 @@ test-suite spec
       base
     , reinforce
     , reinforce-prelude
+    , unordered-containers
     , reinforce-algorithms
     , reinforce-environments
     , hspec

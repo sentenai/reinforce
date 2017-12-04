@@ -29,7 +29,8 @@ library
   default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      base
+      aeson
+    , base
     , reinforce
     , reinforce-prelude
   exposed-modules:
