@@ -1,5 +1,5 @@
 name: reinforce-algorithms
-version: 0.1.0.0
+version: 0.0.1.0
 license-file: ../LICENSE
 ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
     # -Wmissing-import-lists <-- due to NoImplicitPrelude.
@@ -17,20 +17,20 @@ default-extensions:
   - ViewPatterns
 
 dependencies:
-  - base
-  - reinforce
-  - reinforce-prelude
-  - unordered-containers
+  - base                  >= 4.9 && < 5.0
+  - reinforce             == 0.0.1.0
+  - reinforce-prelude     == 0.0.1.0
+  - unordered-containers  >= 0.2
 
 library:
   source-dirs: src
 
-tests:
-  spec:
-    main: Spec.hs
-    source-dirs: test
-    dependencies:
-      - reinforce-algorithms
-      - reinforce-environments
-      - hspec
-      - QuickCheck
+# tests:
+#   spec:
+#     main: Spec.hs
+#     source-dirs: test
+#     dependencies:
+#       - reinforce-algorithms    == 0.0.1.0
+#       - reinforce-environments  == 0.0.1.0
+#       - hspec                   >= 2.4
+#       - QuickCheck              >= 2.9

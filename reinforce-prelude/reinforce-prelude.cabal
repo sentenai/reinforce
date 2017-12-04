@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           reinforce-prelude
-version:        0.0.0.1
+version:        0.0.1.0
 synopsis:       Reinforcement learning in Haskell
 description:    See <https://github.com/Sentenai/reinforce README.md>. @reinforce@ is a library which exports an OpenAI-gym-like typeclass, @MonadEnv@, with both an interface to the <https://github.com/openai/gym-http-api/ gym-http-api>, as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
                 This is an environment-first library, with basic reinforcment learning algorithms being developed on branches in subpackages (see <https://github.com/Sentenai/reinforce#development-and-milestones Development and Milestones>). @reinforce@ is currently an "alpha" release since it still needs some work defining some formal structures around what state-spaces and action-spaces should look like, however haskell's typesystem is expressive enough that this seems to be more of a "nice-to-have."
@@ -30,16 +30,16 @@ library
   default-extensions: NoImplicitPrelude
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      base
-    , dlist
-    , hashable
-    , mtl
-    , microlens-platform
-    , mwc-random
-    , safe-exceptions
-    , statistics
-    , text
-    , vector
+      base                >= 4.9 && < 5.0
+    , dlist               >= 0.8
+    , hashable            >= 1.2
+    , mtl                 >= 2.2
+    , microlens-platform  >= 0.3
+    , mwc-random          >= 0.13
+    , safe-exceptions     >= 0.1
+    , statistics          >= 0.13
+    , text                >= 1.2
+    , vector              >= 0.11
   exposed-modules:
       Reinforce.Prelude
   other-modules:

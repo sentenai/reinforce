@@ -1,5 +1,5 @@
 name:        reinforce-environments
-version:     0.0.0.1
+version:     0.0.1.0
 synopsis:    Reinforcement learning in Haskell
 category:    Reinforcement learning, machine learning, artificial intelligence
 author:      Sam Stites, Sentenai Inc.
@@ -39,10 +39,10 @@ default-extensions:
 
 
 dependencies:
-  - aeson           # >= 1.0  &&  <  1.1
-  - base            # >= 4.9  &&  < 4.10
-  - reinforce
-  - reinforce-prelude
+  - aeson      >= 1.0
+  - base       >= 4.9 && < 5.0
+  - reinforce          == 0.0.1.0
+  - reinforce-prelude  == 0.0.1.0
 
 
 library:

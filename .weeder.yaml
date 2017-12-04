@@ -1,34 +1,26 @@
 - package:
-  - name: reinforce-algorithms
-  - section:
-    - name: test:spec
-    - message:
-      - name: Redundant build-depends entry
-      - depends:
-        - QuickCheck
-        - reinforce
-        - reinforce-algorithms
-        - reinforce-environments
-        - reinforce-prelude
-- package:
   - name: reinforce-zoo
   - section:
     - name: exe:egreedy-bandits-example
     - message:
       - name: Module not compiled
-      - module:
-        - Agents.QTable.CartPoleSpec
-        - Agents.QTable.FrozenLakeSpec
-        - RandomAgent
+      - module: RandomAgent
     - message:
       - name: Redundant build-depends entry
       - depends: reinforce-algorithms
   - section:
+    - name: exe:qtable-cartpole-example
+    - message:
+      - name: Redundant build-depends entry
+      - depends: reinforce
+  - section:
+    - name: exe:qtable-cartpole-example exe:qtable-frozenlake-example
+    - message:
+      - name: Module reused between components
+      - module: Main
+  - section:
     - name: exe:random-agent-example
     - message:
       - name: Module not compiled
-      - module:
-        - Agents.QTable.CartPoleSpec
-        - Agents.QTable.FrozenLakeSpec
-        - EGreedyBandits
+      - module: EGreedy
 

@@ -1,12 +1,11 @@
-module Agents.QTable.CartPoleSpec where
+module Main where
 
-import Reinforce.Prelude
+import Prelude
 
 import Reinforce.Agents
 import Reinforce.Agents.QTable
 import Reinforce.Algorithms.QLearning
 import Environments.Gym.ClassicControl.CartPoleV0
-import Test.Hspec
 
 main :: IO ()
 main = do
@@ -15,10 +14,4 @@ main = do
            runLearner (Just 10) (Just 10)
              rolloutQLearning
   print x
-
-
-spec :: Spec
-spec =
-  describe "running q-table over cartpole" $ do
-    xit "should run and not break" True
 

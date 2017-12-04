@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           reinforce-algorithms
-version:        0.1.0.0
+version:        0.0.1.0
 license-file:   ../LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
@@ -14,10 +14,10 @@ library
   default-extensions: BangPatterns FunctionalDependencies InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns NoImplicitPrelude OverloadedStrings ScopedTypeVariables ViewPatterns
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      base
-    , reinforce
-    , reinforce-prelude
-    , unordered-containers
+      base                  >= 4.9 && < 5.0
+    , reinforce             == 0.0.1.0
+    , reinforce-prelude     == 0.0.1.0
+    , unordered-containers  >= 0.2
   exposed-modules:
       Reinforce.Agents
       Reinforce.Agents.DoubleQTable
@@ -32,22 +32,4 @@ library
       Reinforce.Policy.EpsilonGreedy
   other-modules:
       Paths_reinforce_algorithms
-  default-language: Haskell2010
-
-test-suite spec
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  hs-source-dirs:
-      test
-  default-extensions: BangPatterns FunctionalDependencies InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns NoImplicitPrelude OverloadedStrings ScopedTypeVariables ViewPatterns
-  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
-  build-depends:
-      base
-    , reinforce
-    , reinforce-prelude
-    , unordered-containers
-    , reinforce-algorithms
-    , reinforce-environments
-    , hspec
-    , QuickCheck
   default-language: Haskell2010

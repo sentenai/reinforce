@@ -1,5 +1,5 @@
 name:        reinforce
-version:     0.0.0.1
+version:     0.0.1.0
 synopsis:    Reinforcement learning in Haskell
 category:    Reinforcement learning, machine learning, artificial intelligence
 author:      Sam Stites, Sentenai Inc.
@@ -41,8 +41,8 @@ default-extensions:
 library:
   source-dirs: src
   dependencies:
-    - base            # >= 4.9  &&  < 4.10
-    - primitive       # >= 0.6  &&  <  0.7
-    - reinforce-prelude
+    - base               >= 4.9 && < 5.0
+    - primitive          >= 0.6
+    - reinforce-prelude  == 0.0.1.0
 
 

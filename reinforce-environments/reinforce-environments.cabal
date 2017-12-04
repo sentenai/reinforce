@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           reinforce-environments
-version:        0.0.0.1
+version:        0.0.1.0
 synopsis:       Reinforcement learning in Haskell
 description:    See <https://github.com/Sentenai/reinforce README.md>. @reinforce@ is a library which exports an OpenAI-gym-like typeclass, @MonadEnv@, with both an interface to the <https://github.com/openai/gym-http-api/ gym-http-api>, as well as haskell-native environments which provide a substantial speed-up to the http-server interface.
                 This is an environment-first library, with basic reinforcment learning algorithms being developed on branches in subpackages (see <https://github.com/Sentenai/reinforce#development-and-milestones Development and Milestones>). @reinforce@ is currently an "alpha" release since it still needs some work defining some formal structures around what state-spaces and action-spaces should look like, however haskell's typesystem is expressive enough that this seems to be more of a "nice-to-have."
@@ -29,10 +29,10 @@ library
   default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      aeson
-    , base
-    , reinforce
-    , reinforce-prelude
+      aeson      >= 1.0
+    , base       >= 4.9 && < 5.0
+    , reinforce          == 0.0.1.0
+    , reinforce-prelude  == 0.0.1.0
   exposed-modules:
       Data.CartPole
       Data.Gym

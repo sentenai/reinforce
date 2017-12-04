@@ -1,12 +1,11 @@
-module Agents.QTable.FrozenLakeSpec where
+module Main where
 
-import Reinforce.Prelude
+import Prelude
 
 import Reinforce.Agents
 import Reinforce.Agents.QTable
 import Reinforce.Algorithms.QLearning
 import Environments.Gym.ToyText.FrozenLakeV0 (runDefaultEnvironment)
-import Test.Hspec
 
 main :: IO ()
 main = do
@@ -17,8 +16,4 @@ main = do
   print x
 
 
-spec :: Spec
-spec =
-  describe "running q-table over frozen lake" $ do
-    xit "should run and not break" True
 

@@ -1,5 +1,5 @@
 name:        reinforce-zoo
-version:     0.0.0.1
+version:     0.0.1.0
 synopsis:    Reinforcement learning in Haskell
 category:    Reinforcement learning, machine learning, artificial intelligence
 author:      Sam Stites, Sentenai Inc.
@@ -29,25 +29,40 @@ description: See <https://github.com/Sentenai/reinforce README.md>.
     It's in active development and has some beginner-friendly contributions -
     from porting new gym environments to implementing new algorithms.
 
+dependencies:
+  - base >= 4.9 && < 5.0
 
 executables:
   random-agent-example:
-    source-dirs: examples
+    source-dirs: examples/bandits
     main: RandomAgent.hs
     dependencies:
-      - base
-      - reinforce-environments
+      - reinforce-environments  == 0.0.1.0
 
   egreedy-bandits-example:
-    source-dirs: examples
-    main: EGreedyBandits.hs
+    source-dirs: examples/bandits
+    main: EGreedy.hs
     dependencies:
-      - base
-      - reinforce
-      - reinforce-algorithms
-      - reinforce-environments
-      - reinforce-prelude
-      - mwc-random
-      - vector
+      - reinforce               == 0.0.1.0
+      - reinforce-algorithms    == 0.0.1.0
+      - reinforce-environments  == 0.0.1.0
+      - reinforce-prelude       == 0.0.1.0
+      - mwc-random              >= 0.13
+      - vector                  >= 0.11
+
+  qtable-frozenlake-example:
+    source-dirs: examples/frozenlake
+    main: QTable.hs
+    dependencies:
+      - reinforce-algorithms       == 0.0.1.0
+      - reinforce-environments-gym == 0.0.1.0
+
+  qtable-cartpole-example:
+    source-dirs: examples/frozenlake
+    main: QTable.hs
+    dependencies:
+      - reinforce                  == 0.0.1.0
+      - reinforce-algorithms       == 0.0.1.0
+      - reinforce-environments-gym == 0.0.1.0
 
 
