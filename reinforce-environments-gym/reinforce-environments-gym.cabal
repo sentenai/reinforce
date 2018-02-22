@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.18.1.
+-- This file has been generated from package.yaml by hpack version 0.20.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: 93682e8bebd4ec4bf523db73580c4cf5555caeb86aab495781a343cd82ddd0d5
 
 name:           reinforce-environments-gym
 version:        0.0.0.1
@@ -30,11 +32,11 @@ library
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
       base
+    , gym-http-api
     , http-client
     , reinforce
     , reinforce-environments
     , reinforce-prelude
-    , gym-http-api
     , servant-client
   exposed-modules:
       Environments.Gym.ClassicControl.AcrobotV1

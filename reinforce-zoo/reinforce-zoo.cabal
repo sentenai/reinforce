@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.18.1.
+-- This file has been generated from package.yaml by hpack version 0.20.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: dbc8148cd061a4a3127a6376b0a26e17f3aaa5a65d986c4c540efabe9dd1556f
 
 name:           reinforce-zoo
 version:        0.0.0.1
@@ -31,16 +33,17 @@ executable egreedy-bandits-example
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
       base
+    , mwc-random
     , reinforce
     , reinforce-algorithms
     , reinforce-environments
     , reinforce-prelude
-    , mwc-random
     , vector
   other-modules:
       Agents.QTable.CartPoleSpec
       Agents.QTable.FrozenLakeSpec
       RandomAgent
+      Paths_reinforce_zoo
   default-language: Haskell2010
 
 executable random-agent-example
@@ -55,4 +58,5 @@ executable random-agent-example
       Agents.QTable.CartPoleSpec
       Agents.QTable.FrozenLakeSpec
       EGreedyBandits
+      Paths_reinforce_zoo
   default-language: Haskell2010
