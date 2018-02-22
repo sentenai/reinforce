@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.18.1.
+-- This file has been generated from package.yaml by hpack version 0.20.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: 6da73abb3f5ef876ff30f8d663fcecb31c8a3e00ece208a0759a9369765b01d3
 
 name:           reinforce
 version:        0.0.0.1
