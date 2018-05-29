@@ -1,6 +1,6 @@
 name: reinforce-algorithms
 version: 0.1.0.0
-license-file: ../LICENSE
+license-file: LICENSE
 ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
     # -Wmissing-import-lists <-- due to NoImplicitPrelude.
 
