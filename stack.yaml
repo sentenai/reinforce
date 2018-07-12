@@ -1,4 +1,4 @@
-resolver: lts-9.16
+resolver: lts-12.0
 flags: {}
 
 packages:
@@ -8,12 +8,6 @@ packages:
 - reinforce-environments-gym
 - reinforce-prelude
 - reinforce-zoo
-- location:
-    git: https://github.com/stites/gym-http-api.git
-    commit: '5b72789'
-  subdirs:
-    - binding-hs
-  extra-dep: true
 
 extra-lib-dirs:
 - /usr/local/lib/
