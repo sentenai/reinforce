@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8105b9498dbe026dfa511b9ed60c36d73ce50b5273769ee6026f2f9568d81185
+-- hash: 7b985ab757cc0ca509c20fcb9db65838121fa79f88897a8eaa0bc8794cf3d951
 
 name:           reinforce-environments
 version:        0.0.1.0
@@ -26,6 +26,15 @@ source-repository head
   location: https://github.com/Sentenai/reinforce
 
 library
+  exposed-modules:
+      Data.CartPole
+      Data.Gym
+      Environments.Bandits
+      Environments.CartPole
+  other-modules:
+      Paths_reinforce_environments
+  reexported-modules:
+      Control.MonadEnv, Reinforce.Spaces.Action, Data.Logger, Data.Event, Reinforce.Spaces, Reinforce.Spaces.State
   hs-source-dirs:
       src
   default-extensions: MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
@@ -42,13 +51,4 @@ library
     , statistics
     , transformers
     , vector
-  exposed-modules:
-      Data.CartPole
-      Data.Gym
-      Environments.Bandits
-      Environments.CartPole
-  other-modules:
-      Paths_reinforce_environments
-  reexported-modules:
-      Control.MonadEnv, Reinforce.Spaces.Action, Data.Logger, Data.Event, Reinforce.Spaces, Reinforce.Spaces.State
   default-language: Haskell2010

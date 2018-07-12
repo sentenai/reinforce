@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9d7b07958691b4afe5a21c4b84d1f136aa2f2045f555619675fa4074268ded48
+-- hash: f9195b74cbd80f06e5164b3099dd794a7f88c875959fa62146aabc39a9f10248
 
 name:           reinforce-environments-gym
 version:        0.0.1.0
@@ -26,6 +26,19 @@ source-repository head
   location: https://github.com/Sentenai/reinforce
 
 library
+  exposed-modules:
+      Environments.Gym.ClassicControl.AcrobotV1
+      Environments.Gym.ClassicControl.CartPoleV0
+      Environments.Gym.ClassicControl.CartPoleV1
+      Environments.Gym.ClassicControl.MountainCarContinuousV0
+      Environments.Gym.ClassicControl.MountainCarV0
+      Environments.Gym.ClassicControl.PendulumV0
+      Environments.Gym.Internal
+      Environments.Gym.ToyText.FrozenLakeV0
+  other-modules:
+      Paths_reinforce_environments_gym
+  reexported-modules:
+      Control.MonadEnv, Reinforce.Spaces.Action, Data.Logger, Data.Event, Reinforce.Spaces, Reinforce.Spaces.State
   hs-source-dirs:
       src
   default-extensions: MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
@@ -45,17 +58,4 @@ library
     , text
     , transformers
     , vector
-  exposed-modules:
-      Environments.Gym.ClassicControl.AcrobotV1
-      Environments.Gym.ClassicControl.CartPoleV0
-      Environments.Gym.ClassicControl.CartPoleV1
-      Environments.Gym.ClassicControl.MountainCarContinuousV0
-      Environments.Gym.ClassicControl.MountainCarV0
-      Environments.Gym.ClassicControl.PendulumV0
-      Environments.Gym.Internal
-      Environments.Gym.ToyText.FrozenLakeV0
-  other-modules:
-      Paths_reinforce_environments_gym
-  reexported-modules:
-      Control.MonadEnv, Reinforce.Spaces.Action, Data.Logger, Data.Event, Reinforce.Spaces, Reinforce.Spaces.State
   default-language: Haskell2010

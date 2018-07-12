@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1e8ab0aa98b2e1da00fe06515198e647e7a9dd3e4da14569c0453c61cf8355af
+-- hash: fa653680dc7158b541f6d96affba2b751a14092ad4a3ce8931d08b45129c884e
 
 name:           reinforce
 version:        0.0.1.0
@@ -27,6 +27,17 @@ source-repository head
   subdir: reinforce
 
 library
+  exposed-modules:
+      Control.MonadEnv
+      Control.MonadMWCRandom
+      Data.Event
+      Data.Logger
+      Reinforce.Gym
+      Reinforce.Spaces
+      Reinforce.Spaces.Action
+      Reinforce.Spaces.State
+  other-modules:
+      Paths_reinforce
   hs-source-dirs:
       src
   default-extensions: MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
@@ -41,15 +52,4 @@ library
     , text
     , transformers
     , vector
-  exposed-modules:
-      Control.MonadEnv
-      Control.MonadMWCRandom
-      Data.Event
-      Data.Logger
-      Reinforce.Gym
-      Reinforce.Spaces
-      Reinforce.Spaces.Action
-      Reinforce.Spaces.State
-  other-modules:
-      Paths_reinforce
   default-language: Haskell2010
