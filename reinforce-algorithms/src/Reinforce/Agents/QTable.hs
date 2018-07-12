@@ -5,7 +5,18 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Reinforce.Agents.QTable where
 
-import Reinforce.Prelude
+import Control.Monad.Reader.Class
+import Control.Monad.RWS.Class
+import Control.Monad.IO.Class
+import Control.Monad.Writer.Class
+import Control.Monad.State.Class
+import Control.Monad.Trans
+import Control.Monad.Trans.RWS (RWST, runRWST)
+import Data.Hashable
+import Data.Maybe (fromMaybe)
+import Lens.Micro.Platform
+
+
 import Control.MonadEnv as Env
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HM

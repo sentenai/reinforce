@@ -32,7 +32,12 @@ module Environments.Gym.ToyText.FrozenLakeV0
   , Action(..)
   ) where
 
-import Reinforce.Prelude
+import Control.Monad.IO.Class
+import Control.Exception.Safe
+import Data.Hashable
+import Data.Vector (Vector)
+import GHC.Generics
+
 import Control.MonadEnv
 import Environments.Gym.Internal hiding (runEnvironment)
 import qualified Environments.Gym.Internal as I

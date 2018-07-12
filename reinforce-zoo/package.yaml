@@ -53,6 +53,8 @@ executables:
   qtable-frozenlake-example:
     source-dirs: examples/frozenlake
     main: QTable.hs
+    other-modules:
+      EGreedy
     dependencies:
       - reinforce-algorithms       == 0.0.1.0
       - reinforce-environments-gym == 0.0.1.0
@@ -60,6 +62,8 @@ executables:
   qtable-cartpole-example:
     source-dirs: examples/frozenlake
     main: QTable.hs
+    other-modules:
+      EGreedy
     dependencies:
       - reinforce                  == 0.0.1.0
       - reinforce-algorithms       == 0.0.1.0

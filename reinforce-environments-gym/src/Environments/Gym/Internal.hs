@@ -28,9 +28,10 @@ module Environments.Gym.Internal
   , _step
   ) where
 
-import Control.MonadEnv
-import Reinforce.Prelude
+import Control.Exception.Safe
+import Data.DList
 import Data.Aeson
+import Control.MonadEnv
 import Control.MonadMWCRandom
 import Control.Monad.Except
 import qualified Data.Text as T (pack)
@@ -39,9 +40,19 @@ import Servant.Client
 import Data.Event (Event)
 import qualified Data.Event as Event
 import Network.HTTP.Client (Manager, newManager, defaultManagerSettings)
+
+import Control.Monad.Reader.Class
+import Control.Monad.RWS.Class (MonadRWS)
+import Control.Monad.IO.Class
+import Control.Monad.Writer.Class
+import Control.Monad.State.Class
+import Control.Monad.Trans.Reader (ReaderT(..))
+import Control.Monad.Trans.RWS (RWST, execRWST)
+
+
 import OpenAI.Gym
   ( GymEnv(..)
-  , InstID(..)
+  , InstID -- (..)
   , Observation(..)
   )
 
@@ -142,7 +153,7 @@ runEnvironmentT
   -> Bool
   -> GymEnvironmentT o a t x
   -> t (Either ServantError (DList (Event Reward o a)))
-runEnvironmentT t m u mon env = runClientT action (ClientEnv m u)
+runEnvironmentT t m u mon env = runClientT action (ClientEnv m u Nothing)
   where
     action :: ClientT t (DList (Event Reward o a))
     action = do
@@ -205,7 +216,7 @@ withMonitor env = do
   return ()
   where
     m :: InstID -> OpenAI.Monitor
-    m (InstID t) = OpenAI.Monitor ("/tmp/"<> T.pack (show CartPoleV0) <>"-" <> t) True False False
+    m (OpenAI.InstID t) = OpenAI.Monitor ("/tmp/"<> T.pack (show CartPoleV0) <>"-" <> t) True False False
 
 
 -- | ensure that the gym has reset before stepping, otherwise throw 'EnvironmentRequiresReset'

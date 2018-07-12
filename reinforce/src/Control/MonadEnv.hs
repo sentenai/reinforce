@@ -20,7 +20,20 @@ module Control.MonadEnv
   , Reward
   ) where
 
-import Reinforce.Prelude
+-- import Control.Monad.Reader.Class
+-- import Control.Monad.RWS.Class
+-- import Control.Monad.IO.Class
+-- import Control.Monad.Writer.Class
+-- import Control.Monad.State.Class
+-- import Control.Monad.Trans
+import Control.Monad.Trans.RWS (RWST, runRWST)
+import Control.Monad.Trans.Writer
+import Control.Monad.Trans.State
+import Control.Monad.Trans.Reader
+import Control.Monad.Trans
+-- import Data.Hashable
+-- import Data.Maybe (fromMaybe)
+-- import Lens.Micro.Platform
 
 
 -- * Environment Types

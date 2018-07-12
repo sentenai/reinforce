@@ -6,7 +6,6 @@ packages:
 - reinforce-algorithms
 - reinforce-environments
 - reinforce-environments-gym
-- reinforce-prelude
 - reinforce-zoo
 
 extra-lib-dirs:

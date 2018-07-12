@@ -34,7 +34,7 @@ module Environments.Gym.ClassicControl.CartPoleV1
   , runDefaultEnvironmentT
   ) where
 
-import Reinforce.Prelude hiding (State)
+import Control.Monad.IO.Class
 import Data.CartPole
 import OpenAI.Gym (GymEnv(CartPoleV1))
 import Servant.Client (BaseUrl)

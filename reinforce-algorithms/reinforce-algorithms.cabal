@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.18.1.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: b95a2055450576d3dfb47ada17960a4cfa34ffd17641fbd20785f95998f3544c
 
 name:           reinforce-algorithms
 version:        0.0.1.0
@@ -11,13 +13,16 @@ cabal-version:  >= 1.10
 library
   hs-source-dirs:
       src
-  default-extensions: BangPatterns FunctionalDependencies InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns NoImplicitPrelude OverloadedStrings ScopedTypeVariables ViewPatterns
+  default-extensions: BangPatterns FunctionalDependencies InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns OverloadedStrings ScopedTypeVariables ViewPatterns
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      base                  >= 4.9 && < 5.0
-    , reinforce             == 0.0.1.0
-    , reinforce-prelude     == 0.0.1.0
-    , unordered-containers  >= 0.2
+      base >=4.9 && <5.0
+    , hashable
+    , microlens-platform
+    , mtl
+    , reinforce ==0.0.1.0
+    , transformers
+    , unordered-containers >=0.2
   exposed-modules:
       Reinforce.Agents
       Reinforce.Agents.DoubleQTable

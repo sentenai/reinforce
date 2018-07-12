@@ -31,7 +31,7 @@ description: See <https://github.com/Sentenai/reinforce README.md>.
 
 
 default-extensions:
-  - NoImplicitPrelude
+  # NoImplicitPrelude
   - MultiParamTypeClasses
   - OverloadedStrings
   - LambdaCase
@@ -42,7 +42,14 @@ dependencies:
   - aeson      >= 1.0
   - base       >= 4.9 && < 5.0
   - reinforce          == 0.0.1.0
-  - reinforce-prelude  == 0.0.1.0
+  - vector
+  - statistics
+  - safe-exceptions
+  - hashable
+  - dlist
+  - mtl
+  - transformers
+  - mwc-random
 
 
 library:

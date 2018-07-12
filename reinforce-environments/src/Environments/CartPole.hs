@@ -40,9 +40,17 @@ import Control.MonadEnv
 import Control.MonadMWCRandom
 import Data.DList
 import Data.Maybe
+import Control.Monad.IO.Class
+import Control.Monad.Reader.Class
+import Control.Monad.RWS.Class
+import Control.Monad.IO.Class
+import Control.Monad.Writer.Class
+import Control.Monad.State.Class
+import Control.Monad.Trans.RWS (RWST, evalRWST)
+import Control.Exception.Safe (MonadThrow)
+
 import qualified System.Random.MWC as MWC
 
-import Reinforce.Prelude
 import Data.CartPole
 import qualified Data.Logger as Logger
 

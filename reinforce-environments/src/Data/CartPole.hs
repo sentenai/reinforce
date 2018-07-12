@@ -19,12 +19,14 @@ module Data.CartPole
   , Event
   ) where
 
-import Reinforce.Prelude
+
 import qualified Reinforce.Spaces.State as Spaces
 
 import Data.Aeson
 import Data.Aeson.Types
-import Control.Exception (AssertionFailed(..))
+import Data.Hashable
+import GHC.Generics
+import Control.Exception (AssertionFailed(..), throw)
 import Reinforce.Spaces
 import Reinforce.Spaces.Action (Size)
 -- import Numeric.LinearAlgebra.Static
@@ -66,10 +68,13 @@ data StateCP = StateCP
 
 instance Hashable StateCP
 
+instance Semigroup StateCP where
+  (StateCP a0 b0 c0 d0) <> (StateCP a1 b1 c1 d1)
+    = StateCP (a0+a1) (b0+b1) (c0+c1) (d0+d1)
+
 instance Monoid StateCP where
   mempty = StateCP 0 0 0 0
-  mappend (StateCP a0 b0 c0 d0) (StateCP a1 b1 c1 d1)
-    = StateCP (a0+a1) (b0+b1) (c0+c1) (d0+d1)
+  mappend = (<>)
 
 instance Spaces.StateSpace StateCP where
   toVector (StateCP p a v r) = Spaces.toVector [p, a, v, r]
@@ -87,7 +92,7 @@ instance Spaces.StateSpace StateCP where
         <*> findField 3
 
       findField :: Int -> Maybe Float
-      findField i = double2Float <$> vec V.!? i
+      findField i = realToFrac <$> vec V.!? i
 
 instance FromJSON StateCP where
   parseJSON :: Value -> Parser StateCP

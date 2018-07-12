@@ -30,7 +30,10 @@ module Environments.Gym.ClassicControl.AcrobotV1
   ) where
 
 
-import Reinforce.Prelude hiding (State)
+import Control.Monad.IO.Class
+import Control.Exception.Safe
+import Data.Hashable
+import GHC.Generics
 import Control.MonadEnv (MonadEnv(..), Reward)
 import Environments.Gym.Internal (GymEnvironmentT)
 import qualified Environments.Gym.Internal as I

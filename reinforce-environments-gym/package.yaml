@@ -31,7 +31,7 @@ description: See <https://github.com/Sentenai/reinforce README.md>.
 
 
 default-extensions:
-  - NoImplicitPrelude
+  # NoImplicitPrelude
   - MultiParamTypeClasses
   - OverloadedStrings
   - LambdaCase
@@ -41,12 +41,18 @@ default-extensions:
 dependencies:
   - aeson           >= 1.0
   - base            >= 4.9 && < 5.0
-  - gym-http-api
+  - gym-http-api    >= 0.1.0.1
   - http-client     >= 0.4
   - reinforce               == 0.0.1.0
   - reinforce-environments  == 0.0.1.0
-  - reinforce-prelude       == 0.0.1.0
   - servant-client  >= 0.9
+  - safe-exceptions
+  - dlist
+  - text
+  - mtl
+  - transformers
+  - hashable
+  - vector
 
 
 library:

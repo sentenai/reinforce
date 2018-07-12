@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.18.1.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: 1e8ab0aa98b2e1da00fe06515198e647e7a9dd3e4da14569c0453c61cf8355af
 
 name:           reinforce
 version:        0.0.1.0
@@ -27,12 +29,18 @@ source-repository head
 library
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
+  default-extensions: MultiParamTypeClasses OverloadedStrings LambdaCase TypeFamilies
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
-      base               >= 4.9 && < 5.0
-    , primitive          >= 0.6
-    , reinforce-prelude  == 0.0.1.0
+      base >=4.9 && <5.0
+    , mtl
+    , mwc-random
+    , primitive >=0.6
+    , safe-exceptions
+    , statistics
+    , text
+    , transformers
+    , vector
   exposed-modules:
       Control.MonadEnv
       Control.MonadMWCRandom

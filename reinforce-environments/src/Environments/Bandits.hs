@@ -28,14 +28,23 @@ module Environments.Bandits
   , mkAction
   ) where
 
-import Reinforce.Prelude
 import Control.MonadEnv
 import Control.MonadMWCRandom
 import qualified Data.Vector as V
-import Data.Vector ((!))
+import Data.Vector ((!), Vector)
+import Data.Hashable
 import qualified Data.Event as Event
-import Control.Exception.Safe (assert)
+import Control.Exception.Safe (assert, MonadThrow)
 import qualified Statistics.Distribution as Dist
+import Statistics.Distribution.Normal
+import Data.DList
+import Control.Monad.Reader.Class
+import Control.Monad.RWS.Class
+import Control.Monad.IO.Class
+import Control.Monad.Writer.Class
+import Control.Monad.State.Class
+import Control.Monad.Trans.RWS (RWST, evalRWST)
+import GHC.Generics
 
 
 -- | FIXME: only 10 arms for the time being. This is where a "discrete space"

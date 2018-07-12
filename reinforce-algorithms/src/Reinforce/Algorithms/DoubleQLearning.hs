@@ -1,7 +1,10 @@
 module Reinforce.Algorithms.DoubleQLearning where
 
+import Control.Monad.IO.Class
+import Data.List (maximumBy)
+import Data.Ord (comparing)
+
 import Reinforce.Agents
-import Reinforce.Prelude
 import Control.MonadEnv (MonadEnv, Obs(..))
 import Control.MonadMWCRandom
 import qualified Control.MonadEnv as Env

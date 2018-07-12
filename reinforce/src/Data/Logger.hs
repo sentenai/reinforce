@@ -20,12 +20,17 @@ module Data.Logger
   , DebugLogger(..)
   ) where
 
-import Reinforce.Prelude
-import Control.MonadMWCRandom
+import Control.Monad.IO.Class
+import Control.Monad.Trans
+import Control.Monad.Trans.RWS
+import Control.Monad.Trans.State
+import Control.Exception.Safe
 import Debug.Trace
-import Control.MonadEnv
+import Data.Text (Text)
 import qualified Data.Text as T
 
+import Control.MonadEnv
+import Control.MonadMWCRandom
 -- ========================================================================= --
 -- | Our primary datatype for an event in a trace. Contains the episode number,
 -- reward, state, and action taken (in that order).

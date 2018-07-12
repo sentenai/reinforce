@@ -21,10 +21,14 @@ module Reinforce.Spaces.Action
   , randomChoice
   ) where
 
-import Reinforce.Prelude
-import Control.MonadMWCRandom
+import Control.Monad.IO.Class
 -- import Numeric.LinearAlgebra.Static (R)
 -- import qualified Numeric.LinearAlgebra.Static as LA
+
+import Control.MonadMWCRandom
+import GHC.TypeLits
+import Data.Proxy
+import Data.Vector (Vector)
 import qualified Data.Vector as V
 
 -- | Mostly tags around an Enum, but includes information about the size of

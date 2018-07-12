@@ -32,7 +32,8 @@ module Environments.Gym.ClassicControl.CartPoleV0
   ) where
 
 
-import Reinforce.Prelude
+import Control.Monad.IO.Class
+import Control.Exception.Safe
 import Data.CartPole
 import Control.MonadEnv (MonadEnv(..), Reward)
 import Environments.Gym.Internal (GymEnvironmentT)

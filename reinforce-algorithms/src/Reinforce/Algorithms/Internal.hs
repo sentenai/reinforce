@@ -1,8 +1,5 @@
 module Reinforce.Algorithms.Internal where
 
-import Reinforce.Prelude
-
-
 class Monad m => RLParams m r where
   getLambda :: m r
   getGamma :: m r

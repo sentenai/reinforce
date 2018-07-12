@@ -35,7 +35,8 @@ module Environments.Gym.ClassicControl.MountainCarContinuousV0
   , runDefaultEnvironmentT
   ) where
 
-import Reinforce.Prelude hiding (State)
+-- import Reinforce.Prelude hiding (State)
+import Control.Monad.IO.Class
 import OpenAI.Gym (GymEnv(MountainCarContinuousV0))
 import Servant.Client (BaseUrl)
 import Network.HTTP.Client (Manager)

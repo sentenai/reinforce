@@ -4,7 +4,8 @@ module Reinforce.Agents
   , clockSteps
   ) where
 
-import Reinforce.Prelude
+import Control.Monad
+import Control.Monad.IO.Class
 import Control.MonadEnv
 import qualified Control.MonadEnv as Env (reset)
 

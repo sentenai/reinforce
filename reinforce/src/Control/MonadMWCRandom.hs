@@ -36,10 +36,18 @@ module Control.MonadMWCRandom
   , _uniform
   ) where
 
-import Reinforce.Prelude
+import System.Random.MWC (GenIO, Variate)
 import qualified System.Random.MWC as MWC
 import qualified Statistics.Distribution as Stats
 import Control.MonadEnv (MonadEnv(..), Obs, Initial)
+import Control.Monad.Identity
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Reader
+import Control.Monad.Trans.Writer
+import Control.Monad.Trans.State
+import Control.Monad.Trans
+import Control.Monad.Trans.RWS (RWST)
+import Control.Exception.Safe
 import Control.Monad.Primitive (PrimState, PrimMonad)
 
 -- | a convenience helper to reference the underlying System.Random.MWC function
@@ -113,7 +121,7 @@ sampleFrom xs = fmap ((,dist) . choose) uniform
     choose :: Double -> Int
     choose n =
       -- Return the head index (unsafeHead is safe since the last elem's snd must be 1.0)
-      fst . unsafeHead .
+      fst . head .
 
       -- Drop while the cumulative sum is < the given value
       dropWhile ((< n) . snd) .

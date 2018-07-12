@@ -17,9 +17,10 @@ module Reinforce.Spaces.State
   , StateSpaceStatic(..)
   ) where
 
-import Reinforce.Prelude
+import GHC.TypeLits
+import Data.Vector (Vector)
+import Control.Exception.Safe
 import qualified Data.Vector as V
-
 
 -- | State space information to convert to and from a static hmatrix vector
 class StateSpaceStatic s where
@@ -50,7 +51,7 @@ instance Integral n => StateSpace (Vector n) where
 
 instance StateSpace [Float] where
   toVector   = V.fromList . fmap realToFrac
-  fromVector = return . fmap double2Float . V.toList
+  fromVector = return . fmap realToFrac . V.toList
 
 -- ========================================================================= --
 

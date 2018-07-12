@@ -3,7 +3,6 @@
 module Main where
 
 import Prelude
-import Reinforce.Prelude (impossible) -- same as "error", but for different semantics
 
 import Control.Monad (when)
 import Control.Monad.IO.Class (liftIO)
@@ -74,7 +73,7 @@ egreedyAgent stepN table
 
     Env.step bandit >>= \case
       Terminated -> pure ()
-      Done _ _   -> impossible "Bandit environments are continous and should never terminate"
+      Done _ _   -> error "Bandit environments are continous and should never terminate"
       Next r _   -> do
         let
           oldQ = table V.! banditIdx

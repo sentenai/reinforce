@@ -1,7 +1,8 @@
 module Reinforce.Algorithms.Sarsa where
 
+import Control.Monad.IO.Class
+
 import Reinforce.Agents
-import Reinforce.Prelude
 import Control.MonadEnv (MonadEnv, Obs(..))
 import qualified Control.MonadEnv as Env
 import Reinforce.Algorithms.Internal

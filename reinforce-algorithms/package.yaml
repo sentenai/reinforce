@@ -11,7 +11,7 @@ default-extensions:
   - LambdaCase
   - MultiParamTypeClasses
   - NamedFieldPuns
-  - NoImplicitPrelude
+  # NoImplicitPrelude
   - OverloadedStrings
   - ScopedTypeVariables
   - ViewPatterns
@@ -19,8 +19,11 @@ default-extensions:
 dependencies:
   - base                  >= 4.9 && < 5.0
   - reinforce             == 0.0.1.0
-  - reinforce-prelude     == 0.0.1.0
   - unordered-containers  >= 0.2
+  - transformers
+  - mtl
+  - microlens-platform
+  - hashable
 
 library:
   source-dirs: src
