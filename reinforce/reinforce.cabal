@@ -1,8 +1,10 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fa653680dc7158b541f6d96affba2b751a14092ad4a3ce8931d08b45129c884e
+-- hash: 7b8a18cf31dcebc3ab0c37f27e494c24ce3d07c48f2d1a2df17ed5807579dbc9
 
 name:           reinforce
 version:        0.0.1.0
@@ -19,7 +21,6 @@ copyright:      2017 Sentenai, Inc.
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
-cabal-version:  >= 1.10
 
 source-repository head
   type: git

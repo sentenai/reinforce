@@ -8,9 +8,9 @@ packages:
 - reinforce-environments-gym
 - reinforce-zoo
 
-extra-lib-dirs:
-- /usr/local/lib/
-- /compat/linux/lib/
+# extra-lib-dirs:
+# - /usr/local/lib/
+# - /compat/linux/lib/
 
-extra-include-dirs:
-- /usr/local/include/
+# extra-include-dirs:
+# - /usr/local/include/
