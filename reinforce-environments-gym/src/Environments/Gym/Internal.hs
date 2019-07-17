@@ -251,16 +251,20 @@ _step a = do
   if OpenAI.done out
   then do
     s <- aesonToMaybeState (OpenAI.observation out)
-    LastState ep prior <- get
-    tell . pure $ Event.Event ep r prior a
-    return $ Done r s
+    get >>= \case
+      LastState ep prior -> do
+        tell . pure $ Event.Event ep r prior a
+        return $ Done r s
+      Uninitialized _ -> return $ Done r s -- This case will not happen
   else do
     s <- aesonToState (OpenAI.observation out)
     let n = Next r s
-    LastState ep prior <- get
-    put $ LastState ep s
-    tell . pure $ Event.Event ep r prior a
-    return n
+    get >>= \case
+      LastState ep prior -> do
+        put $ LastState ep s
+        tell . pure $ Event.Event ep r prior a
+        return n
+      Uninitialized _ -> return n -- This case will not happen
   where
     renderStep :: Bool -> OpenAI.Step
     renderStep = OpenAI.Step (toJSON a)
