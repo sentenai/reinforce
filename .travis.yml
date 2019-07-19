@@ -75,7 +75,6 @@ script:
     reinforce-algorithms \
     reinforce-environments \
     reinforce-environments-gym \
-    reinforce-prelude \
 
   # build all zoo examples and executables
   stack --no-terminal $ARGS build reinforce-zoo
