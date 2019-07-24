@@ -1,14 +1,16 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3d962e58c14d98fee67fdc75c9dbc2ef2d47210587614cfd5d6f6587f955fb39
+-- hash: 9258941e9eb9b762acd0f20f9025b45f98848eece94ff22db3f0d23d1e300e89
 
 name:           reinforce-algorithms
 version:        0.0.1.0
+license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
-cabal-version:  >= 1.10
 
 library
   exposed-modules:

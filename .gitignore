@@ -20,7 +20,7 @@ codex.tags
 lib
 *.svg
 out/
-
+.ionide/
 
 # Created by https://www.gitignore.io/api/python
 
