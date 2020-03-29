@@ -14,7 +14,7 @@ This repo is in active development and has some beginner-friendly contributions,
 An example agent
 =============
 
-In `examples/`, you can find an agent which showcases some of the functionality of this library.
+In `reinforce-zoo/bandits/examples/`, you can find an agent which showcases some of the functionality of this library.
 
 ```haskell
 module Main where
