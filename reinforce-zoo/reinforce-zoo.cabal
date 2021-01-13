@@ -35,7 +35,7 @@ executable egreedy-bandits-example
 
 executable qtable-cartpole-example
   main-is: QTable.hs
-  hs-source-dirs: examples/frozenlake
+  hs-source-dirs: examples/cartpole
   default-language: Haskell2010
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   build-depends:
